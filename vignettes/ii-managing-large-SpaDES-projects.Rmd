@@ -4,8 +4,8 @@ author: "Alex M. Chubaty"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Managing large SpaDES projects}
-  %\VignetteEncoding{UTF-8}
   %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
 editor_options: 
   chunk_output_type: console
 ---
