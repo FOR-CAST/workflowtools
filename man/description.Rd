@@ -4,12 +4,14 @@
 \alias{description}
 \title{Create or modify a project's \code{DESCRIPTION} file}
 \usage{
-description(fields = list(), snapshot = NULL)
+description(fields = list(), library = NULL, snapshot = NULL)
 }
 \arguments{
 \item{fields}{named list of \code{DESCRIPTION} fields and their values.}
 
-\item{snapshot}{character. path to a \code{\link[Require:pkgSnapshot]{Require::pkgSnapshot()}} file.}
+\item{library}{paths to package libraries. if \code{NULL}, \code{.libPaths()} will be used.}
+
+\item{snapshot}{character. path to a \code{renv} or \code{Require} snapshot file.}
 }
 \value{
 \code{NULL} invisibly.
@@ -30,6 +32,7 @@ fields Imports and Remotes will be automatically populated based on \code{snapsh
 tmpdir <- file.path(tempdir(), "example_project") |>
   Require::checkPath(create = TRUE)
 cwd <- setwd(tmpdir)
+opts <- options(workflowtools.useRequire = TRUE)
 
 description(fields = list(
   Title = "My Project: It Does Cool Stuff",
@@ -43,9 +46,10 @@ description(fields = list(
   Version = "0.0.1",
   Language = "en-CA",
   License = "MIT",
-  Depends = paste0("R (== 4.2)", collapse = ",\n    ")
+  Depends = paste0("R (== 4.3)", collapse = ",\n    ")
 ))
 
 setwd(cwd)
 unlink(tmpdir, recursive = TRUE)
+options(opts)
 }

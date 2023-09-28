@@ -20,7 +20,6 @@ Imports:
     httr,
     methods,
     reproducible,
-    Require,
     rprojroot,
     sessioninfo,
     sf,
@@ -28,6 +27,11 @@ Imports:
     utils
 Suggests:
     covr,
+    jsonlite,
+    knitr,
+    renv,
+    Require,
+    rmarkdown,
     testthat (>= 3.0.0),
     withr
 BugReports: https://github.com/FOR-CAST/workflowtools/issues

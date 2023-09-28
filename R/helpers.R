@@ -19,6 +19,14 @@ findProjectName <- function() {
   basename(findProjectPath())
 }
 
+#' @importFrom fs path_expand path_norm
+normPath <- function(path) {
+  unlist(path) |>
+    fs::path_norm() |>
+    fs::path_expand() |>
+    normalizePath(winslash = "/", mustWork = FALSE)
+}
+
 #' Identify user or machine
 #'
 #' @param name Optional character string giving user or machine name to match.
@@ -45,4 +53,12 @@ machine <- function(name = NULL) {
   } else {
     grepl(name, Sys.info()[["nodename"]])
   }
+}
+
+## copied from Require::modifyList3
+#' @importFrom utils modifyList
+modList <- function(..., keep.null = TRUE) {
+  dots <- list(...)
+  dots <- dots[!unlist(lapply(dots, is.null))]
+  do.call(Reduce, alist(modifyList, dots))
 }
