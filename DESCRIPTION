@@ -19,7 +19,6 @@ Imports:
     googledrive,
     httr,
     methods,
-    reproducible,
     rprojroot,
     sessioninfo,
     sf,
