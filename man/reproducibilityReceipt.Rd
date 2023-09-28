@@ -45,7 +45,7 @@ Add the following to your Rmd files (without the backslashes):
 -----
 
 \```{r details, echo=FALSE}
-project.workflow::reproducibilityReceipt()
+workflowtools::reproducibilityReceipt()
 \```
 }
 }

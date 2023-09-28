@@ -7,6 +7,6 @@
 # * https://testthat.r-lib.org/articles/special-files.html
 
 library(testthat)
-library(project.workflow)
+library(workflowtools)
 
-test_check("project.workflow")
+test_check("workflowtools")

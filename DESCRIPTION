@@ -1,8 +1,8 @@
-Package: project.workflow
+Package: workflowtools
 Type: Package
 Title: Project Workflow Management Tools and Utilities
 Description: Various helpers for working with large projects.
-URL: https://github.com/FOR-CAST/project.workflow
+URL: https://github.com/FOR-CAST/workflowtools
 Version: 0.0.1
 Authors@R: c(
     person("Alex M", "Chubaty", email = "achubaty@for-cast.ca",
@@ -30,7 +30,7 @@ Suggests:
     covr,
     testthat (>= 3.0.0),
     withr
-BugReports: https://github.com/FOR-CAST/project.workflow/issues
+BugReports: https://github.com/FOR-CAST/workflowtools/issues
 ByteCompile: yes
 Encoding: UTF-8
 Language: en-CA

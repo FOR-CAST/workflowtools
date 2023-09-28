@@ -13,7 +13,7 @@
 #' -----
 #'
 #' \```{r details, echo=FALSE}
-#' project.workflow::reproducibilityReceipt()
+#' workflowtools::reproducibilityReceipt()
 #' \```
 #' }
 #'
@@ -25,7 +25,6 @@
 #'                File path is assumed to be relative to `prjDir`.
 #'
 #' @export
-#' @importFrom Require normPath
 #' @importFrom tools file_ext file_path_sans_ext
 #' @seealso [`projectSessionInfo`]
 #' @rdname reproducibilityReceipt
