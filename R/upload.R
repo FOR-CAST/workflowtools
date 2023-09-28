@@ -19,7 +19,7 @@ utils::globalVariables(c(
 #' @param batch_size the maximum number of files per upload batch.
 #'   Uploads are done in batches to mitigate curl handle errors.
 #'
-#' @return A dribble of the uploaded files (not directories though.)
+#' @return Invisibly, a dribble of the uploaded files (not directories though).
 #'
 #' @export
 #' @importFrom dplyr bind_rows filter pull
