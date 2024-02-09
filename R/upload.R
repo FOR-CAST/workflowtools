@@ -9,7 +9,7 @@ utils::globalVariables(c(
 #' Upload the contents of a folder (directory) to Google Drive recursively.
 #' The implementation is depth-first.
 #' Only uploads objects that have type "file" or "directory" according to `fs::dir_info()`;
-#' ignores types "symlink", "FIFO", "socket", "character_device" or "block_device".
+#' ignores other types.
 #'
 #' @param folder The local folder that is to be uploaded, given as a path e.g. with `fs::path()`.
 #'   The folder and its contents are uploaded.

@@ -25,5 +25,5 @@ Based on \url{https://github.com/tidyverse/googledrive/issues/200#issuecomment-1
 Upload the contents of a folder (directory) to Google Drive recursively.
 The implementation is depth-first.
 Only uploads objects that have type "file" or "directory" according to \code{fs::dir_info()};
-ignores types "symlink", "FIFO", "socket", "character_device" or "block_device".
+ignores other types.
 }

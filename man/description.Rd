@@ -2,25 +2,25 @@
 % Please edit documentation in R/description.R
 \name{description}
 \alias{description}
-\title{Create or modify a project's \code{DESCRIPTION} file}
+\title{Create or modify a project's \file{DESCRIPTION} file}
 \usage{
 description(fields = list(), library = NULL, snapshot = NULL)
 }
 \arguments{
-\item{fields}{named list of \code{DESCRIPTION} fields and their values.}
+\item{fields}{named list of \file{DESCRIPTION} fields and their values.}
 
 \item{library}{paths to package libraries. if \code{NULL}, \code{.libPaths()} will be used.}
 
-\item{snapshot}{character. path to a \code{renv} or \code{Require} snapshot file.}
+\item{snapshot}{character. path to a \pkg{renv} or \pkg{Require} snapshot file.}
 }
 \value{
 \code{NULL} invisibly.
-Invoked for side effect of writing a DESCRIPTION file to the project directory,
-and printing the resulting DESCCRIPTION file to screen.
+Invoked for side effect of writing a \file{DESCRIPTION} file to the project directory,
+and printing the resulting \file{DESCRIPTION} file to screen.
 }
 \description{
 A simple wrapper around \code{usethis::use_description()} to write
-a \code{DESCRIPTION} file in the root project directory.
+a \file{DESCRIPTION} file in the root project directory.
 This file can be used to record project metadata, including package version
 information from the current project library.
 }

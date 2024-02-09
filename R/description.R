@@ -2,28 +2,28 @@ utils::globalVariables(c(
   "RemoteUsername"
 ))
 
-#' Create or modify a project's `DESCRIPTION` file
+#' Create or modify a project's \file{DESCRIPTION} file
 #'
 #' A simple wrapper around `usethis::use_description()` to write
-#' a `DESCRIPTION` file in the root project directory.
+#' a \file{DESCRIPTION} file in the root project directory.
 #' This file can be used to record project metadata, including package version
 #' information from the current project library.
 #'
 #' @note fields Imports and Remotes will be automatically populated based on `snapshot`
 #' (or, if `snapshot = NULL`, the currently installed packages).
 #'
-#' @param fields named list of `DESCRIPTION` fields and their values.
+#' @param fields named list of \file{DESCRIPTION} fields and their values.
 #'
 #' @param library paths to package libraries. if `NULL`, `.libPaths()` will be used.
 #'
-#' @param snapshot character. path to a `renv` or `Require` snapshot file.
+#' @param snapshot character. path to a \pkg{renv} or \pkg{Require} snapshot file.
 #'
 #' @return `NULL` invisibly.
-#' Invoked for side effect of writing a DESCRIPTION file to the project directory,
-#' and printing the resulting DESCCRIPTION file to screen.
+#' Invoked for side effect of writing a \file{DESCRIPTION} file to the project directory,
+#' and printing the resulting \file{DESCRIPTION} file to screen.
 #'
 #' @export
-#' @importFrom data.table rbindlist set
+#' @importFrom data.table as.data.table rbindlist set
 #' @importFrom utils read.csv
 #'
 #' @examples
@@ -59,15 +59,16 @@ description <- function(fields = list(), library = NULL, snapshot = NULL) {
     if (isTRUE(getOption("workflowtools.useRequire"))) {
       if (requireNamespace("Require", quietly = TRUE)) {
         snapshot <- tempfile("pkgsnapshot_Require_", fileext = ".csv")
-        ## TODO: need 93-snapshot branch of Require
         Require::pkgSnapshot(packageVersionFile = snapshot, libPaths = library)
         on.exit(unlink(snapshot), add = TRUE)
 
         pkgs <- read.csv(snapshot)
-        cranPkgs <- pkgs[is.na(pkgs$GithubUsername), ]
-        ghPkgs <- pkgs[!is.na(pkgs$GithubUsername), ]
+        colnames(pkgs) <- colnames(pkgs) |>
+          gsub("Github", "Remote", x = _) |>
+          gsub("SHA1", "Sha", x = _)
+        pkgs <- as.data.table(pkgs)
       } else {
-        stop("Suggested pakcage 'Require' is not installed.")
+        stop("Suggested package 'Require' is not installed.")
       }
     } else {
       if (requireNamespace("renv", quietly = TRUE) &&
@@ -80,16 +81,18 @@ description <- function(fields = list(), library = NULL, snapshot = NULL) {
           lapply(as.data.frame) |>
           rbindlist(fill = TRUE)
         set(pkgs, NULL, "Requirements", NULL)
-        pkgs <- pkgs[!duplicated(pkgs)]
-        cranPkgs <- ghPkgs <- pkgs[is.na(RemoteUsername), ]
-        ghPkgs <- pkgs[!is.na(pkgs$RemoteUsername), ]
       } else {
-        stop("Suggested pakcage 'renv' is not installed.")
+        stop("Suggested packages 'renv' or 'jsonlite' are not installed.")
       }
     }
+
+    pkgs <- pkgs[!duplicated(pkgs)]
+
+    cranPkgs <- pkgs[is.na(RemoteUsername), ]
+    ghPkgs <- pkgs[!is.na(RemoteUsername), ]
   }
 
-  ## voerride user-specified field values
+  ## override user-specified field values
   fields <- modList(fields, list(
     Type = "project",
     Package = NULL,
