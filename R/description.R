@@ -24,6 +24,7 @@ utils::globalVariables(c(
 #'
 #' @export
 #' @importFrom data.table as.data.table rbindlist set
+#' @importFrom tools toTitleCase
 #' @importFrom utils read.csv
 #'
 #' @examples
@@ -94,6 +95,7 @@ description <- function(fields = list(), library = NULL, snapshot = NULL) {
 
   ## override user-specified field values
   fields <- modList(fields, list(
+    Title = tools::toTitleCase(fields$Title),
     Type = "project",
     Package = NULL,
     Imports = paste0(pkgs$Package, " (== ", pkgs$Version, ")", collapse = ",\n    "),
