@@ -1,6 +1,7 @@
 # workflowtools
 
 <!-- badges: start -->
+[![R-CMD-check](https://github.com/FOR-CAST/workflowtools/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/FOR-CAST/workflowtools/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
 The goal of `projectworkflow` is to ...
