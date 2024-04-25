@@ -12,7 +12,7 @@ check_project_packages(path = NULL, snapshot = NULL)
 \item{snapshot}{character. path to a \pkg{renv} or \pkg{Require} snapshot file.}
 }
 \value{
-\code{NULL}, invisibly. will signal an error if there is a discrepanc between
+\code{NULL}, invisibly. will signal an error if there is a discrepancy between
 project and module packages.
 }
 \description{
