@@ -68,31 +68,18 @@ description <- function(fields = list(), library = NULL, snapshot = NULL) {
   if (useRequire) {
     if (requireNamespace("Require", quietly = TRUE)) {
       Require::pkgSnapshot(packageVersionFile = snapshot, libPaths = library)
-
-      pkgs <- read.csv(snapshot)
-      colnames(pkgs) <- colnames(pkgs) |>
-        gsub("Github", "Remote", x = _) |>
-        gsub("SHA1", "Sha", x = _)
-      pkgs <- as.data.table(pkgs)
     } else {
       stop("Suggested package 'Require' is not installed.")
     }
   } else {
-    if (requireNamespace("renv", quietly = TRUE) &&
-        requireNamespace("jsonlite", quietly = TRUE)) {
+    if (requireNamespace("renv", quietly = TRUE)) {
       renv::snapshot(library = library, lockfile = snapshot, type = "all")
-
-      pkgs <- jsonlite::fromJSON(txt = "renv.lock")[["Packages"]] |>
-        lapply(as.data.frame) |>
-        rbindlist(fill = TRUE)
-      set(pkgs, NULL, "Requirements", NULL)
     } else {
-      stop("Suggested packages 'renv' or 'jsonlite' are not installed.")
+      stop("Suggested package 'renv' is not installed.")
     }
   }
 
-  pkgs <- pkgs[!duplicated(pkgs)]
-
+  pkgs <- packages_from_snapshot(snapshot)
   cranPkgs <- pkgs[is.na(RemoteUsername), ]
   ghPkgs <- pkgs[!is.na(RemoteUsername), ]
 
