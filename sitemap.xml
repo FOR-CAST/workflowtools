@@ -16,6 +16,9 @@
     <loc>/index.html</loc>
   </url>
   <url>
+    <loc>/reference/check_project_packages.html</loc>
+  </url>
+  <url>
     <loc>/reference/description.html</loc>
   </url>
   <url>
@@ -25,7 +28,13 @@
     <loc>/reference/findProject.html</loc>
   </url>
   <url>
+    <loc>/reference/get_module_packages.html</loc>
+  </url>
+  <url>
     <loc>/reference/index.html</loc>
+  </url>
+  <url>
+    <loc>/reference/packages_from_snapshot.html</loc>
   </url>
   <url>
     <loc>/reference/projectSessionInfo.html</loc>
