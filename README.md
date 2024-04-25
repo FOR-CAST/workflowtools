@@ -15,11 +15,23 @@ You can install the development version of `workflowtools` from [GitHub](https:/
 devtools::install_github("FOR-CAST/workflowtools")
 ```
 
-## Example
+## Getting started
 
-This is a basic example which shows you how to solve a common problem:
+```r
+library("workflowtools")
+```
 
-``` r
-library(workflowtools)
-## basic example code
+### Machine setup
+
+Use the following helper function to print a set of recommended commands to execute when setting up a new computer.
+This typically only needs to be done once per computer/user.
+
+```r
+setup_machine()
+```
+
+### Project setup
+
+```r
+setup_project()
 ```

@@ -7,6 +7,7 @@ utils::globalVariables(c(
 
 ## usethis namespace: start
 #' @import methods
+#' @importFrom cli cli cli_code cli_h1 cli_h2 cli_li cli_text
 #' @importFrom data.table := as.data.table data.table rbindlist set setkey setnames
 #' @importFrom dplyr bind_rows filter pull
 #' @importFrom fs dir_info path_expand path_norm
