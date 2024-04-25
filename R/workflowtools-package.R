@@ -1,5 +1,5 @@
 utils::globalVariables(c(
-  "Version"
+  ".", "Package", "Version", "Version_Mod", "Version_Prj"
 ))
 
 #' @keywords internal
@@ -7,7 +7,7 @@ utils::globalVariables(c(
 
 ## usethis namespace: start
 #' @import methods
-#' @importFrom data.table := as.data.table data.table rbindlist set setkey
+#' @importFrom data.table := as.data.table data.table rbindlist set setkey setnames
 #' @importFrom dplyr bind_rows filter pull
 #' @importFrom fs dir_info path_expand path_norm
 #' @importFrom furrr future_map_dfr future_map2_dfr
@@ -18,6 +18,6 @@ utils::globalVariables(c(
 #' @importFrom sessioninfo session_info
 #' @importFrom tools file_ext file_path_sans_ext toTitleCase
 #' @importFrom usethis proj_activate use_news_md use_readme_md
-#' @importFrom utils modifyList read.csv
+#' @importFrom utils capture.output modifyList read.csv
 ## usethis namespace: end
 NULL

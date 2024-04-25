@@ -103,6 +103,8 @@ get_module_packages <- function(module = NULL, path, verbose = FALSE) {
 
 #' Check a project's packages against module dependencies
 #'
+#' @param path character specifying the project path
+#'
 #' @param snapshot character. path to a \pkg{renv} or \pkg{Require} snapshot file.
 #'
 #' @return `NULL`, invisibly. will signal an error if there is a discrepanc between

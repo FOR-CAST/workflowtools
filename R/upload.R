@@ -29,7 +29,7 @@ drive_upload_folder <- function(folder, drive_path, batch_size = 10) {
   on.exit(httr::set_config(old), add = TRUE)
 
   ## Only call fs::dir_info once in order to avoid weirdness if the contents of the folder is changing
-  contents <- googledrive::dir_info(folder, type = c("file", "dir"))
+  contents <- fs::dir_info(folder, type = c("file", "dir"))
   dirs_to_upload <- contents |>
     dplyr::filter(type == "directory") |>
     dplyr::pull(path)

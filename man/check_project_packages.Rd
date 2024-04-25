@@ -7,6 +7,8 @@
 check_project_packages(path = NULL, snapshot = NULL)
 }
 \arguments{
+\item{path}{character specifying the project path}
+
 \item{snapshot}{character. path to a \pkg{renv} or \pkg{Require} snapshot file.}
 }
 \value{
