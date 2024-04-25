@@ -410,7 +410,7 @@ values are not hardcoded to a fixed value (e.g.,
 <code>min(parallel::detectCores() / 2, 120)</code>)</p>
 <p>The goal is to be able to use a single script for all your
 simulations. Run names, study areas, etc. should be controlled
-externally to this (i.e., don’t hardcode runNames unless the control
+externally to this (i.e., don’t hardcode run names unless the control
 script iterates through a loop of all your study areas.) If using a loop
 to iterate through e.g., study areas, it’s useful to use lock files (see
 below) to prevent simultaneous runs from interfering with one
@@ -501,7 +501,7 @@ nodes (specifically, <code>terra</code> objects need to be
 <p>I like using <code>config</code> package plus a
 <code>config.yml</code> file to set user- and machine-specific options
 (like scratch directory paths, cache settings, etc.). Using
-<code>config</code> is optional though, as these usr- and
+<code>config</code> is optional though, as these user- and
 machine-specific settings can also be defined in <code>02-init.R</code>.
 The important thing is to clearly identify which parameters/values are
 ‘global’ for all simulations, and which are intended to be changed by
@@ -578,8 +578,8 @@ file!</em></p>
 <h4 id="using-git-submodules">Using git submodules<a class="anchor" aria-label="anchor" href="#using-git-submodules"></a>
 </h4>
 <p>We will add each of the <code>SpaDES</code> modules to our project as
-git submodules via the command line (but <a href="https://support.gitkraken.com/working-with-repositories/submodules" class="external-link">GitKraken
-does support git submodules</a>). (You’ll need to delete the
+git submodules via the command line (but <a href="https://support.gitkraken.com/working-with-repositories/submodules" class="external-link">Git
+Kraken does support git submodules</a>). (You’ll need to delete the
 <code>moduleN/</code> sub-directories within <code>modules</code>.)</p>
 <pre><code>cd ~/Documents/myProject/modules
 git submodule add https://github.com/USERNAMEA/module1
