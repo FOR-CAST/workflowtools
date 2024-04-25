@@ -16,6 +16,9 @@
     <loc>/index.html</loc>
   </url>
   <url>
+    <loc>/news/index.html</loc>
+  </url>
+  <url>
     <loc>/reference/check_project_packages.html</loc>
   </url>
   <url>
@@ -41,6 +44,12 @@
   </url>
   <url>
     <loc>/reference/reproducibilityReceipt.html</loc>
+  </url>
+  <url>
+    <loc>/reference/setup.html</loc>
+  </url>
+  <url>
+    <loc>/reference/use_module.html</loc>
   </url>
   <url>
     <loc>/reference/whoami.html</loc>
