@@ -11,7 +11,7 @@
 #'
 #' @param repo character. GitHub repository specification of the form `<user|org>/<repo>@<branch>`.
 #'
-#' @return `NULL`, invisibly. Used for the side-effect of printing project seutp messages to screen.
+#' @return `NULL`, invisibly. Used for the side-effect of printing project setup messages to screen.
 #'
 #' @export
 #' @rdname setup

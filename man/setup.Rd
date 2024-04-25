@@ -15,7 +15,7 @@ setup_project(path = NULL, repo = NULL)
 \item{repo}{character. GitHub repository specification of the form \verb{<user|org>/<repo>@<branch>}.}
 }
 \value{
-\code{NULL}, invisibly. Used for the side-effect of printing project seutp messages to screen.
+\code{NULL}, invisibly. Used for the side-effect of printing project setup messages to screen.
 }
 \description{
 Every project will be a little different, and will require some level of customization.

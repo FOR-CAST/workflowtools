@@ -251,7 +251,7 @@ They should be listed alphabetically, so that it's easy for a human to read, fin
 Where these values are not hardcoded to a fixed value (e.g., `Ncpus = 8L`), they should be set using variables defined in `02-init.R` (e.g., `Ncpus = ncores`, where `ncores` was previously defined as `min(parallel::detectCores() / 2, 120)`)
 
 The goal is to be able to use a single script for all your simulations.
-Run names, study areas, etc. should be controlled externally to this (i.e., don't hardcode runNames unless the control script iterates through a loop of all your study areas.)
+Run names, study areas, etc. should be controlled externally to this (i.e., don't hardcode run names unless the control script iterates through a loop of all your study areas.)
 If using a loop to iterate through e.g., study areas, it's useful to use lock files (see below) to prevent simultaneous runs from interfering with one another.
 
 #### Replication and scenarios
@@ -319,7 +319,7 @@ lapply(studyAreas, function(studyAreaName) {
 #### Per-user and per-machine config
 
 I like using `config` package plus a `config.yml` file to set user- and machine-specific options (like scratch directory paths, cache settings, etc.). 
-Using `config` is optional though, as these usr- and machine-specific settings can also be defined in `02-init.R`.
+Using `config` is optional though, as these user- and machine-specific settings can also be defined in `02-init.R`.
 The important thing is to clearly identify which parameters/values are 'global' for all simulations, and which are intended to be changed by the user.
 Note that no parameters that are expected to be changed for the purposes of running different simulation parameters (e.g., study area) should be set here (see above).
 
@@ -372,7 +372,7 @@ These data files should be easily retrieved via download or created by the modul
 
 #### Using git submodules
 
-We will add each of the `SpaDES` modules to our project as git submodules via the command line (but [GitKraken does support git submodules](https://support.gitkraken.com/working-with-repositories/submodules)).
+We will add each of the `SpaDES` modules to our project as git submodules via the command line (but [Git Kraken does support git submodules](https://support.gitkraken.com/working-with-repositories/submodules)).
 (You'll need to delete the `moduleN/` sub-directories within `modules`.)
 
 ```
