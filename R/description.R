@@ -23,9 +23,6 @@ utils::globalVariables(c(
 #' and printing the resulting \file{DESCRIPTION} file to screen.
 #'
 #' @export
-#' @importFrom data.table as.data.table rbindlist set
-#' @importFrom tools toTitleCase
-#' @importFrom utils read.csv
 #'
 #' @examples
 #' tmpdir <- file.path(tempdir(), "example_project") |>

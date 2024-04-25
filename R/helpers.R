@@ -7,7 +7,6 @@
 #'         `findProjectName` returns the basename of the path.
 #'
 #' @export
-#' @importFrom rprojroot find_root from_wd is_git_root is_rstudio_project
 #' @rdname findProject
 findProjectPath <- function() {
   find_root(is_rstudio_project | is_git_root | from_wd, path = getwd())
@@ -19,7 +18,6 @@ findProjectName <- function() {
   basename(findProjectPath())
 }
 
-#' @importFrom fs path_expand path_norm
 normPath <- function(path) {
   unlist(path) |>
     fs::path_norm() |>
@@ -56,9 +54,8 @@ machine <- function(name = NULL) {
 }
 
 ## copied from Require::modifyList3
-#' @importFrom utils modifyList
 modList <- function(..., keep.null = TRUE) {
   dots <- list(...)
   dots <- dots[!unlist(lapply(dots, is.null))]
-  do.call(Reduce, alist(modifyList, dots))
+  do.call(Reduce, alist(utils::modifyList, dots))
 }

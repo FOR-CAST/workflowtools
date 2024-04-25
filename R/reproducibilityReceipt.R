@@ -25,7 +25,6 @@
 #'                File path is assumed to be relative to `prjDir`.
 #'
 #' @export
-#' @importFrom tools file_ext file_path_sans_ext
 #' @seealso [`projectSessionInfo`]
 #' @rdname reproducibilityReceipt
 reproducibilityReceipt <- function(prjDir = NULL, title = "Reproducibility receipt", writeTo = NULL) {
@@ -117,7 +116,6 @@ gitInfo <- function(prjDir = NULL) {
 }
 
 #' @export
-#' @importFrom data.table as.data.table rbindlist
 #' @rdname reproducibilityReceipt
 submoduleInfo <- function(prjDir = NULL) {
   if (is.null(prjDir)) {
@@ -137,7 +135,6 @@ submoduleInfo <- function(prjDir = NULL) {
 }
 
 #' @export
-#' @importFrom sessioninfo session_info
 #' @rdname reproducibilityReceipt
 sessInfo <- function() {
   sessioninfo::session_info()
