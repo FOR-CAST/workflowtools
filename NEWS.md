@@ -1,7 +1,11 @@
-# workflowtools (development version)
+# workflowtools 0.0.4
 
 * add `cli` to Imports for improved messaging;
 * add project and machine setup helpers `setup_machine()` and `setup_project()`;
+* fixed issue writing GitHub package metadata in `description()`;
+* fixed and improved `get_module_packages()` to work with nested/multiple module paths;
+* new function `find_modules()` to assist with module path discovery;
+* added tests;
 * improved documentation;
 
 # workflowtools 0.0.3

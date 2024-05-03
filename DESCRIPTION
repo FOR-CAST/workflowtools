@@ -3,7 +3,7 @@ Type: Package
 Title: Project Workflow Management Tools and Utilities
 Description: Various helpers for working with large projects.
 URL: https://github.com/FOR-CAST/workflowtools
-Version: 0.0.3.9000
+Version: 0.0.4
 Authors@R: c(
     person("Alex M", "Chubaty", email = "achubaty@for-cast.ca",
            role = c("aut", "cre"), comment = c(ORCID = "0000-0001-7146-8135"))
@@ -24,6 +24,7 @@ Imports:
     rprojroot,
     sessioninfo,
     sf,
+    stats,
     usethis,
     utils
 Suggests:

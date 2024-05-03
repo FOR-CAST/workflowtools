@@ -89,8 +89,8 @@ description <- function(fields = list(), library = NULL, snapshot = NULL) {
     Type = "project",
     Package = NULL,
     Imports = paste0(pkgs$Package, " (== ", pkgs$Version, ")", collapse = ",\n    "),
-    Remotes = paste0(ghPkgs$GithubUsername, "/", ghPkgs$GithubRepo, "@",
-                     ghPkgs$GithubSHA1, collapse = ",\n    ")
+    Remotes = paste0(ghPkgs$RemoteUsername, "/", ghPkgs$RemoteRepo, "@",
+                     ghPkgs$RemoteSha, collapse = ",\n    ")
   ))
 
   usethis::proj_set(findProjectPath(), force = TRUE)

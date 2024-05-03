@@ -28,6 +28,24 @@ packages_from_snapshot <- function(snapshot = "renv.lock") {
   return(pkgs)
 }
 
+#' Find modules
+#'
+#' Determine the relative path of modules discovered in `path`.
+#'
+#' @param path character, specifying the path to the modules directory.
+#'
+#' @return character vector
+#'
+#' @export
+find_modules <- function(path) {
+  all_R <- fs::dir_ls(path, type = "file", recurse = TRUE, regexp = "[.]R$")
+  is_mod <- basename(fs::path_dir(all_R)) == tools::file_path_sans_ext(fs::path_file(all_R))
+  module <- fs::path_dir(all_R[is_mod]) |> fs::path_rel(path) |> as.character()
+  names(module) <- fs::path_dir(all_R[is_mod]) |> as.character() |> basename()
+
+  return(module)
+}
+
 #' Get module package dependencies
 #'
 #' @param module character, specifying a module name.
@@ -42,26 +60,49 @@ packages_from_snapshot <- function(snapshot = "renv.lock") {
 #' @export
 #' @seealso [check_project_packages()]
 get_module_packages <- function(module = NULL, path, verbose = FALSE) {
+  valid_modules <- find_modules(path)
+
   if (is.null(module)) {
-    module <- list.dirs(path, full.names = FALSE, recursive = FALSE)
+    module_valid <- valid_modules
+  } else {
+    module_valid <- valid_modules[names(valid_modules) %in% module] ## with path
+    module_invalid <- module[!module %in% names(valid_modules)] ## w/o path - used for messaging
+    message_invalid <- paste0("The following modules are not found in ", path, ":\n",
+                              "    ", paste(module_invalid, collapse = "\n    "))
+
+    if (length(module_valid) == 0) {
+      stop(message_invalid)
+    }
+
+    if (length(module_invalid) > 0) {
+      warning(message_invalid)
+    }
   }
 
-  pkgdt <- lapply(module, function(m) {
+  pkgdt <- lapply(module_valid, function(m) {
     if (isTRUE(verbose)) {
       message("Resolving package dependencies for module ", m, ".")
     }
 
-    mod <- parse(file.path(path, m, paste0(m, ".R")))
+    name <- basename(m)
+    mod <- parse(file.path(path, m, paste0(name, ".R")))
     id1 <- vapply(mod, function(x) grepl("reqdPkgs", x) |> any(), logical(1)) |> which()
-    id2 <- sapply(mod[id1], function(x) grepl("reqdPkgs", x)) |> which()
-    pkgs <- eval(mod[[id1]][[id2]][["reqdPkgs"]]) |> unlist()
+    if (length(id1) > 0) {
+      id2 <- sapply(mod[id1], function(x) grepl("reqdPkgs", x)) |> which()
+      pkgs <- eval(mod[[id1]][[id2]][["reqdPkgs"]]) |> unlist()
+    } else {
+      ## no 'reqdPkgs' field in metadata; e.g., parent module
+      pkgs <- NULL
+    }
 
     if (!is.null(pkgs)) {
       pkg_name <- lapply(strsplit(pkgs, "\\("), function(x) {
-        ifelse(grepl("(/|@)", x[1]), remotes::parse_github_repo_spec(x[1])[["repo"]], x[[1]][1])
+        ifelse(grepl("(/|@)", x[1]), remotes::parse_github_repo_spec(x[1])[["repo"]], x[[1]][1]) |>
+          trimws()
       }) |> unlist()
       pkg_repo <- lapply(strsplit(pkgs, "\\("), function(x) {
-        ifelse(grepl("(/|@)", x[1]), remotes::parse_github_repo_spec(x[1])[["username"]], NA_character_)
+        ifelse(grepl("(/|@)", x[1]), remotes::parse_github_repo_spec(x[1])[["username"]], NA_character_) |>
+          trimws()
       }) |> unlist()
       pkg_ref <- lapply(strsplit(pkgs, "\\("), function(x) {
         ifelse(grepl("(/|@)", x[1]), remotes::parse_github_repo_spec(x[1])[["ref"]], NA_character_)
@@ -96,6 +137,7 @@ get_module_packages <- function(module = NULL, path, verbose = FALSE) {
     setkey("Package")
 
   pkgdt[, Version := as.character(base::max(as.numeric_version(Version), na.rm = TRUE)), by = "Package"]
+  pkgdt[, Repo := unique(na.omit(Repo)), by = "Package"] ## assume want GitHub version
   pkgdt <- unique(pkgdt)
 
   return(pkgdt)
