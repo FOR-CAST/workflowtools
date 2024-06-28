@@ -16,7 +16,7 @@ The folder and its contents are uploaded.}
 Uploads are done in batches to mitigate curl handle errors.}
 }
 \value{
-Invisibly, a dribble of the uploaded files (not directories though).
+Invisibly, a dribble of the uploaded files (not directories).
 }
 \description{
 Based on \url{https://github.com/tidyverse/googledrive/issues/200#issuecomment-1112766367}.

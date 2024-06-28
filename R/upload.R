@@ -19,7 +19,7 @@ utils::globalVariables(c(
 #' @param batch_size the maximum number of files per upload batch.
 #'   Uploads are done in batches to mitigate curl handle errors.
 #'
-#' @return Invisibly, a dribble of the uploaded files (not directories though).
+#' @return Invisibly, a dribble of the uploaded files (not directories).
 #'
 #' @export
 drive_upload_folder <- function(folder, drive_path, batch_size = 10) {
@@ -53,7 +53,7 @@ drive_upload_folder <- function(folder, drive_path, batch_size = 10) {
     dplyr::bind_rows()
 
   # Create the next level down of directories
-  furrr::future_map2_dfr(dirs_to_upload, fid, drive_upload_folder) |>
+  furrr::future_map2_dfr(dirs_to_upload, fid, drive_upload_folder, batch_size = batch_size) |>
     dplyr::bind_rows(uploaded_files) |>
     invisible() ## return a dribble of what's been uploaded
 }

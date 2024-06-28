@@ -1,3 +1,8 @@
+# workflowtools 0.0.5
+
+* add `purrr` to Imports;
+* add `drive_download_folder()` to recursively download Google Drive folders;
+
 # workflowtools 0.0.4
 
 * add `cli` to Imports for improved messaging;
