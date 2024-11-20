@@ -6,7 +6,7 @@ information from the current project library."><!-- mathjax --><script src="http
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]--></head><body data-spy="scroll" data-target="#toc">
-    
+
 
     <div class="container template-reference-topic">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -20,7 +20,7 @@ information from the current project library."><!-- mathjax --><script src="http
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">workflowtools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.6</span>
       </span>
     </div>
 
@@ -31,7 +31,7 @@ information from the current project library."><!-- mathjax --><script src="http
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
-     
+
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu"><li>
@@ -44,20 +44,20 @@ information from the current project library."><!-- mathjax --><script src="http
       </ul><ul class="nav navbar-nav navbar-right"><li>
   <a href="https://github.com/FOR-CAST/workflowtools/" class="external-link">
     <span class="fab fa-github fa-lg"></span>
-     
+
   </a>
 </li>
       </ul></div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
 
-      
+
 
       </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Create or modify a project's <code class="file">DESCRIPTION</code> file</h1>
-    <small class="dont-index">Source: <a href="https://github.com/FOR-CAST/workflowtools/blob/HEAD/R/description.R" class="external-link"><code>R/description.R</code></a></small>
+    <small class="dont-index">Source: <a href="https://github.com/FOR-CAST/workflowtools/blob/main/R/description.R" class="external-link"><code>R/description.R</code></a></small>
     <div class="hidden name"><code>description.Rd</code></div>
     </div>
 
@@ -74,23 +74,23 @@ information from the current project library.</p>
 
     <div id="arguments">
     <h2>Arguments</h2>
-    <dl><dt>fields</dt>
+
+
+<dl><dt id="arg-fields">fields<a class="anchor" aria-label="anchor" href="#arg-fields"></a></dt>
 <dd><p>named list of <code class="file">DESCRIPTION</code> fields and their values.</p></dd>
 
 
-<dt>library</dt>
+<dt id="arg-library">library<a class="anchor" aria-label="anchor" href="#arg-library"></a></dt>
 <dd><p>paths to package libraries. if <code>NULL</code>, <code><a href="https://rdrr.io/r/base/libPaths.html" class="external-link">.libPaths()</a></code> will be used.</p></dd>
 
 
-<dt>snapshot</dt>
+<dt id="arg-snapshot">snapshot<a class="anchor" aria-label="anchor" href="#arg-snapshot"></a></dt>
 <dd><p>character. path to a <span class="pkg">renv</span> or <span class="pkg">Require</span> snapshot file.</p></dd>
 
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    
-
-<p><code>NULL</code> invisibly.
+    <p><code>NULL</code> invisibly.
 Invoked for side effect of writing a <code class="file">DESCRIPTION</code> file to the project directory,
 and printing the resulting <code class="file">DESCRIPTION</code> file to screen.</p>
     </div>
@@ -121,9 +121,9 @@ and printing the resulting <code class="file">DESCRIPTION</code> file to screen.
 <span class="r-in"><span>  License <span class="op">=</span> <span class="st">"MIT"</span>,</span></span>
 <span class="r-in"><span>  Depends <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"R (== 4.3)"</span>, collapse <span class="op">=</span> <span class="st">",\n    "</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> package version file saved in /tmp/RtmpRef6GW/pkgsnapshot_Require_69f414c7edfa.csv</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Setting active project to <span style="color: #0000BB;">'/tmp/RtmpRef6GW/example_project'</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Writing <span style="color: #0000BB;">'DESCRIPTION'</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> package version file saved in /tmp/RtmpbRJu5f/pkgsnapshot_Require_69de6580b079.csv</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Setting active project to <span style="color: #0000BB;">"/tmp/RtmpbRJu5f/example_project"</span>.</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Writing <span style="color: #0000BB;">DESCRIPTION</span>.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #0000BB;">Type</span>: <span style="color: #BB0000;">project</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #0000BB;">Package</span>: <span style="color: #BB0000;">example_project</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #0000BB;">Title</span>: My Project: It Does Cool Stuff</span>
@@ -136,110 +136,111 @@ and printing the resulting <code class="file">DESCRIPTION</code> file to screen.
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #0000BB;">Depends</span>:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     R (== 4.3)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #0000BB;">Imports</span>:</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     DBI (== 1.2.3),</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     R6 (== 2.5.1),</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     Rcpp (== 1.0.12),</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     Require (== 0.3.1),</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     askpass (== 1.2.0),</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     base64enc (== 0.1-3),</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     brio (== 1.1.5),</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     bslib (== 0.7.0),</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     cachem (== 1.1.0),</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     callr (== 3.7.6),</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     classInt (== 0.4-10),</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     cli (== 3.6.3),</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     clipr (== 0.8.0),</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     covr (== 3.6.4),</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     cpp11 (== 0.4.7),</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     crayon (== 1.5.3),</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     credentials (== 2.0.1),</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     curl (== 5.2.1),</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     data.table (== 1.15.4),</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     desc (== 1.4.3),</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     details (== 0.3.0),</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     diffobj (== 0.3.5),</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     digest (== 0.6.36),</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     downlit (== 0.4.4),</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     dplyr (== 1.1.4),</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     e1071 (== 1.7-14),</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     evaluate (== 0.24.0),</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     fansi (== 1.0.6),</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     fastmap (== 1.2.0),</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     fontawesome (== 0.5.2),</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     fs (== 1.6.4),</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     furrr (== 0.3.1),</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     future (== 1.33.2),</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     gargle (== 1.5.2),</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     generics (== 0.1.3),</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     gert (== 2.0.1),</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     gh (== 1.4.1),</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     gitcreds (== 0.1.2),</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     globals (== 0.16.3),</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     glue (== 1.7.0),</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     googledrive (== 2.1.1),</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     highr (== 0.11),</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     htmltools (== 0.5.8.1),</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     httr (== 1.4.7),</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     httr2 (== 1.0.1),</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     ini (== 0.3.1),</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     jquerylib (== 0.1.4),</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     jsonlite (== 1.8.8),</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     knitr (== 1.47),</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     lazyeval (== 0.2.2),</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     lifecycle (== 1.0.4),</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     listenv (== 0.9.1),</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     magrittr (== 2.0.3),</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     memoise (== 2.0.1),</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     mime (== 0.12),</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     openssl (== 2.2.0),</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     pak (== 0.7.2),</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     parallelly (== 1.37.1),</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     pillar (== 1.9.0),</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     pkgbuild (== 1.4.4),</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     pkgconfig (== 2.0.3),</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     pkgdown (== 2.0.9),</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     pkgload (== 1.4.0),</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     png (== 0.1-8),</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     praise (== 1.0.0),</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     processx (== 3.8.4),</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     proxy (== 0.4-27),</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     ps (== 1.7.6),</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     purrr (== 1.0.2),</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     ragg (== 1.3.2),</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     rappdirs (== 0.3.3),</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     rematch2 (== 2.1.2),</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     remotes (== 2.5.0),</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     renv (== 1.0.7),</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     rex (== 1.2.1),</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     rlang (== 1.1.4),</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     rmarkdown (== 2.27),</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     rprojroot (== 2.0.4),</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     rstudioapi (== 0.16.0),</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     s2 (== 1.1.6),</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     sass (== 0.4.9),</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     sessioninfo (== 1.2.2),</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     sf (== 1.0-16),</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     sys (== 3.4.2),</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     systemfonts (== 1.1.0),</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     testthat (== 3.2.1.1),</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     textshaping (== 0.4.0),</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     tibble (== 3.2.1),</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     tidyselect (== 1.2.1),</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     tinytex (== 0.51),</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     units (== 0.8-5),</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     usethis (== 2.2.3),</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     utf8 (== 1.2.4),</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     uuid (== 1.2-0),</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     vctrs (== 0.6.5),</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     waldo (== 0.5.2),</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     whisker (== 0.4.1),</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     withr (== 3.0.0),</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     wk (== 0.9.1),</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     workflowtools (== 0.0.5),</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     xfun (== 0.45),</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     xml2 (== 1.3.6),</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     yaml (== 2.3.8),</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     zip (== 2.3.1)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BB0000;">    DBI (== 1.2.3),</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BB0000;">    R (== 4.4),</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BB0000;">    R6 (== 2.5.1),</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BB0000;">    Rcpp (== 1.0.13-1),</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BB0000;">    Require (== 1.0.1),</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BB0000;">    askpass (== 1.2.1),</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BB0000;">    base64enc (== 0.1-3),</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BB0000;">    brio (== 1.1.5),</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BB0000;">    bslib (== 0.8.0),</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BB0000;">    cachem (== 1.1.0),</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BB0000;">    callr (== 3.7.6),</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BB0000;">    classInt (== 0.4-10),</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BB0000;">    cli (== 3.6.3),</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BB0000;">    clipr (== 0.8.0),</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BB0000;">    covr (== 3.6.4),</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BB0000;">    cpp11 (== 0.5.0),</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BB0000;">    crayon (== 1.5.3),</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BB0000;">    credentials (== 2.0.2),</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BB0000;">    curl (== 6.0.1),</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BB0000;">    data.table (== 1.16.2),</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BB0000;">    desc (== 1.4.3),</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BB0000;">    details (== 0.3.0),</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BB0000;">    diffobj (== 0.3.5),</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BB0000;">    digest (== 0.6.37),</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BB0000;">    downlit (== 0.4.4),</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BB0000;">    dplyr (== 1.1.4),</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BB0000;">    e1071 (== 1.7-16),</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BB0000;">    evaluate (== 1.0.1),</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BB0000;">    fansi (== 1.0.6),</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BB0000;">    fastmap (== 1.2.0),</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BB0000;">    fontawesome (== 0.5.3),</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BB0000;">    fs (== 1.6.5),</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BB0000;">    furrr (== 0.3.1),</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BB0000;">    future (== 1.34.0),</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BB0000;">    gargle (== 1.5.2),</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BB0000;">    generics (== 0.1.3),</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BB0000;">    gert (== 2.1.4),</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BB0000;">    gh (== 1.4.1),</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BB0000;">    gitcreds (== 0.1.2),</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BB0000;">    globals (== 0.16.3),</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BB0000;">    glue (== 1.8.0),</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BB0000;">    googledrive (== 2.1.1),</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BB0000;">    highr (== 0.11),</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BB0000;">    htmltools (== 0.5.8.1),</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BB0000;">    httr (== 1.4.7),</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BB0000;">    httr2 (== 1.0.6),</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BB0000;">    ini (== 0.3.1),</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BB0000;">    jquerylib (== 0.1.4),</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BB0000;">    jsonlite (== 1.8.9),</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BB0000;">    knitr (== 1.49),</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BB0000;">    lazyeval (== 0.2.2),</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BB0000;">    lifecycle (== 1.0.4),</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BB0000;">    listenv (== 0.9.1),</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BB0000;">    magrittr (== 2.0.3),</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BB0000;">    memoise (== 2.0.1),</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BB0000;">    mime (== 0.12),</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BB0000;">    openssl (== 2.2.2),</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BB0000;">    pak (== 0.8.0),</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BB0000;">    parallelly (== 1.39.0),</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BB0000;">    pillar (== 1.9.0),</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BB0000;">    pkgbuild (== 1.4.5),</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BB0000;">    pkgconfig (== 2.0.3),</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BB0000;">    pkgdown (== 2.1.1),</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BB0000;">    pkgload (== 1.4.0),</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BB0000;">    png (== 0.1-8),</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BB0000;">    praise (== 1.0.0),</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BB0000;">    processx (== 3.8.4),</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BB0000;">    proxy (== 0.4-27),</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BB0000;">    ps (== 1.8.1),</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BB0000;">    purrr (== 1.0.2),</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BB0000;">    ragg (== 1.3.3),</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BB0000;">    rappdirs (== 0.3.3),</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BB0000;">    remotes (== 2.5.0),</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BB0000;">    renv (== 1.0.11),</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BB0000;">    rex (== 1.2.1),</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BB0000;">    rlang (== 1.1.4),</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BB0000;">    rmarkdown (== 2.29),</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BB0000;">    rprojroot (== 2.0.4),</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BB0000;">    rstudioapi (== 0.17.1),</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BB0000;">    s2 (== 1.1.7),</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BB0000;">    sass (== 0.4.9),</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BB0000;">    sessioninfo (== 1.2.2),</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BB0000;">    sf (== 1.0-19),</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BB0000;">    sys (== 3.4.3),</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BB0000;">    systemfonts (== 1.1.0),</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BB0000;">    testthat (== 3.2.1.1),</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BB0000;">    textshaping (== 0.4.0),</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BB0000;">    tibble (== 3.2.1),</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BB0000;">    tidyselect (== 1.2.1),</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BB0000;">    tinytex (== 0.54),</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BB0000;">    units (== 0.8-5),</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BB0000;">    usethis (== 3.0.0),</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BB0000;">    utf8 (== 1.2.4),</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BB0000;">    uuid (== 1.2-1),</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BB0000;">    vctrs (== 0.6.5),</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BB0000;">    waldo (== 0.6.1),</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BB0000;">    whisker (== 0.4.1),</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BB0000;">    withr (== 3.0.2),</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BB0000;">    wk (== 0.9.4),</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BB0000;">    workflowtools (== 0.0.6),</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BB0000;">    xfun (== 0.49),</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BB0000;">    xml2 (== 1.3.6),</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BB0000;">    yaml (== 2.3.10),</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BB0000;">    zip (== 2.3.1)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #0000BB;">Remotes</span>:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     /@</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #0000BB;">Encoding</span>: UTF-8</span>
@@ -262,15 +263,15 @@ and printing the resulting <code class="file">DESCRIPTION</code> file to screen.
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.9.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.</p>
 </div>
 
       </footer></div>
 
-  
 
 
-  
+
+
 
   </body></html>
 

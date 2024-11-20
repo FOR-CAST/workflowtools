@@ -1,66 +1,25 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>/404.html</loc>
-  </url>
-  <url>
-    <loc>/articles/ii-managing-large-SpaDES-projects.html</loc>
-  </url>
-  <url>
-    <loc>/articles/index.html</loc>
-  </url>
-  <url>
-    <loc>/authors.html</loc>
-  </url>
-  <url>
-    <loc>/index.html</loc>
-  </url>
-  <url>
-    <loc>/news/index.html</loc>
-  </url>
-  <url>
-    <loc>/reference/check_project_packages.html</loc>
-  </url>
-  <url>
-    <loc>/reference/description.html</loc>
-  </url>
-  <url>
-    <loc>/reference/drive_download_folder.html</loc>
-  </url>
-  <url>
-    <loc>/reference/drive_upload_folder.html</loc>
-  </url>
-  <url>
-    <loc>/reference/findProject.html</loc>
-  </url>
-  <url>
-    <loc>/reference/find_modules.html</loc>
-  </url>
-  <url>
-    <loc>/reference/get_module_packages.html</loc>
-  </url>
-  <url>
-    <loc>/reference/index.html</loc>
-  </url>
-  <url>
-    <loc>/reference/packages_from_snapshot.html</loc>
-  </url>
-  <url>
-    <loc>/reference/projectSessionInfo.html</loc>
-  </url>
-  <url>
-    <loc>/reference/reproducibilityReceipt.html</loc>
-  </url>
-  <url>
-    <loc>/reference/setup.html</loc>
-  </url>
-  <url>
-    <loc>/reference/use_module.html</loc>
-  </url>
-  <url>
-    <loc>/reference/whoami.html</loc>
-  </url>
-  <url>
-    <loc>/reference/workflowtools-package.html</loc>
-  </url>
+<urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
+<url><loc>/404.html</loc></url>
+<url><loc>/articles/ii-managing-large-SpaDES-projects.html</loc></url>
+<url><loc>/articles/index.html</loc></url>
+<url><loc>/authors.html</loc></url>
+<url><loc>/index.html</loc></url>
+<url><loc>/news/index.html</loc></url>
+<url><loc>/reference/check_project_packages.html</loc></url>
+<url><loc>/reference/description.html</loc></url>
+<url><loc>/reference/drive_download_folder.html</loc></url>
+<url><loc>/reference/drive_upload_folder.html</loc></url>
+<url><loc>/reference/findProject.html</loc></url>
+<url><loc>/reference/find_modules.html</loc></url>
+<url><loc>/reference/get_module_packages.html</loc></url>
+<url><loc>/reference/github_repo.html</loc></url>
+<url><loc>/reference/index.html</loc></url>
+<url><loc>/reference/packages_from_snapshot.html</loc></url>
+<url><loc>/reference/projectSessionInfo.html</loc></url>
+<url><loc>/reference/reproducibilityReceipt.html</loc></url>
+<url><loc>/reference/setup.html</loc></url>
+<url><loc>/reference/use_module.html</loc></url>
+<url><loc>/reference/whoami.html</loc></url>
+<url><loc>/reference/workflowtools-package.html</loc></url>
 </urlset>
+
