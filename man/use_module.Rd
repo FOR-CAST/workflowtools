@@ -4,16 +4,20 @@
 \alias{use_module}
 \title{Use a SpaDES module with a project}
 \usage{
-use_module(path = NULL, repo = NULL)
+use_module(repo = NULL, path = NULL)
 }
 \arguments{
-\item{path}{character specifying the module path (e.g. \code{"modules"})}
-
 \item{repo}{character. GitHub repository specification of the form \verb{<user|org>/<repo>@<branch>}.}
+
+\item{path}{character specifying the module path (e.g. \code{"modules"}).}
 }
 \value{
 \code{NULL} invisibly. invoked for side-effect of adding a git submodule
 }
 \description{
 Adds
+}
+\examples{
+use_module("PredictiveEcology/Biomass_core@development", "modules")
+use_module("FOR-CAST/SBW_dispersal")
 }

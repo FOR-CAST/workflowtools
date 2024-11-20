@@ -59,3 +59,27 @@ modList <- function(..., keep.null = TRUE) {
   dots <- dots[!unlist(lapply(dots, is.null))]
   do.call(Reduce, alist(utils::modifyList, dots))
 }
+
+#' Extract components of a GitHub repository string
+#'
+#' @param x
+#'
+#' @return character string corresponding to the extracted component.
+#'
+#' @keywords internal
+#' @rdname github_repo
+.github_repo <- function(x) {
+  ifelse(grepl("(/|@)", x[1]), remotes::parse_github_repo_spec(x[1])[["repo"]], x[[1]][1]) |>
+    trimws()
+}
+
+#' @rdname github_repo
+.github_user <- function(x) {
+  ifelse(grepl("(/|@)", x[1]), remotes::parse_github_repo_spec(x[1])[["username"]], NA_character_) |>
+    trimws()
+}
+
+#' @rdname github_repo
+.github_ref <- function(x) {
+  ifelse(grepl("(/|@)", x[1]), remotes::parse_github_repo_spec(x[1])[["ref"]], NA_character_)
+}

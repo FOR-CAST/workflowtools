@@ -97,15 +97,13 @@ get_module_packages <- function(module = NULL, path, verbose = FALSE) {
 
     if (!is.null(pkgs)) {
       pkg_name <- lapply(strsplit(pkgs, "\\("), function(x) {
-        ifelse(grepl("(/|@)", x[1]), remotes::parse_github_repo_spec(x[1])[["repo"]], x[[1]][1]) |>
-          trimws()
+        .github_repo(x)
       }) |> unlist()
       pkg_repo <- lapply(strsplit(pkgs, "\\("), function(x) {
-        ifelse(grepl("(/|@)", x[1]), remotes::parse_github_repo_spec(x[1])[["username"]], NA_character_) |>
-          trimws()
+        .github_user(x)
       }) |> unlist()
       pkg_ref <- lapply(strsplit(pkgs, "\\("), function(x) {
-        ifelse(grepl("(/|@)", x[1]), remotes::parse_github_repo_spec(x[1])[["ref"]], NA_character_)
+        .github_ref(x)
       }) |> unlist()
       pkg_vers <- lapply(strsplit(pkgs, "\\("), function(x) {
         ifelse(length(x) > 1, x[[2]][1], "0") |>

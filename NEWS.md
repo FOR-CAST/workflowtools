@@ -1,3 +1,9 @@
+# workflowtools 0.0.6
+
+* add `glue` to imports;
+* add internal helpers for parsing GitHub user, repo, and branch/tag ref;
+* improve `use_module()` messaging and code output;
+
 # workflowtools 0.0.5
 
 * add `purrr` to Imports;

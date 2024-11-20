@@ -12,6 +12,7 @@ utils::globalVariables(c(
 #' @importFrom dplyr bind_rows filter pull
 #' @importFrom fs dir_info dir_ls path_dir path_expand path_file path_norm path_rel
 #' @importFrom furrr future_map_dfr future_map2_dfr
+#' @importFrom glue glue
 #' @importFrom googledrive drive_download drive_ls drive_mkdir drive_put
 #' @importFrom httr config set_config
 #' @importFrom purrr map2_dfr walk
