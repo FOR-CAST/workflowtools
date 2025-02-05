@@ -46,6 +46,7 @@ testthat::test_that("get_module_packages() works", {
 })
 
 testthat::test_that("packages_from_snapshot() works with old renv lockfile", {
+  testthat::skip_if_not(getRversion() >= "4.4")
   testthat::skip_if_not_installed("renv")
   testthat::skip_if_not_installed("withr")
 
@@ -87,6 +88,7 @@ testthat::test_that("packages_from_snapshot() works with old renv lockfile", {
 })
 
 testthat::test_that("packages_from_snapshot() works with new renv lockfile", {
+  testthat::skip_if_not(getRversion() >= "4.4")
   testthat::skip_if_not_installed("renv")
   testthat::skip_if_not_installed("withr")
 
