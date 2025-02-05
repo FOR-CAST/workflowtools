@@ -1,3 +1,8 @@
+# workflowtools 0.0.7
+
+* add `tibble` and `tidyr` to imports;
+* allow use of new `renv` lockfile format (#1);
+
 # workflowtools 0.0.6
 
 * add `glue` to imports;

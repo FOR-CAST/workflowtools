@@ -9,9 +9,17 @@ packages_from_snapshot <- function(snapshot = "renv.lock") {
   if (tools::file_ext(snapshot) == "lock") {
     if (requireNamespace("jsonlite", quietly = TRUE)) {
       pkgs <- jsonlite::fromJSON(txt = snapshot)[["Packages"]] |>
-        lapply(as.data.frame) |>
+        lapply(function(x) {
+          tibble::enframe(x) |>
+            tidyr::pivot_wider()
+        }) |>
         rbindlist(fill = TRUE)
-      set(pkgs, NULL, "Requirements", NULL)
+      cols2keep <- c("Package", "RemoteHost", "RemoteRef", "RemoteRepo",
+                     "RemoteSha", "RemoteType",  "RemoteUsername",
+                     "Repository", "Source", "Version")
+      cols2drop <- colnames(pkgs)[!(colnames(pkgs) %in% cols2keep)]
+      set(pkgs, NULL, cols2drop, NULL)
+      pkgs <- pkgs[, lapply(.SD, as.character)] ## convert cols from list to char
     } else {
       stop("Suggested package 'jsonlite' is not installed.")
     }

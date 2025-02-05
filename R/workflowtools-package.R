@@ -8,7 +8,7 @@ utils::globalVariables(c(
 ## usethis namespace: start
 #' @import methods
 #' @importFrom cli cli cli_code cli_h1 cli_h2 cli_li cli_text
-#' @importFrom data.table := as.data.table data.table rbindlist set setkey setnames
+#' @importFrom data.table := .SD as.data.table data.table rbindlist set setkey setnames
 #' @importFrom dplyr bind_rows filter pull
 #' @importFrom fs dir_info dir_ls path_dir path_expand path_file path_norm path_rel
 #' @importFrom furrr future_map_dfr future_map2_dfr
@@ -20,6 +20,8 @@ utils::globalVariables(c(
 #' @importFrom rprojroot find_root from_wd is_git_root is_rstudio_project
 #' @importFrom sessioninfo session_info
 #' @importFrom stats na.omit
+#' @importFrom tibble enframe
+#' @importFrom tidyr pivot_wider
 #' @importFrom tools file_ext file_path_sans_ext toTitleCase
 #' @importFrom usethis proj_activate use_news_md use_readme_md
 #' @importFrom utils capture.output globalVariables modifyList read.csv
