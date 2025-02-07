@@ -1,3 +1,7 @@
+# workflowtools 0.0.8
+
+* replace `"NULL"` with `NA` in `packages_from_snapshot()` (#2);
+
 # workflowtools 0.0.7
 
 * add `tibble` and `tidyr` to imports;
