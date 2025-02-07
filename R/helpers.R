@@ -25,6 +25,13 @@ normPath <- function(path) {
     normalizePath(winslash = "/", mustWork = FALSE)
 }
 
+null_to_na <- function(x) {
+  if (is.null(x)) {
+    return(NA)
+  } else {
+    return(x)
+  }
+}
 #' Identify user or machine
 #'
 #' @param name Optional character string giving user or machine name to match.

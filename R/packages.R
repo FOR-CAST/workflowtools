@@ -19,7 +19,7 @@ packages_from_snapshot <- function(snapshot = "renv.lock") {
                      "Repository", "Source", "Version")
       cols2drop <- colnames(pkgs)[!(colnames(pkgs) %in% cols2keep)]
       set(pkgs, NULL, cols2drop, NULL)
-      pkgs <- pkgs[, lapply(.SD, as.character)] ## convert cols from list to char
+      pkgs <- pkgs[, lapply(.SD, \(x) sapply(x, null_to_na))]
     } else {
       stop("Suggested package 'jsonlite' is not installed.")
     }
