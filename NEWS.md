@@ -1,3 +1,7 @@
+# workflowtools 0.0.9
+
+* fix shell quoting for Windows in `gitInfo()` (#4);
+
 # workflowtools 0.0.8
 
 * replace `"NULL"` with `NA` in `packages_from_snapshot()` (#2);

@@ -107,7 +107,7 @@ gitInfo <- function(prjDir = NULL) {
   remote <- strsplit(unique(gsub(" (.*)$", "", remote)), "\t")[[1]]
   remote <- paste0(local, " @ ", remote[1], " (", remote[2], ")")
 
-  head <- system(paste(Sys.which("git"), "log -1 --format='[%h] %as: %s'"), intern = TRUE)
+  head <- system2(Sys.which("git"), "log -1 --format=\"[%h] %as: %s\"", wait = TRUE)
 
   list(Local = local,
        Remote = remote,
