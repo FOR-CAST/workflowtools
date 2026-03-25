@@ -1,3 +1,8 @@
+# workflowtools (development version)
+
+* add `download_once()` and `drive_download_once()`;
+* add `archive_extract_once()`;
+
 # workflowtools 0.0.8
 
 * replace `"NULL"` with `NA` in `packages_from_snapshot()` (#2);
@@ -30,7 +35,8 @@
 
 # workflowtools 0.0.3
 
-* added `packages_from_snapshot()`, `get_module_packages()`, and `check_project_packages()` to compare module and project packages;
+* add `packages_from_snapshot()`, `get_module_packages()`, and `check_project_packages()`
+  to compare module and project packages;
 * allow user to pass existing pkg snapshot to `description()`;
 * improved documentation;
 
@@ -43,4 +49,5 @@
 # workflowtools 0.0.1
 
 * initial version;
-* moved various project utils from `SpaDES.project` since that package is no longer intended to be used to work with existing (large/complex) projects;
+* moved various project utils from `SpaDES.project` since that package is no longer
+  intended to be used to work with existing (large/complex) projects;

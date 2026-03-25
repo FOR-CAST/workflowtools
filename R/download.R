@@ -1,6 +1,34 @@
-utils::globalVariables(c(
-  "id"
-))
+#' Download a file, skipping if file already exists locally
+#'
+#' @param url character, specifying a URL to a file
+#'
+#' @param destfile character, specifying a local destination file path
+#'
+#' @param ... additional parameters passed to `download.file`
+#'
+#' @importFrom utils download.file
+#' @export
+#' @seealso [drive_download_once()]
+download_once <- function(url, destfile, ...) {
+  if (!file.exists(destfile)) {
+    utils::download.file(url = url, destfile = destfile, ...)
+  }
+}
+
+#' Download a file from Google Drive, skipping if file already exists locally
+#'
+#' @inheritParams googledrive::drive_download
+#'
+#' @param ... additional parameters passed to [utils::download.file]
+#'
+#' @importFrom googledrive drive_download
+#' @export
+#' @seealso [download_once()]
+drive_download_once <- function(file, path, ...) {
+  if (!file.exists(path)) {
+    googledrive::drive_download(file = file, path = path, ...)
+  }
+}
 
 #' Download multiple files/folders from Google Drive
 #'
@@ -55,7 +83,12 @@ drive_download_folder <- function(drive_folder, path, batch_size = 10, overwrite
     purrr::map2_dfr(
       .x = drive_dirs$id,
       .y = drive_dirs$name,
-      .f = ~ drive_download_folder(.x, file.path(path, .y), batch_size = batch_size, overwrite = overwrite)
+      .f = ~ drive_download_folder(
+        .x,
+        file.path(path, .y),
+        batch_size = batch_size,
+        overwrite = overwrite
+      )
     ) |>
       dplyr::bind_rows(downloaded_files) |>
       invisible() ## return a dribble of what's been uploaded
