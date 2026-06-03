@@ -1,3 +1,22 @@
+# workflowtools 0.0.11
+
+## Microsoft Teams / SharePoint helpers
+
+* New `teams_*()` family for syncing project files with a Microsoft Teams
+  channel's file area (the SharePoint document library), mirroring the existing
+  Google Drive helpers:
+  - `teams_connect()` authenticates and resolves a team/channel/root folder.
+  - `teams_download_folder()` recursively mirrors a remote folder locally
+    (walks the tree itself, since the built-in recursive download silently
+    skips nested subfolders), with an `exclude` list.
+  - `teams_upload_files()` uploads local files into a destination folder.
+  - `teams_ensure_folder()` creates a (possibly nested) folder path.
+  - `Microsoft365R` added to `Suggests` (guarded with `requireNamespace()`).
+* New `with_retry()` retries a flaky network call with a short backoff and
+  applies HTTP/1.1 hardening. The curl "HTTP2 framing layer" workaround
+  previously inlined in `drive_download_folder()` / `drive_upload_folder()` is
+  now centralised in the internal `.use_http11()` helper used by all three.
+
 # workflowtools 0.0.10
 
 ## snake_case migration with prefix-grouped families

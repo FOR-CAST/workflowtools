@@ -25,10 +25,9 @@ drive_download_folder <- function(drive_folder, path, batch_size = 10, overwrite
     dir.create(path, recursive = TRUE)
   }
 
-  ## avoid curl HTTP2 framing layer error:
+  ## avoid curl HTTP2 framing layer error (see .use_http11):
   ## per https://github.com/tidyverse/googlesheets4/issues/233#issuecomment-889376499
-  old <- httr::set_config(httr::config(http_version = 2)) ## corresponds to CURL_HTTP_VERSION_1_1
-  on.exit(httr::set_config(old), add = TRUE)
+  .use_http11()
 
   drive_dirs <- googledrive::drive_ls(drive_folder, recursive = FALSE, type = "folder")
   drive_files <- googledrive::drive_ls(drive_folder, recursive = FALSE) |>
