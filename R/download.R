@@ -30,8 +30,8 @@ drive_download_folder <- function(drive_folder, path, batch_size = 10, overwrite
   old <- httr::set_config(httr::config(http_version = 2)) ## corresponds to CURL_HTTP_VERSION_1_1
   on.exit(httr::set_config(old), add = TRUE)
 
-  drive_dirs <- drive_ls(drive_folder, recursive = FALSE, type = "folder")
-  drive_files <- drive_ls(drive_folder, recursive = FALSE) |>
+  drive_dirs <- googledrive::drive_ls(drive_folder, recursive = FALSE, type = "folder")
+  drive_files <- googledrive::drive_ls(drive_folder, recursive = FALSE) |>
     dplyr::filter(!id %in% drive_dirs[["id"]])
 
   ## download the files in the current directory
@@ -44,7 +44,7 @@ drive_download_folder <- function(drive_folder, path, batch_size = 10, overwrite
         purrr::map2_dfr(
           .x = x$id,
           .y = x$name,
-          .f = ~ drive_download(.x, file.path(path, .y), overwrite = overwrite)
+          .f = ~ googledrive::drive_download(.x, file.path(path, .y), overwrite = overwrite)
         )
       }) |>
       dplyr::bind_rows()
@@ -55,7 +55,12 @@ drive_download_folder <- function(drive_folder, path, batch_size = 10, overwrite
     purrr::map2_dfr(
       .x = drive_dirs$id,
       .y = drive_dirs$name,
-      .f = ~ drive_download_folder(.x, file.path(path, .y), batch_size = batch_size, overwrite = overwrite)
+      .f = ~ drive_download_folder(
+        .x,
+        file.path(path, .y),
+        batch_size = batch_size,
+        overwrite = overwrite
+      )
     ) |>
       dplyr::bind_rows(downloaded_files) |>
       invisible() ## return a dribble of what's been uploaded

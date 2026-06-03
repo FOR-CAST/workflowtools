@@ -5,25 +5,12 @@ utils::globalVariables(c(
 #' @keywords internal
 "_PACKAGE"
 
+## All function calls in R/ are namespaced via pkg::fun().
+## Only the operators / NSE symbols / sentinel values that cannot be called
+## with `::` are imported here.
+
 ## usethis namespace: start
-#' @import methods
-#' @importFrom cli cli cli_code cli_h1 cli_h2 cli_li cli_text
-#' @importFrom data.table := .SD as.data.table data.table rbindlist set setkey setnames
-#' @importFrom dplyr bind_rows filter pull
-#' @importFrom fs dir_info dir_ls path_dir path_expand path_file path_norm path_rel
-#' @importFrom furrr future_map_dfr future_map2_dfr
-#' @importFrom glue glue
-#' @importFrom googledrive drive_download drive_ls drive_mkdir drive_put
-#' @importFrom httr config set_config
-#' @importFrom purrr map2_dfr walk
-#' @importFrom remotes parse_github_repo_spec
-#' @importFrom rprojroot find_root from_wd is_git_root is_rstudio_project
-#' @importFrom sessioninfo session_info
-#' @importFrom stats na.omit
-#' @importFrom tibble enframe
-#' @importFrom tidyr pivot_wider
-#' @importFrom tools file_ext file_path_sans_ext toTitleCase
-#' @importFrom usethis proj_activate use_news_md use_readme_md
-#' @importFrom utils capture.output globalVariables modifyList read.csv
+#' @importFrom data.table := .SD
+#' @importFrom lifecycle deprecated
 ## usethis namespace: end
 NULL

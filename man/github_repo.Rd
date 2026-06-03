@@ -12,9 +12,6 @@
 
 .github_ref(x)
 }
-\arguments{
-\item{x}{}
-}
 \value{
 character string corresponding to the extracted component.
 }

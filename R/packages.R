@@ -10,15 +10,23 @@ packages_from_snapshot <- function(snapshot = "renv.lock") {
     if (requireNamespace("jsonlite", quietly = TRUE)) {
       pkgs <- jsonlite::fromJSON(txt = snapshot)[["Packages"]] |>
         lapply(function(x) {
-          tibble::enframe(x) |>
-            tidyr::pivot_wider()
+          tibble::enframe(x) |> tidyr::pivot_wider()
         }) |>
-        rbindlist(fill = TRUE)
-      cols2keep <- c("Package", "RemoteHost", "RemoteRef", "RemoteRepo",
-                     "RemoteSha", "RemoteType",  "RemoteUsername",
-                     "Repository", "Source", "Version")
+        data.table::rbindlist(fill = TRUE)
+      cols2keep <- c(
+        "Package",
+        "RemoteHost",
+        "RemoteRef",
+        "RemoteRepo",
+        "RemoteSha",
+        "RemoteType",
+        "RemoteUsername",
+        "Repository",
+        "Source",
+        "Version"
+      )
       cols2drop <- colnames(pkgs)[!(colnames(pkgs) %in% cols2keep)]
-      set(pkgs, NULL, cols2drop, NULL)
+      data.table::set(pkgs, NULL, cols2drop, NULL)
       pkgs <- pkgs[, lapply(.SD, \(x) sapply(x, null_to_na))]
     } else {
       stop("Suggested package 'jsonlite' is not installed.")
@@ -28,7 +36,7 @@ packages_from_snapshot <- function(snapshot = "renv.lock") {
     colnames(pkgs) <- colnames(pkgs) |>
       gsub("Github", "Remote", x = _) |>
       gsub("SHA1", "Sha", x = _)
-    pkgs <- as.data.table(pkgs)
+    pkgs <- data.table::as.data.table(pkgs)
   }
 
   pkgs <- pkgs[!duplicated(pkgs)]
@@ -75,8 +83,13 @@ get_module_packages <- function(module = NULL, path, verbose = FALSE) {
   } else {
     module_valid <- valid_modules[names(valid_modules) %in% module] ## with path
     module_invalid <- module[!module %in% names(valid_modules)] ## w/o path - used for messaging
-    message_invalid <- paste0("The following modules are not found in ", path, ":\n",
-                              "    ", paste(module_invalid, collapse = "\n    "))
+    message_invalid <- paste0(
+      "The following modules are not found in ",
+      path,
+      ":\n",
+      "    ",
+      paste(module_invalid, collapse = "\n    ")
+    )
 
     if (length(module_valid) == 0) {
       stop(message_invalid)
@@ -106,13 +119,16 @@ get_module_packages <- function(module = NULL, path, verbose = FALSE) {
     if (!is.null(pkgs)) {
       pkg_name <- lapply(strsplit(pkgs, "\\("), function(x) {
         .github_repo(x)
-      }) |> unlist()
+      }) |>
+        unlist()
       pkg_repo <- lapply(strsplit(pkgs, "\\("), function(x) {
         .github_user(x)
-      }) |> unlist()
+      }) |>
+        unlist()
       pkg_ref <- lapply(strsplit(pkgs, "\\("), function(x) {
         .github_ref(x)
-      }) |> unlist()
+      }) |>
+        unlist()
       pkg_vers <- lapply(strsplit(pkgs, "\\("), function(x) {
         ifelse(length(x) > 1, x[[2]][1], "0") |>
           gsub("(==|>=|>)", "", x = _) |>
@@ -121,7 +137,7 @@ get_module_packages <- function(module = NULL, path, verbose = FALSE) {
       }) |>
         unlist()
 
-      data.table(
+      data.table::data.table(
         # Module = m, ## include when debugging
         Package = pkg_name,
         Repo = pkg_repo,
@@ -129,7 +145,7 @@ get_module_packages <- function(module = NULL, path, verbose = FALSE) {
         Version = pkg_vers
       )
     } else {
-      data.table(
+      data.table::data.table(
         # Module = character(0), ## include when debugging
         Package = character(0),
         Repo = character(0),
@@ -138,12 +154,15 @@ get_module_packages <- function(module = NULL, path, verbose = FALSE) {
       )
     }
   }) |>
-    rbindlist() |>
+    data.table::rbindlist() |>
     unique() |>
-    setkey("Package")
+    data.table::setkey("Package")
 
-  pkgdt[, Version := as.character(base::max(as.numeric_version(Version), na.rm = TRUE)), by = "Package"]
-  pkgdt[, Repo := unique(na.omit(Repo)), by = "Package"] ## assume want GitHub version
+  pkgdt[,
+    Version := as.character(base::max(as.numeric_version(Version), na.rm = TRUE)),
+    by = "Package"
+  ]
+  pkgdt[, Repo := unique(stats::na.omit(Repo)), by = "Package"] ## assume want GitHub version
   pkgdt <- unique(pkgdt)
 
   return(pkgdt)
@@ -161,7 +180,7 @@ get_module_packages <- function(module = NULL, path, verbose = FALSE) {
 #' @export
 check_project_packages <- function(path = NULL, snapshot = NULL) {
   if (is.null(path)) {
-    path <- findProjectPath()
+    path <- project_path()
   }
 
   if (is.null(snapshot)) {
@@ -177,14 +196,15 @@ check_project_packages <- function(path = NULL, snapshot = NULL) {
   prj_pkgs <- prj_pkgs[, .(Package, Version)]
 
   pkgs <- mod_pkgs[prj_pkgs, nomatch = NULL] |>
-    setnames("i.Version", "Version_Prj") |>
-    setnames("Version", "Version_Mod")
+    data.table::setnames("i.Version", "Version_Prj") |>
+    data.table::setnames("Version", "Version_Mod")
   pkgs <- pkgs[as.numeric_version(Version_Mod) > as.numeric_version(Version_Prj), ]
 
   if (NROW(pkgs) > 0) {
     stop(
       "Module package dependencies greater than those in project:\n",
-      paste0(capture.output(pkgs), "\n"), "\n",
+      paste0(utils::capture.output(pkgs), "\n"),
+      "\n",
       "Try updating selected packages using:\n",
       paste0("renv::update(c(", paste0("'", pkgs$Package, "'", collapse = ", "), "))")
     )

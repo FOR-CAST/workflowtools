@@ -1,3 +1,23 @@
+# workflowtools 0.0.10
+
+## snake_case migration with prefix-grouped families
+
+* All exported functions are renamed to snake_case. Two new families group
+  related functions for discoverability:
+  - **`project_*()`** for project-root accessors: `project_path()` (was
+    `findProjectPath()`) and `project_name()` (was `findProjectName()`).
+  - **`info_*()`** for introspection: `info_git()` (was `gitInfo()`),
+    `info_submodules()` (was `submoduleInfo()`), `info_session()` (was
+    `sessInfo()`), `info_spatial_libs()` (was `spatialLibs()`), and the
+    aggregator `info_project()` (was `projectSessionInfo()`).
+  - `reproducibility_receipt()` (was `reproducibilityReceipt()`) stays as a
+    standalone wrapper that uses the `info_*()` family.
+* The old camelCase names remain available as deprecation shims that emit a
+  one-time-per-session warning via `lifecycle::deprecate_warn()` and delegate
+  to the new names. Update callers at your own pace.
+* `lifecycle` added to `Imports`. Internal helpers `modList` and `normPath`
+  hard-renamed to `mod_list` and `norm_path` (not exported, no shim).
+
 # workflowtools 0.0.9
 
 * fix shell quoting for Windows in `gitInfo()` (#4);

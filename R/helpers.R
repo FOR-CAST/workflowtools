@@ -1,24 +1,27 @@
-#' Find the project root directory
+#' Project root directory
 #'
-#' Searches from current working directory for and Rstudio project file
+#' Searches from current working directory for an RStudio project file
 #' or git repository, falling back on using the current working directory.
 #'
-#' @return `findProjectPath` returns an absolute path;
-#'         `findProjectName` returns the basename of the path.
+#' @return `project_path()` returns an absolute path;
+#'         `project_name()` returns the basename of the path.
 #'
 #' @export
-#' @rdname findProject
-findProjectPath <- function() {
-  find_root(is_rstudio_project | is_git_root | from_wd, path = getwd())
+#' @rdname project_path
+project_path <- function() {
+  rprojroot::find_root(
+    rprojroot::is_rstudio_project | rprojroot::is_git_root | rprojroot::from_wd,
+    path = getwd()
+  )
 }
 
 #' @export
-#' @rdname findProject
-findProjectName <- function() {
-  basename(findProjectPath())
+#' @rdname project_path
+project_name <- function() {
+  basename(project_path())
 }
 
-normPath <- function(path) {
+norm_path <- function(path) {
   unlist(path) |>
     fs::path_norm() |>
     fs::path_expand() |>
@@ -61,7 +64,7 @@ machine <- function(name = NULL) {
 }
 
 ## copied from Require::modifyList3
-modList <- function(..., keep.null = TRUE) {
+mod_list <- function(..., keep.null = TRUE) {
   dots <- list(...)
   dots <- dots[!unlist(lapply(dots, is.null))]
   do.call(Reduce, alist(utils::modifyList, dots))
@@ -82,7 +85,11 @@ modList <- function(..., keep.null = TRUE) {
 
 #' @rdname github_repo
 .github_user <- function(x) {
-  ifelse(grepl("(/|@)", x[1]), remotes::parse_github_repo_spec(x[1])[["username"]], NA_character_) |>
+  ifelse(
+    grepl("(/|@)", x[1]),
+    remotes::parse_github_repo_spec(x[1])[["username"]],
+    NA_character_
+  ) |>
     trimws()
 }
 

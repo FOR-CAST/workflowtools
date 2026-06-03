@@ -30,9 +30,7 @@ drive_upload_folder <- function(folder, drive_path, batch_size = 10) {
 
   ## Only call fs::dir_info once in order to avoid weirdness if the contents of the folder is changing
   contents <- fs::dir_info(folder, type = c("file", "dir"))
-  dirs_to_upload <- contents |>
-    dplyr::filter(type == "directory") |>
-    dplyr::pull(path)
+  dirs_to_upload <- contents |> dplyr::filter(type == "directory") |> dplyr::pull(path)
 
   folderIDs <- googledrive::drive_ls(drive_path)
   fid <- folderIDs[folderIDs[["name"]] == basename(folder), "id"][[1]]
@@ -41,9 +39,7 @@ drive_upload_folder <- function(folder, drive_path, batch_size = 10) {
   }
 
   # Directly upload the files
-  files_to_upload <- contents |>
-    dplyr::filter(type == "file") |>
-    dplyr::pull(path)
+  files_to_upload <- contents |> dplyr::filter(type == "file") |> dplyr::pull(path)
   g <- seq(files_to_upload) %/% batch_size
   uploaded_files <- files_to_upload |>
     split(g) |>
