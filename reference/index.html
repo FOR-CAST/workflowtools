@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">workflowtools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.8.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.13</span>
       </span>
     </div>
 
@@ -32,7 +32,7 @@
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu"><li>
-      <a href="../articles/ii-managing-large-SpaDES-projects.html">Managing large SpaDES projects</a>
+      <a href="../articles/input-data-manifest.html">Tracking input data with a manifest</a>
     </li>
   </ul></li>
 <li>
@@ -65,9 +65,21 @@
         </td>
         <td><p>Extract an archive, skipping if previously extracted</p></td>
       </tr><tr><td>
+          <p><code><a href="as_bibentry.html">as_bibentry()</a></code> </p>
+        </td>
+        <td><p>Convert a manifest record to a <code><a href="https://rdrr.io/r/utils/bibentry.html" class="external-link">utils::bibentry</a></code></p></td>
+      </tr><tr><td>
+          <p><code><a href="bibtex_keys_in_file.html">bibtex_keys_in_file()</a></code> </p>
+        </td>
+        <td><p>Extract BibTeX keys from a .bib file</p></td>
+      </tr><tr><td>
           <p><code><a href="check_project_packages.html">check_project_packages()</a></code> </p>
         </td>
         <td><p>Check a project's packages against module dependencies</p></td>
+      </tr><tr><td>
+          <p><code><a href="citation_text.html">citation_text()</a></code> </p>
+        </td>
+        <td><p>Format a manifest record's citation as prose</p></td>
       </tr><tr><td>
           <p><code><a href="description.html">description()</a></code> </p>
         </td>
@@ -89,33 +101,81 @@
         </td>
         <td><p>Upload a folder to Google Drive</p></td>
       </tr><tr><td>
-          <p><code><a href="findProject.html">findProjectPath()</a></code> <code><a href="findProject.html">findProjectName()</a></code> </p>
+          <p><code><a href="extract_metadata.html">extract_metadata()</a></code> </p>
         </td>
-        <td><p>Find the project root directory</p></td>
+        <td><p>Extract a manifest record from a source-specific object</p></td>
       </tr><tr><td>
           <p><code><a href="find_modules.html">find_modules()</a></code> </p>
         </td>
         <td><p>Find modules</p></td>
       </tr><tr><td>
+          <p><code><a href="format_bibtex_entry.html">format_bibtex_entry()</a></code> </p>
+        </td>
+        <td><p>Convert a manifest record's citation to a <code>bibentry</code></p></td>
+      </tr><tr><td>
           <p><code><a href="get_module_packages.html">get_module_packages()</a></code> </p>
         </td>
         <td><p>Get module package dependencies</p></td>
+      </tr><tr><td>
+          <p><code><a href="info_project.html">info_project()</a></code> <code><a href="info_project.html">info_git()</a></code> <code><a href="info_project.html">info_submodules()</a></code> <code><a href="info_project.html">info_session()</a></code> <code><a href="info_project.html">info_spatial_libs()</a></code> <code><a href="info_project.html">timestamp()</a></code> </p>
+        </td>
+        <td><p>Project, session, and environment introspection</p></td>
+      </tr><tr><td>
+          <p><code><a href="input_manifest_record.html">input_manifest_record()</a></code> </p>
+        </td>
+        <td><p>Construct an input-manifest record</p></td>
+      </tr><tr><td>
+          <p><code><a href="input_manifest_schema.html">input_manifest_schema()</a></code> </p>
+        </td>
+        <td><p>Schema for input-manifest records</p></td>
+      </tr><tr><td>
+          <p><code><a href="metadata_bcdata.html">metadata_bcdata()</a></code> </p>
+        </td>
+        <td><p>Get manifest metadata for a BC Data Catalogue record</p></td>
       </tr><tr><td>
           <p><code><a href="packages_from_snapshot.html">packages_from_snapshot()</a></code> </p>
         </td>
         <td><p>Extract package info from a snapshot</p></td>
       </tr><tr><td>
-          <p><code><a href="projectSessionInfo.html">projectSessionInfo()</a></code> </p>
+          <p><code><a href="project_path.html">project_path()</a></code> <code><a href="project_path.html">project_name()</a></code> </p>
         </td>
-        <td><p>Project session info</p></td>
+        <td><p>Project root directory</p></td>
       </tr><tr><td>
-          <p><code><a href="reproducibilityReceipt.html">reproducibilityReceipt()</a></code> <code><a href="reproducibilityReceipt.html">gitInfo()</a></code> <code><a href="reproducibilityReceipt.html">submoduleInfo()</a></code> <code><a href="reproducibilityReceipt.html">sessInfo()</a></code> <code><a href="reproducibilityReceipt.html">spatialLibs()</a></code> <code><a href="reproducibilityReceipt.html">timestamp()</a></code> </p>
+          <p><code><a href="read_input_manifest.html">read_input_manifest()</a></code> </p>
+        </td>
+        <td><p>Read an input-data manifest from JSON</p></td>
+      </tr><tr><td>
+          <p><code><a href="register_input.html">register_input()</a></code> </p>
+        </td>
+        <td><p>Register an input dataset in the manifest</p></td>
+      </tr><tr><td>
+          <p><code><a href="reproducibility_receipt.html">reproducibility_receipt()</a></code> </p>
         </td>
         <td><p>Reproducibility receipt for Rmarkdown documents</p></td>
       </tr><tr><td>
           <p><code><a href="setup.html">setup_machine()</a></code> <code><a href="setup.html">setup_project()</a></code> </p>
         </td>
         <td><p>Create a new project</p></td>
+      </tr><tr><td>
+          <p><code><a href="sync_manifest_to_bibtex.html">sync_manifest_to_bibtex()</a></code> </p>
+        </td>
+        <td><p>Sync manifest citations to a sidecar BibTeX file</p></td>
+      </tr><tr><td>
+          <p><code><a href="teams_connect.html">teams_connect()</a></code> </p>
+        </td>
+        <td><p>Connect to a Microsoft Teams channel's file area</p></td>
+      </tr><tr><td>
+          <p><code><a href="teams_download_folder.html">teams_download_folder()</a></code> </p>
+        </td>
+        <td><p>Recursively mirror a Teams folder to a local directory</p></td>
+      </tr><tr><td>
+          <p><code><a href="teams_ensure_folder.html">teams_ensure_folder()</a></code> </p>
+        </td>
+        <td><p>Ensure a (possibly nested) Teams folder exists</p></td>
+      </tr><tr><td>
+          <p><code><a href="teams_upload_files.html">teams_upload_files()</a></code> </p>
+        </td>
+        <td><p>Upload local files into a Teams folder</p></td>
       </tr><tr><td>
           <p><code><a href="use_module.html">use_module()</a></code> </p>
         </td>
@@ -124,6 +184,14 @@
           <p><code><a href="whoami.html">user()</a></code> <code><a href="whoami.html">machine()</a></code> </p>
         </td>
         <td><p>Identify user or machine</p></td>
+      </tr><tr><td>
+          <p><code><a href="with_retry.html">with_retry()</a></code> </p>
+        </td>
+        <td><p>Retry a flaky network call with a hardened curl config</p></td>
+      </tr><tr><td>
+          <p><code><a href="write_input_manifest.html">write_input_manifest()</a></code> </p>
+        </td>
+        <td><p>Write an input-data manifest to JSON</p></td>
       </tr></tbody></table></div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

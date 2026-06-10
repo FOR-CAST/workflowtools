@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">workflowtools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.8.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.13</span>
       </span>
     </div>
 
@@ -50,7 +50,7 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="articles/ii-managing-large-SpaDES-projects.html">Managing large SpaDES projects</a>
+      <a href="articles/input-data-manifest.html">Tracking input data with a manifest</a>
     </li>
   </ul>
 </li>
@@ -82,33 +82,90 @@
 </h1></div>
 <!-- badges: start -->
 
-<p>The goal of <code>projectworkflow</code> is to …</p>
+<p><code>workflowtools</code> provides a small set of opinionated helpers for managing large, multi-source R projects: tracking input datasets and their provenance, recording reproducibility information for every build, syncing files with cloud storage, and bootstrapping new projects. It is intentionally narrow: each function is small, single-purpose, and composable with <a href="https://docs.ropensci.org/targets/" class="external-link">targets</a>, <a href="https://rstudio.github.io/renv/" class="external-link">renv</a>, and similar tooling.</p>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
-<p>You can install the development version of <code>workflowtools</code> from <a href="https://github.com/" class="external-link">GitHub</a> with:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># install.packages("devtools")</span></span>
-<span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"FOR-CAST/workflowtools"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="co"># Install the development version from GitHub:</span></span>
+<span><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"FOR-CAST/workflowtools@development"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="getting-started">Getting started<a class="anchor" aria-label="anchor" href="#getting-started"></a>
 </h2>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://github.com/FOR-CAST/workflowtools" class="external-link">"workflowtools"</a></span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/FOR-CAST/workflowtools" class="external-link">workflowtools</a></span><span class="op">)</span></span></code></pre></div>
 <div class="section level3">
-<h3 id="machine-setup">Machine setup<a class="anchor" aria-label="anchor" href="#machine-setup"></a>
+<h3 id="track-input-datasets-with-a-manifest">Track input datasets with a manifest<a class="anchor" aria-label="anchor" href="#track-input-datasets-with-a-manifest"></a>
 </h3>
-<p>Use the following helper function to print a set of recommended commands to execute when setting up a new computer. This typically only needs to be done once per computer/user.</p>
+<p>Record where each input dataset came from, when it was retrieved, its vintage, license, and citation. Downstream tooling (provenance appendices, auto-generated bibliographies) reads the manifest so input documentation stays in sync with what was actually fetched.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="reference/setup.html">setup_machine</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="co"># Construct a record by hand:</span></span>
+<span><span class="va">nfdb</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/input_manifest_record.html">input_manifest_record</a></span><span class="op">(</span></span>
+<span>  id          <span class="op">=</span> <span class="st">"nfdb"</span>,</span>
+<span>  name        <span class="op">=</span> <span class="st">"Canadian National Fire Database"</span>,</span>
+<span>  source      <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>type <span class="op">=</span> <span class="st">"http_download"</span>, url <span class="op">=</span> <span class="st">"https://cwfis.cfs.nrcan.gc.ca/en_CA/nfdb"</span><span class="op">)</span>,</span>
+<span>  local_path  <span class="op">=</span> <span class="st">"data/processed/nfdb.gpkg"</span>,</span>
+<span>  license     <span class="op">=</span> <span class="st">"OGL-Canada-2.0"</span>,</span>
+<span>  citation    <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>bibtex_key <span class="op">=</span> <span class="st">"CFS:NFDB"</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span><span class="fu"><a href="reference/register_input.html">register_input</a></span><span class="op">(</span><span class="va">nfdb</span><span class="op">)</span>            <span class="co"># idempotent upsert, keyed by id</span></span>
+<span></span>
+<span><span class="co"># Or extract metadata from a BC Data Catalogue record:</span></span>
+<span><span class="va">vri</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/metadata_bcdata.html">metadata_bcdata</a></span><span class="op">(</span><span class="st">"2ebb35d8-c82f-4a17-9c96-612ac3532d55"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="reference/register_input.html">register_input</a></span><span class="op">(</span><span class="va">vri</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Sync eligible manifest citations to a sidecar .bib (deduplicated against</span></span>
+<span><span class="co"># the project's curated references.bib):</span></span>
+<span><span class="fu"><a href="reference/sync_manifest_to_bibtex.html">sync_manifest_to_bibtex</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<p>See the <a href="https://for-cast.github.io/workflowtools/articles/input-data-manifest.html" class="external-link"><code>input-data-manifest</code></a> vignette for the full lifecycle, including custom S3 methods for new source types.</p>
 </div>
 <div class="section level3">
-<h3 id="project-setup">Project setup<a class="anchor" aria-label="anchor" href="#project-setup"></a>
+<h3 id="reproducibility-receipts">Reproducibility receipts<a class="anchor" aria-label="anchor" href="#reproducibility-receipts"></a>
 </h3>
+<p>Record git, R session, spatial-library, and timestamp metadata for every build so any output PDF, report, or simList carries a stable build identity.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="reference/setup.html">setup_project</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="reference/reproducibility_receipt.html">reproducibility_receipt</a></span><span class="op">(</span>writeTo <span class="op">=</span> <span class="st">"INFO.md"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Or use the individual collectors:</span></span>
+<span><span class="fu"><a href="reference/info_project.html">info_project</a></span><span class="op">(</span><span class="op">)</span>        <span class="co"># full bundle</span></span>
+<span><span class="fu"><a href="reference/info_project.html">info_git</a></span><span class="op">(</span><span class="op">)</span>            <span class="co"># repository state</span></span>
+<span><span class="fu"><a href="reference/info_project.html">info_session</a></span><span class="op">(</span><span class="op">)</span>        <span class="co"># R session info</span></span>
+<span><span class="fu"><a href="reference/info_project.html">info_spatial_libs</a></span><span class="op">(</span><span class="op">)</span>   <span class="co"># GEOS / GDAL / PROJ versions</span></span></code></pre></div>
 </div>
+<div class="section level3">
+<h3 id="project--module-helpers">Project + module helpers<a class="anchor" aria-label="anchor" href="#project--module-helpers"></a>
+</h3>
+<p>Bootstrap a new project, declare its module dependencies, and verify them against the project library:</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="reference/setup.html">setup_machine</a></span><span class="op">(</span><span class="op">)</span>                  <span class="co"># one-time host setup checklist</span></span>
+<span><span class="fu"><a href="reference/setup.html">setup_project</a></span><span class="op">(</span><span class="op">)</span>                  <span class="co"># new-project setup checklist</span></span>
+<span><span class="fu"><a href="reference/description.html">description</a></span><span class="op">(</span><span class="op">)</span>                    <span class="co"># generate a project-level DESCRIPTION</span></span>
+<span><span class="fu"><a href="reference/check_project_packages.html">check_project_packages</a></span><span class="op">(</span><span class="op">)</span>         <span class="co"># verify module deps vs renv.lock</span></span>
+<span><span class="fu"><a href="reference/get_module_packages.html">get_module_packages</a></span><span class="op">(</span>path <span class="op">=</span> <span class="st">"."</span><span class="op">)</span>  <span class="co"># parse `reqdPkgs` from SpaDES-style modules</span></span></code></pre></div>
+</div>
+<div class="section level3">
+<h3 id="cloud-file-sync">Cloud file sync<a class="anchor" aria-label="anchor" href="#cloud-file-sync"></a>
+</h3>
+<p>Mirror folders to Google Drive or a Microsoft Teams / SharePoint document library:</p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="reference/drive_upload_folder.html">drive_upload_folder</a></span><span class="op">(</span>folder <span class="op">=</span> <span class="st">"outputs/figures"</span>, drive_path <span class="op">=</span> <span class="st">"..."</span><span class="op">)</span></span>
+<span><span class="fu"><a href="reference/drive_download_folder.html">drive_download_folder</a></span><span class="op">(</span>drive_folder <span class="op">=</span> <span class="st">"..."</span>, path <span class="op">=</span> <span class="st">"data/"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">folder</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/teams_connect.html">teams_connect</a></span><span class="op">(</span>team <span class="op">=</span> <span class="st">"Project Team"</span>, channel <span class="op">=</span> <span class="st">"General"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="reference/teams_upload_files.html">teams_upload_files</a></span><span class="op">(</span><span class="va">folder</span>, files <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.files.html" class="external-link">list.files</a></span><span class="op">(</span><span class="st">"outputs"</span>, full.names <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="reference/teams_download_folder.html">teams_download_folder</a></span><span class="op">(</span><span class="va">folder</span>, path <span class="op">=</span> <span class="st">"data/"</span><span class="op">)</span></span></code></pre></div>
+</div>
+</div>
+<div class="section level2">
+<h2 id="documentation">Documentation<a class="anchor" aria-label="anchor" href="#documentation"></a>
+</h2>
+<p>Full function reference and vignettes are at <a href="https://for-cast.github.io/workflowtools/" class="external-link uri">https://for-cast.github.io/workflowtools/</a>.</p>
+</div>
+<div class="section level2">
+<h2 id="code-of-conduct">Code of conduct<a class="anchor" aria-label="anchor" href="#code-of-conduct"></a>
+</h2>
+<p>Please note that this project is released with a <a href="https://www.contributor-covenant.org/version/2/1/code_of_conduct/" class="external-link">Contributor Code of Conduct</a>. By contributing, you agree to abide by its terms.</p>
 </div>
 </div>
   </div>
@@ -147,7 +204,10 @@
 <div class="dev-status">
 <h2 data-toc-skip>Dev status</h2>
 <ul class="list-unstyled">
+<li><a href="https://lifecycle.r-lib.org/articles/stages.html#experimental" class="external-link"><img src="https://img.shields.io/badge/lifecycle-experimental-orange.svg" alt="Lifecycle: experimental"></a></li>
 <li><a href="https://github.com/FOR-CAST/workflowtools/actions/workflows/R-CMD-check.yaml" class="external-link"><img src="https://github.com/FOR-CAST/workflowtools/actions/workflows/R-CMD-check.yaml/badge.svg" alt="R-CMD-check"></a></li>
+<li><a href="https://github.com/FOR-CAST/workflowtools/actions/workflows/test-coverage.yaml" class="external-link"><img src="https://github.com/FOR-CAST/workflowtools/actions/workflows/test-coverage.yaml/badge.svg" alt="test-coverage"></a></li>
+<li><a href="https://for-cast.github.io/workflowtools/" class="external-link"><img src="https://github.com/FOR-CAST/workflowtools/actions/workflows/pkgdown.yaml/badge.svg" alt="pkgdown"></a></li>
 </ul>
 </div>
 

@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">workflowtools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.8.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.13</span>
       </span>
     </div>
 
@@ -32,7 +32,7 @@
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu"><li>
-      <a href="../articles/ii-managing-large-SpaDES-projects.html">Managing large SpaDES projects</a>
+      <a href="../articles/input-data-manifest.html">Tracking input data with a manifest</a>
     </li>
   </ul></li>
 <li>
@@ -58,9 +58,78 @@
     </div>
 
     <div class="section level2">
-<h2 class="page-header" data-toc-text="development version" id="workflowtools-development-version">workflowtools (development version)<a class="anchor" aria-label="anchor" href="#workflowtools-development-version"></a></h2>
-<ul><li>add <code><a href="../reference/download_once.html">download_once()</a></code> and <code><a href="../reference/drive_download_once.html">drive_download_once()</a></code>;</li>
-<li>add <code><a href="../reference/archive_extract_once.html">archive_extract_once()</a></code>;</li>
+<h2 class="page-header" data-toc-text="0.0.13" id="workflowtools-0013">workflowtools 0.0.13<a class="anchor" aria-label="anchor" href="#workflowtools-0013"></a></h2>
+<div class="section level3">
+<h3 id="reconcile-with-main-0-0-13">Reconcile with <code>main</code>
+<a class="anchor" aria-label="anchor" href="#reconcile-with-main-0-0-13"></a></h3>
+<ul><li>Carries forward functions that landed on <code>main</code> while <code>development</code> was working through the 0.0.10 → 0.0.12 sequence:
+<ul><li>
+<code><a href="../reference/download_once.html">download_once()</a></code> and <code><a href="../reference/drive_download_once.html">drive_download_once()</a></code> skip the download when the destination already exists locally.</li>
+<li>
+<code><a href="../reference/archive_extract_once.html">archive_extract_once()</a></code> skips re-extracting an archive whose files are already present.</li>
+</ul></li>
+<li>New <code>air.toml</code> + <code>.vscode/</code> configuration carried forward from <code>main</code>.</li>
+<li>
+<code>archive</code> added to <code>Imports</code>.</li>
+</ul></div>
+</div>
+    <div class="section level2">
+<h2 class="page-header" data-toc-text="0.0.12" id="workflowtools-0012">workflowtools 0.0.12<a class="anchor" aria-label="anchor" href="#workflowtools-0012"></a></h2>
+<div class="section level3">
+<h3 id="input-data-manifest-0-0-12">Input-data manifest<a class="anchor" aria-label="anchor" href="#input-data-manifest-0-0-12"></a></h3>
+<ul><li>New manifest API for tracking project input datasets in a JSON file at <code>data/input_manifest.json</code>: <code><a href="../reference/register_input.html">register_input()</a></code> (idempotent upsert keyed by <code>id</code>), <code><a href="../reference/read_input_manifest.html">read_input_manifest()</a></code>, <code><a href="../reference/write_input_manifest.html">write_input_manifest()</a></code> (stable, sorted record order), <code><a href="../reference/input_manifest_record.html">input_manifest_record()</a></code> (validated constructor), <code><a href="../reference/input_manifest_schema.html">input_manifest_schema()</a></code>. Manifest format carries a <code>@context</code> field for forward-compatible JSON-LD interpretation; current readers ignore it.</li>
+<li>
+<code><a href="../reference/sync_manifest_to_bibtex.html">sync_manifest_to_bibtex()</a></code> is a one-way, conservative exporter that writes eligible manifest citations to a sidecar <code>.bib</code> (typically <code>citations/data-sources.bib</code>), deduplicated against a curated <code>references.bib</code>. Records marked <code>citation.external = TRUE</code> are skipped silently; key collisions warn and skip. <code><a href="../reference/format_bibtex_entry.html">format_bibtex_entry()</a></code>, <code><a href="../reference/bibtex_keys_in_file.html">bibtex_keys_in_file()</a></code>, <code><a href="../reference/as_bibentry.html">as_bibentry()</a></code>, and <code><a href="../reference/citation_text.html">citation_text()</a></code> cover the per-record formatting cases.</li>
+<li>
+<code><a href="../reference/extract_metadata.html">extract_metadata()</a></code> S3 generic turns a source-specific object into a manifest record. Methods shipped: <code>.character</code> (URL + optional HEAD probe for <code>Last-Modified</code>) and <code>.bcdc_record</code> (from <code><a href="https://bcgov.github.io/bcdata/reference/bcdc_get_record.html" class="external-link">bcdata::bcdc_get_record()</a></code>). <code>metadata_bcdata(record_id)</code> is the user-facing wrapper – fetch via bcdata, extract, and cache to <code>tools::R_user_dir("workflowtools", which = "cache")/metadata/</code> for 30 days (override via <code>workflowtools.metadata_cache.ttl_days</code>).</li>
+<li>
+<code>jsonlite</code> promoted from Suggests to Imports. <code>bcdata</code> added to Suggests.</li>
+</ul></div>
+<div class="section level3">
+<h3 id="vignettes-0-0-12">Vignettes<a class="anchor" aria-label="anchor" href="#vignettes-0-0-12"></a></h3>
+<ul><li>New: <code>input-data-manifest</code> walks through the full lifecycle.</li>
+<li>Removed: the long-obsolete <code>Managing large SpaDES projects</code> vignette.</li>
+</ul></div>
+</div>
+    <div class="section level2">
+<h2 class="page-header" data-toc-text="0.0.11" id="workflowtools-0011">workflowtools 0.0.11<a class="anchor" aria-label="anchor" href="#workflowtools-0011"></a></h2>
+<div class="section level3">
+<h3 id="microsoft-teams--sharepoint-helpers-0-0-11">Microsoft Teams / SharePoint helpers<a class="anchor" aria-label="anchor" href="#microsoft-teams--sharepoint-helpers-0-0-11"></a></h3>
+<ul><li>New <code>teams_*()</code> family for syncing project files with a Microsoft Teams channel’s file area (the SharePoint document library), mirroring the existing Google Drive helpers:
+<ul><li>
+<code><a href="../reference/teams_connect.html">teams_connect()</a></code> authenticates and resolves a team/channel/root folder.</li>
+<li>
+<code><a href="../reference/teams_download_folder.html">teams_download_folder()</a></code> recursively mirrors a remote folder locally (walks the tree itself, since the built-in recursive download silently skips nested subfolders), with an <code>exclude</code> list.</li>
+<li>
+<code><a href="../reference/teams_upload_files.html">teams_upload_files()</a></code> uploads local files into a destination folder.</li>
+<li>
+<code><a href="../reference/teams_ensure_folder.html">teams_ensure_folder()</a></code> creates a (possibly nested) folder path.</li>
+<li>
+<code>Microsoft365R</code> added to <code>Suggests</code> (guarded with <code><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace()</a></code>).</li>
+</ul></li>
+<li>New <code><a href="../reference/with_retry.html">with_retry()</a></code> retries a flaky network call with a short backoff and applies HTTP/1.1 hardening. The curl “HTTP2 framing layer” workaround previously inlined in <code><a href="../reference/drive_download_folder.html">drive_download_folder()</a></code> / <code><a href="../reference/drive_upload_folder.html">drive_upload_folder()</a></code> is now centralised in the internal <code>.use_http11()</code> helper used by all three.</li>
+</ul></div>
+</div>
+    <div class="section level2">
+<h2 class="page-header" data-toc-text="0.0.10" id="workflowtools-0010">workflowtools 0.0.10<a class="anchor" aria-label="anchor" href="#workflowtools-0010"></a></h2>
+<div class="section level3">
+<h3 id="snake_case-migration-with-prefix-grouped-families-0-0-10">snake_case migration with prefix-grouped families<a class="anchor" aria-label="anchor" href="#snake_case-migration-with-prefix-grouped-families-0-0-10"></a></h3>
+<ul><li>All exported functions are renamed to snake_case. Two new families group related functions for discoverability:
+<ul><li>
+<strong><code>project_*()</code></strong> for project-root accessors: <code><a href="../reference/project_path.html">project_path()</a></code> (was <code><a href="../reference/workflowtools-deprecated.html">findProjectPath()</a></code>) and <code><a href="../reference/project_path.html">project_name()</a></code> (was <code><a href="../reference/workflowtools-deprecated.html">findProjectName()</a></code>).</li>
+<li>
+<strong><code>info_*()</code></strong> for introspection: <code><a href="../reference/info_project.html">info_git()</a></code> (was <code><a href="../reference/workflowtools-deprecated.html">gitInfo()</a></code>), <code><a href="../reference/info_project.html">info_submodules()</a></code> (was <code><a href="../reference/workflowtools-deprecated.html">submoduleInfo()</a></code>), <code><a href="../reference/info_project.html">info_session()</a></code> (was <code><a href="../reference/workflowtools-deprecated.html">sessInfo()</a></code>), <code><a href="../reference/info_project.html">info_spatial_libs()</a></code> (was <code><a href="../reference/workflowtools-deprecated.html">spatialLibs()</a></code>), and the aggregator <code><a href="../reference/info_project.html">info_project()</a></code> (was <code><a href="../reference/workflowtools-deprecated.html">projectSessionInfo()</a></code>).</li>
+<li>
+<code><a href="../reference/reproducibility_receipt.html">reproducibility_receipt()</a></code> (was <code><a href="../reference/workflowtools-deprecated.html">reproducibilityReceipt()</a></code>) stays as a standalone wrapper that uses the <code>info_*()</code> family.</li>
+</ul></li>
+<li>The old camelCase names remain available as deprecation shims that emit a one-time-per-session warning via <code><a href="https://lifecycle.r-lib.org/reference/deprecate_soft.html" class="external-link">lifecycle::deprecate_warn()</a></code> and delegate to the new names. Update callers at your own pace.</li>
+<li>
+<code>lifecycle</code> added to <code>Imports</code>. Internal helpers <code>modList</code> and <code>normPath</code> hard-renamed to <code>mod_list</code> and <code>norm_path</code> (not exported, no shim).</li>
+</ul></div>
+</div>
+    <div class="section level2">
+<h2 class="page-header" data-toc-text="0.0.9" id="workflowtools-009">workflowtools 0.0.9<a class="anchor" aria-label="anchor" href="#workflowtools-009"></a></h2>
+<ul><li>fix shell quoting for Windows in <code><a href="../reference/workflowtools-deprecated.html">gitInfo()</a></code> (<a href="https://github.com/FOR-CAST/workflowtools/issues/4" class="external-link">#4</a>);</li>
 </ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.0.8" id="workflowtools-008">workflowtools 0.0.8<a class="anchor" aria-label="anchor" href="#workflowtools-008"></a></h2>
