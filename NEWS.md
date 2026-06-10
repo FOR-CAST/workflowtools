@@ -1,3 +1,17 @@
+# workflowtools 0.0.13
+
+## Reconcile with `main`
+
+* Carries forward functions that landed on `main` while `development`
+  was working through the 0.0.10 → 0.0.12 sequence:
+  - `download_once()` and `drive_download_once()` skip the download
+    when the destination already exists locally.
+  - `archive_extract_once()` skips re-extracting an archive whose
+    files are already present.
+* New `air.toml` + `.vscode/` configuration carried forward from
+  `main`.
+* `archive` added to `Imports`.
+
 # workflowtools 0.0.12
 
 ## Input-data manifest
@@ -106,7 +120,8 @@
 
 # workflowtools 0.0.3
 
-* added `packages_from_snapshot()`, `get_module_packages()`, and `check_project_packages()` to compare module and project packages;
+* add `packages_from_snapshot()`, `get_module_packages()`, and `check_project_packages()`
+  to compare module and project packages;
 * allow user to pass existing pkg snapshot to `description()`;
 * improved documentation;
 
@@ -119,4 +134,5 @@
 # workflowtools 0.0.1
 
 * initial version;
-* moved various project utils from `SpaDES.project` since that package is no longer intended to be used to work with existing (large/complex) projects;
+* moved various project utils from `SpaDES.project` since that package is no longer
+  intended to be used to work with existing (large/complex) projects;

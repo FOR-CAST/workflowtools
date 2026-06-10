@@ -1,5 +1,5 @@
 utils::globalVariables(c(
-  ".", "Package", "Repo", "Version", "Version_Mod", "Version_Prj"
+  ".", "id", "path", "Package", "Repo", "Version", "Version_Mod", "Version_Prj"
 ))
 
 #' @keywords internal

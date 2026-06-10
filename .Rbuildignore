@@ -3,4 +3,5 @@
 ^\.git$
 ^\.github$
 ^\.gitignore$
-^air\.toml$
+^\.vscode$
+^[.]?air[.]toml$
