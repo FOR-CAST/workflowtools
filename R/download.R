@@ -6,7 +6,6 @@
 #'
 #' @param ... additional parameters passed to `download.file`
 #'
-#' @importFrom utils download.file
 #' @export
 #' @seealso [drive_download_once()]
 download_once <- function(url, destfile, ...) {
@@ -21,7 +20,6 @@ download_once <- function(url, destfile, ...) {
 #'
 #' @param ... additional parameters passed to [utils::download.file]
 #'
-#' @importFrom googledrive drive_download
 #' @export
 #' @seealso [download_once()]
 drive_download_once <- function(file, path, ...) {
@@ -53,13 +51,12 @@ drive_download_folder <- function(drive_folder, path, batch_size = 10, overwrite
     dir.create(path, recursive = TRUE)
   }
 
-  ## avoid curl HTTP2 framing layer error:
+  ## avoid curl HTTP2 framing layer error (see .use_http11):
   ## per https://github.com/tidyverse/googlesheets4/issues/233#issuecomment-889376499
-  old <- httr::set_config(httr::config(http_version = 2)) ## corresponds to CURL_HTTP_VERSION_1_1
-  on.exit(httr::set_config(old), add = TRUE)
+  .use_http11()
 
-  drive_dirs <- drive_ls(drive_folder, recursive = FALSE, type = "folder")
-  drive_files <- drive_ls(drive_folder, recursive = FALSE) |>
+  drive_dirs <- googledrive::drive_ls(drive_folder, recursive = FALSE, type = "folder")
+  drive_files <- googledrive::drive_ls(drive_folder, recursive = FALSE) |>
     dplyr::filter(!id %in% drive_dirs[["id"]])
 
   ## download the files in the current directory
@@ -72,7 +69,7 @@ drive_download_folder <- function(drive_folder, path, batch_size = 10, overwrite
         purrr::map2_dfr(
           .x = x$id,
           .y = x$name,
-          .f = ~ drive_download(.x, file.path(path, .y), overwrite = overwrite)
+          .f = ~ googledrive::drive_download(.x, file.path(path, .y), overwrite = overwrite)
         )
       }) |>
       dplyr::bind_rows()

@@ -14,7 +14,7 @@
 #' use_module("FOR-CAST/SBW_dispersal")
 use_module <- function(repo = NULL, path = NULL) {
   if (is.null(path)) {
-    path <- file.path(findProjectPath(), "modules") |> fs::path_rel()
+    path <- file.path(project_path(), "modules") |> fs::path_rel()
   }
 
   gh_url <- "https://github.com"
@@ -22,11 +22,11 @@ use_module <- function(repo = NULL, path = NULL) {
   mod_repo <- .github_user(repo)
   mod_ref <- .github_ref(repo)
 
-  cli({
-    cli_text("not yet implemented. please add manually using e.g.,")
-    cli_code(
-      glue("git -C {path} add submodule {gh_url}/{mod_repo}/{mod_name} {path}/{mod_name}"),
-      if (nzchar(mod_ref)) glue("git -C {path}/{mod_name} checkout {mod_ref}"),
+  cli::cli({
+    cli::cli_text("not yet implemented. please add manually using e.g.,")
+    cli::cli_code(
+      glue::glue("git -C {path} add submodule {gh_url}/{mod_repo}/{mod_name} {path}/{mod_name}"),
+      if (nzchar(mod_ref)) glue::glue("git -C {path}/{mod_name} checkout {mod_ref}"),
       language = "bash"
     )
   })

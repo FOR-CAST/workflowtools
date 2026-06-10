@@ -1,5 +1,7 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
+^\.git$
 ^\.github$
-^[.]?air[.]toml$
+^\.gitignore$
 ^\.vscode$
+^[.]?air[.]toml$

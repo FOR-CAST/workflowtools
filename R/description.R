@@ -84,16 +84,25 @@ description <- function(fields = list(), library = NULL, snapshot = NULL) {
   ghPkgs <- pkgs[!is.na(RemoteUsername), ]
 
   ## override user-specified field values
-  fields <- modList(fields, list(
-    Title = tools::toTitleCase(fields$Title),
-    Type = "project",
-    Package = NULL,
-    Imports = paste0(pkgs$Package, " (== ", pkgs$Version, ")", collapse = ",\n    "),
-    Remotes = paste0(ghPkgs$RemoteUsername, "/", ghPkgs$RemoteRepo, "@",
-                     ghPkgs$RemoteSha, collapse = ",\n    ")
-  ))
+  fields <- mod_list(
+    fields,
+    list(
+      Title = tools::toTitleCase(fields$Title),
+      Type = "project",
+      Package = NULL,
+      Imports = paste0(pkgs$Package, " (== ", pkgs$Version, ")", collapse = ",\n    "),
+      Remotes = paste0(
+        ghPkgs$RemoteUsername,
+        "/",
+        ghPkgs$RemoteRepo,
+        "@",
+        ghPkgs$RemoteSha,
+        collapse = ",\n    "
+      )
+    )
+  )
 
-  usethis::proj_set(findProjectPath(), force = TRUE)
+  usethis::proj_set(project_path(), force = TRUE)
   usethis::use_description(fields = fields, check_name = FALSE, roxygen = FALSE)
 
   return(invisible(NULL))

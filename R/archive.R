@@ -31,7 +31,6 @@
 #' archive_extract_once(a, d, i) ## does not re-extract files
 #' unlink(d)
 #'
-#' @importFrom archive archive_extract
 #' @export
 archive_extract_once <- function(archive, dir = ".", files = NULL, ..., force = FALSE) {
   extract <- if (isTRUE(force)) {

@@ -45,86 +45,77 @@ testthat::test_that("get_module_packages() works", {
   testthat::expect_identical(NROW(mp), length(unique(mp$Package)))
 })
 
-testthat::test_that("packages_from_snapshot() works with old renv lockfile", {
-  testthat::skip_if_not(getRversion() >= "4.4")
-  testthat::skip_if_not_installed("renv")
-  testthat::skip_if_not_installed("withr")
+## Fixture-based tests for packages_from_snapshot().
+##
+## Rather than driving a live renv::init() + renv::install() + renv::snapshot()
+## ceremony (which is slow, network-dependent, and brittle to renv version
+## drift on minimal libraries), we ship pre-built minimal lockfiles under
+## tests/testthat/fixtures/ and check that the parser extracts the expected
+## fields from each format. See tests/testthat/fixtures/README.md for the
+## contract and instructions on how to refresh the fixtures if renv's
+## lockfile format changes.
 
-  ## minimal renv lockfile (renv < 1.1.0)
-  withr::local_options(list(
-    renv.lockfile.version = 1L
-  ))
+testthat::test_that("packages_from_snapshot() parses an old (v1) renv lockfile", {
+  testthat::skip_if_not_installed("jsonlite")
 
-  tmpPrjPath <- withr::local_tempdir("renv_old_")
-  withr::local_dir(tmpPrjPath)
+  lockfile <- testthat::test_path("fixtures", "renv-v1.lock")
+  testthat::expect_true(file.exists(lockfile))
 
-  lockfile <- file.path(tmpPrjPath, "renv.lock")
-  tmpPrjLib <- renv::paths$library()
+  pkg_df <- packages_from_snapshot(lockfile)
 
-  renv::init(tmpPrjPath, load = FALSE, restart = FALSE)
-  renv::install(
-    packages = c("class", "data.table", "dplyr", "KernSmooth", "MASS", "r-spatial/sf"),
-    library = tmpPrjLib,
-    project = tmpPrjPath,
-    lock = TRUE,
-    prompt = FALSE
+  ## Core requested packages parsed.
+  expected <- c("class", "data.table", "dplyr", "KernSmooth", "MASS", "sf")
+  testthat::expect_true(all(expected %in% pkg_df[["Package"]]))
+
+  ## Result is a data.table with the parser's documented columns.
+  testthat::expect_s3_class(pkg_df, "data.table")
+  expected_cols <- c(
+    "Package",
+    "RemoteHost",
+    "RemoteRef",
+    "RemoteRepo",
+    "RemoteSha",
+    "RemoteType",
+    "RemoteUsername",
+    "Repository",
+    "Source",
+    "Version"
   )
+  testthat::expect_true(all(expected_cols %in% colnames(pkg_df)))
 
-  pkgs <- dir(tmpPrjLib, include.dirs = TRUE)
-  renv::snapshot(
-    project = tmpPrjPath,
-    library = tmpPrjLib,
-    lockfile = lockfile,
-    packages = pkgs,
-    prompt = FALSE
-  )
+  ## CRAN package: Source = "Repository", no Remote* fields.
+  dt_row <- pkg_df[pkg_df$Package == "data.table", ]
+  testthat::expect_equal(dt_row$Source, "Repository")
+  testthat::expect_equal(dt_row$Repository, "CRAN")
+  testthat::expect_true(is.na(dt_row$RemoteUsername))
 
-  testthat::expect_no_error(
-    pkg_df <- packages_from_snapshot(lockfile)
-  )
-  testthat::expect_true(all(pkgs %in% pkg_df[["Package"]]))
-
-  withr::deferred_run()
+  ## GitHub package: Source = "GitHub", Remote* fields populated.
+  sf_row <- pkg_df[pkg_df$Package == "sf", ]
+  testthat::expect_equal(sf_row$Source, "GitHub")
+  testthat::expect_equal(sf_row$RemoteUsername, "r-spatial")
+  testthat::expect_equal(sf_row$RemoteRepo, "sf")
 })
 
-testthat::test_that("packages_from_snapshot() works with new renv lockfile", {
-  testthat::skip_if_not(getRversion() >= "4.4")
-  testthat::skip_if_not_installed("renv")
-  testthat::skip_if_not_installed("withr")
+testthat::test_that("packages_from_snapshot() parses a new (v2) renv lockfile", {
+  testthat::skip_if_not_installed("jsonlite")
 
-  ## minimal renv lockfile (renv >= 1.1.0)
-  withr::local_options(list(
-    renv.lockfile.version = 2L
-  ))
+  lockfile <- testthat::test_path("fixtures", "renv-v2.lock")
+  testthat::expect_true(file.exists(lockfile))
 
-  tmpPrjPath <- withr::local_tempdir("renv_new_")
-  withr::local_dir(tmpPrjPath)
+  pkg_df <- packages_from_snapshot(lockfile)
 
-  lockfile <- file.path(tmpPrjPath, "renv.lock")
-  tmpPrjLib <- renv::paths$library()
+  ## Core requested packages parsed.
+  expected <- c("class", "data.table", "dplyr", "KernSmooth", "MASS", "sf")
+  testthat::expect_true(all(expected %in% pkg_df[["Package"]]))
 
-  renv::init(tmpPrjPath, load = FALSE, restart = FALSE)
-  renv::install(
-    packages = c("class", "data.table", "dplyr", "KernSmooth", "MASS", "r-spatial/sf"),
-    library = tmpPrjLib,
-    project = tmpPrjPath,
-    lock = TRUE,
-    prompt = FALSE
-  )
+  ## v2 lockfiles include per-package Requirements; the parser does not retain
+  ## that column (it only keeps the Remote*/Repository/Source/Version columns),
+  ## so confirm the parser silently drops unknown fields.
+  testthat::expect_false("Requirements" %in% colnames(pkg_df))
 
-  pkgs <- dir(tmpPrjLib, include.dirs = TRUE)
-  renv::snapshot(
-    project = tmpPrjPath,
-    library = tmpPrjLib,
-    lockfile = lockfile,
-    packages = pkgs,
-    prompt = FALSE
-  )
-
-  testthat::expect_no_error(
-    pkg_df <- packages_from_snapshot(lockfile)
-  )
-  testthat::expect_true(all(pkgs %in% pkg_df[["Package"]]))
-
-  withr::deferred_run()
+  ## CRAN + GitHub round-trips work the same as in v1.
+  testthat::expect_equal(pkg_df[pkg_df$Package == "dplyr", ]$Source, "Repository")
+  sf_row <- pkg_df[pkg_df$Package == "sf", ]
+  testthat::expect_equal(sf_row$Source, "GitHub")
+  testthat::expect_equal(sf_row$RemoteSha, "f78ddcfa4a08c3bd4b91bdaa75a3a82af8b5d2c0")
 })

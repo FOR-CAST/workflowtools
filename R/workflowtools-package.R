@@ -1,70 +1,16 @@
 utils::globalVariables(c(
-  ".", "id", "Package", "Repo", "Version", "Version_Mod", "Version_Prj"
+  ".", "id", "path", "Package", "Repo", "Version", "Version_Mod", "Version_Prj"
 ))
 
 #' @keywords internal
 "_PACKAGE"
 
+## All function calls in R/ are namespaced via pkg::fun().
+## Only the operators / NSE symbols / sentinel values that cannot be called
+## with `::` are imported here.
+
 ## usethis namespace: start
-#' @import methods
-#' @importFrom archive archive
-#' @importFrom archive archive_extract
-#' @importFrom cli cli
-#' @importFrom cli cli_code
-#' @importFrom cli cli_h1
-#' @importFrom cli cli_h2
-#' @importFrom cli cli_li
-#' @importFrom cli cli_text
-#' @importFrom data.table :=
-#' @importFrom data.table .SD
-#' @importFrom data.table as.data.table
-#' @importFrom data.table data.table
-#' @importFrom data.table rbindlist
-#' @importFrom data.table set
-#' @importFrom data.table setkey
-#' @importFrom data.table setnames
-#' @importFrom dplyr bind_rows
-#' @importFrom dplyr filter
-#' @importFrom dplyr pull
-#' @importFrom dplyr slice
-#' @importFrom fs dir_info
-#' @importFrom fs dir_ls
-#' @importFrom fs path
-#' @importFrom fs path_dir
-#' @importFrom fs path_expand
-#' @importFrom fs path_file
-#' @importFrom fs path_norm
-#' @importFrom fs path_rel
-#' @importFrom furrr future_map_dfr
-#' @importFrom furrr future_map2_dfr
-#' @importFrom glue glue
-#' @importFrom googledrive drive_download
-#' @importFrom googledrive drive_ls
-#' @importFrom googledrive drive_mkdir
-#' @importFrom googledrive drive_put
-#' @importFrom httr config
-#' @importFrom httr set_config
-#' @importFrom purrr map2_dfr
-#' @importFrom purrr walk
-#' @importFrom remotes parse_github_repo_spec
-#' @importFrom rprojroot find_root
-#' @importFrom rprojroot from_wd
-#' @importFrom rprojroot is_git_root
-#' @importFrom rprojroot is_rstudio_project
-#' @importFrom sessioninfo session_info
-#' @importFrom stats na.omit
-#' @importFrom tibble enframe
-#' @importFrom tidyr pivot_wider
-#' @importFrom tools file_ext
-#' @importFrom tools file_path_sans_ext
-#' @importFrom tools toTitleCase
-#' @importFrom usethis proj_activate
-#' @importFrom usethis use_news_md
-#' @importFrom usethis use_readme_md
-#' @importFrom utils capture.output
-#' @importFrom utils download.file
-#' @importFrom utils globalVariables
-#' @importFrom utils modifyList
-#' @importFrom utils read.csv
+#' @importFrom data.table := .SD
+#' @importFrom lifecycle deprecated
 ## usethis namespace: end
 NULL
