@@ -70,8 +70,16 @@ testthat::test_that("packages_from_snapshot() parses an old (v1) renv lockfile",
   ## Result is a data.table with the parser's documented columns.
   testthat::expect_s3_class(pkg_df, "data.table")
   expected_cols <- c(
-    "Package", "RemoteHost", "RemoteRef", "RemoteRepo", "RemoteSha",
-    "RemoteType", "RemoteUsername", "Repository", "Source", "Version"
+    "Package",
+    "RemoteHost",
+    "RemoteRef",
+    "RemoteRepo",
+    "RemoteSha",
+    "RemoteType",
+    "RemoteUsername",
+    "Repository",
+    "Source",
+    "Version"
   )
   testthat::expect_true(all(expected_cols %in% colnames(pkg_df)))
 

@@ -1,0 +1,229 @@
+---
+title: "Tracking input data with a manifest"
+author: "Alex M. Chubaty"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Tracking input data with a manifest}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+editor_options:
+  chunk_output_type: console
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+`workflowtools` ships an input-data manifest API for projects that consume
+multiple datasets from heterogeneous sources (BC Data Catalogue, NRCan, ERA5,
+hand-curated files). The manifest is a single JSON file that records, for each
+dataset:
+
+- its **source** (catalogue URL, query, retrieval timestamp),
+- its **vintage** (publisher's version or last-modified date),
+- a **local pointer** plus content **hash**,
+- and a structured **citation** (BibTeX key, full entry, prose).
+
+Downstream tooling (e.g. a per-PDF provenance appendix or a `data-sources.bib`
+sidecar) reads the manifest to populate itself, so the project's input
+documentation stays in sync with what was actually fetched.
+
+This vignette walks through the typical lifecycle.
+
+```{r setup}
+library(workflowtools)
+```
+
+## 1. Where does the manifest live?
+
+Convention: a single JSON file at `data/input_manifest.json`, alongside the
+project's `data/` directory. The default arguments to every manifest function
+point there, so most calls don't need to mention the path.
+
+For this vignette we'll use a temp file.
+
+```{r}
+manifest_path <- file.path(tempdir(), "input_manifest.json")
+```
+
+## 2. Register the first input -- a hand-written record
+
+For sources without a dedicated extractor (a USB-stick drop, an internal
+reference layer, an ERA5 batch download), build a record manually with
+`input_manifest_record()`:
+
+```{r}
+nfdb <- input_manifest_record(
+  id = "nfdb",
+  name = "Canadian National Fire Database (NFDB) -- Agency Fire Data",
+  source = list(
+    type = "http_download",
+    url = "https://cwfis.cfs.nrcan.gc.ca/en_CA/nfdb"
+  ),
+  local_path = "data/processed/nfdb_poly.gpkg",
+  version_or_vintage = "2024-12-01",
+  license = "OGL-Canada-2.0",
+  citation = list(
+    bibtex_key = "CFS:NFDB",
+    formatted_text = "Canadian Forest Service (2024). Canadian National Fire Database -- Agency Fire Data."
+  )
+)
+register_input(nfdb, manifest_path)
+```
+
+`register_input()` is idempotent and keyed by `id`: re-running with an updated
+`nfdb` record replaces the existing entry rather than duplicating it.
+
+```{r}
+nfdb$version_or_vintage <- "2025-01-15"
+register_input(nfdb, manifest_path)
+
+read_input_manifest(manifest_path)[[1]]$version_or_vintage
+```
+
+## 3. Register a BC Data Catalogue record automatically
+
+For datasets that flow through the BC Data Catalogue, `metadata_bcdata()`
+fetches the catalogue record, extracts the relevant fields, caches them, and
+returns a manifest-ready record:
+
+```{r, eval = FALSE}
+vri <- metadata_bcdata("2ebb35d8-c82f-4a17-9c96-612ac3532d55")
+register_input(vri, manifest_path)
+```
+
+The cache (default location:
+`tools::R_user_dir("workflowtools", which = "cache")/metadata/`) means a
+second call returns immediately without hitting the network. Cache TTL is 30
+days by default; override with `metadata_bcdata(..., ttl_days = 90)` or
+`options(workflowtools.metadata_cache.ttl_days = 90)`. Pass
+`refresh = TRUE` to force a fetch.
+
+Behind the scenes `metadata_bcdata()` calls
+`bcdata::bcdc_get_record()` and dispatches its result to the S3 method
+`extract_metadata.bcdc_record()`. You can call those directly if you want
+to short-circuit the cache:
+
+```{r, eval = FALSE}
+bcdata::bcdc_get_record("...") |> extract_metadata()
+```
+
+## 4. Register a raw URL with the fallback method
+
+For an arbitrary URL with no dedicated metadata API,
+`extract_metadata.character()` does a best-effort HTTP HEAD to populate the
+record's vintage from `Last-Modified`:
+
+```{r, eval = FALSE}
+era5_doc <- extract_metadata(
+  "https://cds.climate.copernicus.eu/cdsapp#!/dataset/reanalysis-era5-single-levels",
+  id = "era5-single-levels"
+)
+register_input(era5_doc, manifest_path)
+```
+
+Pass `head_lookup = FALSE` to skip the HEAD request (useful when offline or
+when the server is known to reject HEAD).
+
+## 5. Extending: a custom S3 method
+
+If you have a source not covered by the built-in methods, define an S3 method
+for `extract_metadata`. Here's a sketch for a hypothetical NRCan FBP fuel-type
+record:
+
+```{r, eval = FALSE}
+extract_metadata.nrcan_fbp_record <- function(x, id = NULL, ...) {
+  input_manifest_record(
+    id        = id %||% "cffdrs-fbp-fuels-2024",
+    name      = x$dataset_title,
+    source    = list(type = "nrcan_fbp", url = x$portal_url),
+    local_path = file.path("data", x$file_name),
+    license   = x$license,
+    citation  = list(
+      bibtex_key = sprintf("NRCan:%s", x$version_year),
+      formatted_text = sprintf("NRCan (%s). %s.", x$version_year, x$dataset_title)
+    )
+  )
+}
+```
+
+Subsequent calls to `extract_metadata(record)` dispatch on
+`class(record)[1L]` and your method takes over.
+
+## 6. Sync citations to a sidecar BibTeX file
+
+The bridge to a project's bibliography is `sync_manifest_to_bibtex()`:
+a one-way, conservative exporter that writes eligible manifest citations to a
+sidecar `.bib`, deduplicated against the project's hand-curated bibliography.
+
+```{r}
+references_bib <- file.path(tempdir(), "references.bib")
+out_bib        <- file.path(tempdir(), "data-sources.bib")
+
+## A hand-curated references.bib that already contains an entry for one of
+## the manifest records; the sync should skip it (and warn) to keep the
+## curated bib the source of truth for that key.
+writeLines("@misc{CFS:NFDB,\n  title = {Curated NFDB entry},\n}", references_bib)
+
+result <- sync_manifest_to_bibtex(
+  manifest       = manifest_path,
+  out            = out_bib,
+  references_bib = references_bib
+)
+result
+```
+
+The collision warning is a deliberate prompt: either delete the duplicate
+entry from `references.bib` (letting the sync own the key from now on) or
+mark the manifest record with `citation = list(..., external = TRUE)` to
+silence the warning and keep the curated entry authoritative.
+
+Records with `citation = list(external = TRUE)` are skipped silently:
+
+```{r}
+nfdb$citation$external <- TRUE
+register_input(nfdb, manifest_path)
+sync_manifest_to_bibtex(manifest_path, out_bib, references_bib)
+```
+
+## 7. Reading the manifest from downstream consumers
+
+Provenance appendices, audit tables, and bibliography pre-renders all consume
+the manifest via `read_input_manifest()`:
+
+```{r}
+recs <- read_input_manifest(manifest_path)
+data.frame(
+  id      = vapply(recs, `[[`, character(1L), "id"),
+  vintage = vapply(recs, function(r) r$version_or_vintage %||% "", character(1L))
+)
+```
+
+For prose output, [`citation_text()`] and [`as_bibentry()`] handle records
+one at a time.
+
+## 8. Recommended project wiring
+
+A typical project arranges things like this:
+
+1. Each input-fetch target in your pipeline (`{targets}`, drake, Make, ...)
+   calls `register_input(extract_metadata(source_obj), manifest_path)` after
+   the fetch succeeds.
+2. A final target calls `sync_manifest_to_bibtex()` once per build.
+3. The qmd / Rmd report's bibliography lists both the curated and
+   auto-generated `.bib` files.
+4. A "provenance appendix" R chunk reads the manifest and renders a kable of
+   inputs with their vintages and citations.
+
+The result: every report ships with a self-describing record of where its
+data came from -- without a hand-maintained input list to keep in sync.
+
+## See also
+
+- [`input_manifest_schema()`] for the canonical field list.
+- [`extract_metadata()`] for the S3 generic + the methods shipped with
+  this package (`character`, `bcdc_record`).
+- [`sync_manifest_to_bibtex()`] for the dedup rules.

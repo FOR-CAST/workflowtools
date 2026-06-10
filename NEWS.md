@@ -1,3 +1,36 @@
+# workflowtools 0.0.12
+
+## Input-data manifest
+
+* New manifest API for tracking project input datasets in a JSON file at
+  `data/input_manifest.json`:
+  `register_input()` (idempotent upsert keyed by `id`),
+  `read_input_manifest()`, `write_input_manifest()` (stable, sorted record
+  order), `input_manifest_record()` (validated constructor),
+  `input_manifest_schema()`. Manifest format carries a `@context` field for
+  forward-compatible JSON-LD interpretation; current readers ignore it.
+* `sync_manifest_to_bibtex()` is a one-way, conservative exporter that
+  writes eligible manifest citations to a sidecar `.bib` (typically
+  `citations/data-sources.bib`), deduplicated against a curated
+  `references.bib`. Records marked `citation.external = TRUE` are skipped
+  silently; key collisions warn and skip. `format_bibtex_entry()`,
+  `bibtex_keys_in_file()`, `as_bibentry()`, and `citation_text()` cover
+  the per-record formatting cases.
+* `extract_metadata()` S3 generic turns a source-specific object into a
+  manifest record. Methods shipped: `.character` (URL + optional HEAD
+  probe for `Last-Modified`) and `.bcdc_record` (from
+  `bcdata::bcdc_get_record()`). `metadata_bcdata(record_id)` is the
+  user-facing wrapper -- fetch via bcdata, extract, and cache to
+  `tools::R_user_dir("workflowtools", which = "cache")/metadata/` for 30
+  days (override via `workflowtools.metadata_cache.ttl_days`).
+* `jsonlite` promoted from Suggests to Imports. `bcdata` added to
+  Suggests.
+
+## Vignettes
+
+* New: `input-data-manifest` walks through the full lifecycle.
+* Removed: the long-obsolete `Managing large SpaDES projects` vignette.
+
 # workflowtools 0.0.11
 
 ## Microsoft Teams / SharePoint helpers
