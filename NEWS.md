@@ -1,3 +1,14 @@
+# workflowtools 0.0.14
+
+## Build-stamp and provenance collectors
+
+* `build_stamp_date()` formats a one-line git/date stamp for a Quarto `date:` field.
+* `build_stamp_git()` returns the short SHA, branch, and dirty flag of a repo (base R + `git` only).
+* `prov_build_identity()` returns a build-identity data.frame (timestamp, optional scenario, git commit/branch).
+* `prov_r_packages()` returns a data.frame of installed versions for a set of packages.
+* `prov_repository_state()` returns a data.frame of HEAD, branch, and submodule status, shortened to fit PDF tables.
+* `prov_toolchain()` returns a data.frame of R, GEOS/GDAL/PROJ, and Pandoc/Quarto versions.
+
 # workflowtools 0.0.13
 
 ## Reconcile with `main`
