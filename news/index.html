@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">workflowtools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.13</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.14</span>
       </span>
     </div>
 
@@ -57,6 +57,24 @@
       <small>Source: <a href="https://github.com/FOR-CAST/workflowtools/blob/main/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="page-header" data-toc-text="0.0.14" id="workflowtools-0014">workflowtools 0.0.14<a class="anchor" aria-label="anchor" href="#workflowtools-0014"></a></h2>
+<div class="section level3">
+<h3 id="build-stamp-and-provenance-collectors-0-0-14">Build-stamp and provenance collectors<a class="anchor" aria-label="anchor" href="#build-stamp-and-provenance-collectors-0-0-14"></a></h3>
+<ul><li>
+<code><a href="../reference/build_stamp.html">build_stamp_date()</a></code> formats a one-line git/date stamp for a Quarto <code>date:</code> field.</li>
+<li>
+<code><a href="../reference/build_stamp.html">build_stamp_git()</a></code> returns the short SHA, branch, and dirty flag of a repo (base R + <code>git</code> only).</li>
+<li>
+<code><a href="../reference/prov_collectors.html">prov_build_identity()</a></code> returns a build-identity data.frame (timestamp, optional scenario, git commit/branch).</li>
+<li>
+<code><a href="../reference/prov_collectors.html">prov_r_packages()</a></code> returns a data.frame of installed versions for a set of packages.</li>
+<li>
+<code><a href="../reference/prov_collectors.html">prov_repository_state()</a></code> returns a data.frame of HEAD, branch, and submodule status, shortened to fit PDF tables.</li>
+<li>
+<code><a href="../reference/prov_collectors.html">prov_toolchain()</a></code> returns a data.frame of R, GEOS/GDAL/PROJ, and Pandoc/Quarto versions.</li>
+</ul></div>
+</div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.0.13" id="workflowtools-0013">workflowtools 0.0.13<a class="anchor" aria-label="anchor" href="#workflowtools-0013"></a></h2>
 <div class="section level3">

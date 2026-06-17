@@ -9,9 +9,16 @@
 <url><loc>/reference/archive_extract_once.html</loc></url>
 <url><loc>/reference/as_bibentry.html</loc></url>
 <url><loc>/reference/bibtex_keys_in_file.html</loc></url>
+<url><loc>/reference/build_stamp.html</loc></url>
 <url><loc>/reference/check_project_packages.html</loc></url>
 <url><loc>/reference/citation_text.html</loc></url>
 <url><loc>/reference/description.html</loc></url>
+<url><loc>/reference/dot-git_safe.html</loc></url>
+<url><loc>/reference/dot-prov_git_state.html</loc></url>
+<url><loc>/reference/dot-prov_os_string.html</loc></url>
+<url><loc>/reference/dot-prov_pandoc.html</loc></url>
+<url><loc>/reference/dot-prov_quarto.html</loc></url>
+<url><loc>/reference/dot-prov_truncate.html</loc></url>
 <url><loc>/reference/download_once.html</loc></url>
 <url><loc>/reference/drive_download_folder.html</loc></url>
 <url><loc>/reference/drive_download_once.html</loc></url>
@@ -28,6 +35,7 @@
 <url><loc>/reference/metadata_bcdata.html</loc></url>
 <url><loc>/reference/packages_from_snapshot.html</loc></url>
 <url><loc>/reference/project_path.html</loc></url>
+<url><loc>/reference/prov_collectors.html</loc></url>
 <url><loc>/reference/read_input_manifest.html</loc></url>
 <url><loc>/reference/register_input.html</loc></url>
 <url><loc>/reference/reproducibility_receipt.html</loc></url>
