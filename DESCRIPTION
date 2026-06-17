@@ -48,7 +48,7 @@ ByteCompile: yes
 Encoding: UTF-8
 Language: en-CA
 LazyData: true
-License: GPL-3
+License: Apache License (>= 2)
 Roxygen: list(markdown = TRUE)
 Config/testthat/edition: 3
 VignetteBuilder: knitr

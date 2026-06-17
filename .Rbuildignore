@@ -5,3 +5,4 @@
 ^\.gitignore$
 ^\.vscode$
 ^[.]?air[.]toml$
+^LICENSE\.md$
