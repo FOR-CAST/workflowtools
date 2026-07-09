@@ -1,3 +1,8 @@
+# workflowtools 0.0.15
+
+* `archive_extract_once()` falls back to the system `unzip` (Info-ZIP) when
+  `libarchive` fails on large `ZIP64` archives.
+
 # workflowtools 0.0.14
 
 ## Build-stamp and provenance collectors

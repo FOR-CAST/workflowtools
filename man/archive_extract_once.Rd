@@ -25,6 +25,12 @@ character, the filenames extracted (invisibly)
 \description{
 Extract an archive, skipping if previously extracted
 }
+\details{
+\code{libarchive} (via \link[archive:archive_extract]{archive::archive_extract}) can fail on very large \code{ZIP64}
+archives (e.g. with a "Truncated input file" error). When extraction fails and
+the archive is a \code{.zip}, \code{archive_extract_once()} falls back to the system
+\code{unzip} (Info-ZIP), which handles \code{ZIP64} and selective extraction.
+}
 \examples{
 a <- system.file(package = "archive", "extdata", "data.zip")
 d <- tempfile()
