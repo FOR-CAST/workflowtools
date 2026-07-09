@@ -4,7 +4,7 @@ testthat::test_that("get_module_packages() works", {
   prjPath <- "~/GitHub/Ontario_AOU_ROF"
   mpath <- file.path(prjPath, "modules")
 
-  testthat::skip_if_not(dir.exists(prjPath))
+  testthat::skip_if_not(dir.exists(mpath))
 
   mp1 <- get_module_packages(module = "canClimateData", path = mpath)
   testthat::expect_identical(NROW(mp1), length(unique(mp1$Package)))
@@ -30,7 +30,7 @@ testthat::test_that("get_module_packages() works", {
   mpath1 <- file.path(prjPath, "modules")
   mpath2 <- file.path(mpath1, "scfm", "modules")
 
-  testthat::skip_if_not(dir.exists(prjPath))
+  testthat::skip_if_not(dir.exists(mpath1) && dir.exists(mpath2))
 
   mp1 <- get_module_packages(module = "Biomass_borealDataPrep", path = mpath1)
   testthat::expect_identical(NROW(mp1), length(unique(mp1$Package)))
