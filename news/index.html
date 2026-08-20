@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">workflowtools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.15</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.16</span>
       </span>
     </div>
 
@@ -57,6 +57,13 @@
       <small>Source: <a href="https://github.com/FOR-CAST/workflowtools/blob/main/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="page-header" data-toc-text="0.0.16" id="workflowtools-0016">workflowtools 0.0.16<a class="anchor" aria-label="anchor" href="#workflowtools-0016"></a></h2>
+<ul><li>
+<code><a href="../reference/get_module_packages.html">get_module_packages()</a></code> no longer warns “no non-missing arguments to max; returning -Inf”. A package may be declared in <code>reqdPkgs</code> with no version constraint at all (<code>"data.table"</code> rather than <code>"data.table (&gt;= 1.14)"</code>), so every version in that group is <code>NA</code>; <code>max(..., na.rm = TRUE)</code> then reduced an empty vector and produced a meaningless version. Such groups now yield <code>NA_character_</code>;</li>
+<li>
+<code><a href="../reference/archive_extract_once.html">archive_extract_once()</a></code> now decides whether to extract by comparing each wanted file against the <strong>size recorded in the archive manifest</strong>, not merely whether it exists, and verifies the result afterwards – raising an error if anything is still missing or short. An interrupted extraction leaves a truncated file behind, and the previous existence-only test then treated that stub as “already extracted” on every later call, so the truncation became permanent and silent: LandWeb ended up with a 1.88 GB NBAC fire-perimeter shapefile cut to 567 MB, which made GDAL log 74,178 read errors while <code><a href="https://r-spatial.github.io/sf/reference/st_read.html" class="external-link">sf::st_read()</a></code> still returned the full feature count (the <code>.shx</code> index was intact) and the pipeline completed with historic fire summaries built from ~30% of the record. As a side benefit, <code>files = NULL</code> no longer re-extracts unconditionally – a complete archive is now skipped;</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.0.15" id="workflowtools-0015">workflowtools 0.0.15<a class="anchor" aria-label="anchor" href="#workflowtools-0015"></a></h2>
 <ul><li>
