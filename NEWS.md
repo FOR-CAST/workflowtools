@@ -1,3 +1,7 @@
+# workflowtools 0.0.16
+
+* `archive_extract_once()` now decides whether to extract by comparing each wanted file against the **size recorded in the archive manifest**, not merely whether it exists, and verifies the result afterwards -- raising an error if anything is still missing or short. An interrupted extraction leaves a truncated file behind, and the previous existence-only test then treated that stub as "already extracted" on every later call, so the truncation became permanent and silent: LandWeb ended up with a 1.88 GB NBAC fire-perimeter shapefile cut to 567 MB, which made GDAL log 74,178 read errors while `sf::st_read()` still returned the full feature count (the `.shx` index was intact) and the pipeline completed with historic fire summaries built from ~30% of the record. As a side benefit, `files = NULL` no longer re-extracts unconditionally -- a complete archive is now skipped;
+
 # workflowtools 0.0.15
 
 * `archive_extract_once()` falls back to the system `unzip` (Info-ZIP) when
