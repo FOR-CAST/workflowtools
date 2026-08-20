@@ -26,6 +26,13 @@ character, the filenames extracted (invisibly)
 Extract an archive, skipping if previously extracted
 }
 \details{
+Extraction is skipped only when every wanted file is already on disk \strong{at the size
+the archive says it should be}. Checking existence alone is not enough: an
+interrupted extraction leaves a short file behind, which then looks "already
+extracted" forever. After extracting, the result is verified against the archive
+manifest and an error is raised if anything is still missing or short, so a partial
+extraction fails loudly instead of being silently reused.
+
 \code{libarchive} (via \link[archive:archive_extract]{archive::archive_extract}) can fail on very large \code{ZIP64}
 archives (e.g. with a "Truncated input file" error). When extraction fails and
 the archive is a \code{.zip}, \code{archive_extract_once()} falls back to the system
