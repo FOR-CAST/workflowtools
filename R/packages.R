@@ -158,10 +158,7 @@ get_module_packages <- function(module = NULL, path, verbose = FALSE) {
     unique() |>
     data.table::setkey("Package")
 
-  pkgdt[,
-    Version := as.character(base::max(as.numeric_version(Version), na.rm = TRUE)),
-    by = "Package"
-  ]
+  pkgdt[, Version := .max_version(Version), by = "Package"]
   pkgdt[, Repo := unique(stats::na.omit(Repo)), by = "Package"] ## assume want GitHub version
   pkgdt <- unique(pkgdt)
 
@@ -211,4 +208,19 @@ check_project_packages <- function(path = NULL, snapshot = NULL) {
   }
 
   return(invisible(NULL))
+}
+
+## Highest version among a package's `reqdPkgs` declarations, as a character scalar.
+## A package may be declared with no version constraint at all (e.g. "data.table" rather than
+## "data.table (>= 1.14)"), in which case every entry in the group is NA. `max(..., na.rm = TRUE)`
+## on that empty result warns "no non-missing arguments to max; returning -Inf" and yields a
+## meaningless version, so the no-constraint case returns NA_character_ instead.
+.max_version <- function(version) {
+  v <- as.numeric_version(version)
+  v <- v[!is.na(v)]
+  if (length(v) == 0L) {
+    NA_character_
+  } else {
+    as.character(max(v))
+  }
 }

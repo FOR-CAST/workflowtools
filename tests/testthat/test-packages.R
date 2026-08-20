@@ -119,3 +119,13 @@ testthat::test_that("packages_from_snapshot() parses a new (v2) renv lockfile", 
   testthat::expect_equal(sf_row$Source, "GitHub")
   testthat::expect_equal(sf_row$RemoteSha, "f78ddcfa4a08c3bd4b91bdaa75a3a82af8b5d2c0")
 })
+
+test_that(".max_version() picks the highest version and tolerates no-constraint groups", {
+  expect_identical(.max_version(c("1.2.3", "1.10.0", "1.9.9")), "1.10.0")
+  expect_identical(.max_version(c("2.0", NA, "1.0")), "2.0")
+
+  ## a package declared without any version constraint: every entry is NA. This used to warn
+  ## "no non-missing arguments to max; returning -Inf".
+  expect_no_warning(out <- .max_version(c(NA_character_, NA_character_)))
+  expect_identical(out, NA_character_)
+})
