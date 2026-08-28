@@ -54,6 +54,18 @@
 #'
 #' @export
 archive_extract_once <- function(archive, dir = ".", files = NULL, ..., force = FALSE) {
+  ## `archive::archive()` and `archive::archive_extract()` open the archive with
+  ## `file(path, "rb")`, which takes its `encoding` from `getOption("encoding")`. Under
+  ## `options(encoding = "UTF-8")` a re-encoding layer is applied to a BINARY stream,
+  ## libarchive misparses the ZIP, and every member's recorded size comes back as 0.
+  ## Sizes are exactly what this function compares against, so under that option EVERY file
+  ## looks short: the archive is re-extracted on every single call, and the verification
+  ## afterwards can never pass no matter what landed on disk. `options(encoding = "UTF-8")`
+  ## is in force inside a SpaDES run, which is why this only ever bit in the pipeline and
+  ## never in a standalone test. Force a binary-safe encoding for the duration.
+  old_enc <- options(encoding = "native.enc")
+  on.exit(options(old_enc), add = TRUE)
+
   manifest <- archive::archive(archive)
 
   if (is.numeric(files)) {

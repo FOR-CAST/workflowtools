@@ -115,3 +115,33 @@ test_that("staging directory is not left behind", {
   expect_error(archive_extract_once(a, d, "iris.csv", force = TRUE))
   expect_length(list.files(d, pattern = "^[.]archive_extract_once-", all.files = TRUE), 0L)
 })
+
+test_that("archive_extract_once reads the archive under a binary-safe encoding", {
+  ## archive::archive() opens the archive with file(path, "rb"), which takes its encoding from
+  ## getOption("encoding"). Under UTF-8 a re-encoding layer is applied to a BINARY stream and
+  ## libarchive misreads member sizes as 0 -- so every file compares as short, the archive is
+  ## re-extracted on EVERY call, and the post-extraction verification can never pass. That
+  ## option is in force inside a SpaDES run, which is why this never showed up standalone.
+  ##
+  ## NOTE the misparse is size-dependent: verified that a 929-byte zip reads correctly under
+  ## either encoding while a 1.26 GB one returns all zeros, so the small test archive here
+  ## CANNOT reproduce it. Assert the guard itself instead: the encoding must be binary-safe
+  ## while the archive is read, and restored afterwards.
+  a <- system.file("extdata", "data.zip", package = "archive")
+  d <- withr::local_tempdir()
+  withr::local_options(encoding = "UTF-8")
+
+  real_archive <- archive::archive
+  seen <- NULL
+  testthat::local_mocked_bindings(
+    archive = function(file, ...) {
+      seen <<- getOption("encoding")
+      real_archive(file, ...)
+    },
+    .package = "archive"
+  )
+
+  archive_extract_once(a, d, "iris.csv")
+  expect_identical(seen, "native.enc")
+  expect_identical(getOption("encoding"), "UTF-8") ## restored on exit
+})
