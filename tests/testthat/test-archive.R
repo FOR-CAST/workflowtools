@@ -69,3 +69,49 @@ test_that("archive_extract_once errors when extraction leaves a file short", {
 
   expect_error(archive_extract_once(a, d, "iris.csv"), "extraction incomplete")
 })
+
+test_that("a failed extraction leaves an existing good file INTACT", {
+  ## The regression this locks down: extraction used to write straight into `dir`, so a failure
+  ## part-way through replaced a complete file with a truncated one -- and because one short
+  ## member makes the next call re-extract everything, that turned a single interrupted run into
+  ## a permanent loop. The mock writes a partial file and then fails, which is exactly the
+  ## mid-write failure that cost LandWeb a 1.88 GB shapefile repeatedly.
+  a <- system.file("extdata", "data.zip", package = "archive")
+  d <- withr::local_tempdir()
+
+  archive_extract_once(a, d, "iris.csv")
+  good <- file.size(file.path(d, "iris.csv"))
+
+  testthat::local_mocked_bindings(
+    archive_extract = function(archive, dir, files, ...) {
+      writeLines("partial", file.path(dir, "iris.csv")) ## a half-written member
+      stop("interrupted mid-extraction")
+    },
+    .package = "archive"
+  )
+  testthat::local_mocked_bindings(
+    .extract_unzip_fallback = function(archive, dir, files, err) stop(err)
+  )
+
+  expect_error(archive_extract_once(a, d, "iris.csv", force = TRUE))
+  expect_identical(file.size(file.path(d, "iris.csv")), good)
+})
+
+test_that("staging directory is not left behind", {
+  a <- system.file("extdata", "data.zip", package = "archive")
+  d <- withr::local_tempdir()
+
+  archive_extract_once(a, d, "iris.csv")
+  expect_length(list.files(d, pattern = "^[.]archive_extract_once-", all.files = TRUE), 0L)
+
+  ## also cleaned when the extraction fails
+  testthat::local_mocked_bindings(
+    archive_extract = function(archive, dir, files, ...) stop("boom"),
+    .package = "archive"
+  )
+  testthat::local_mocked_bindings(
+    .extract_unzip_fallback = function(archive, dir, files, err) stop(err)
+  )
+  expect_error(archive_extract_once(a, d, "iris.csv", force = TRUE))
+  expect_length(list.files(d, pattern = "^[.]archive_extract_once-", all.files = TRUE), 0L)
+})

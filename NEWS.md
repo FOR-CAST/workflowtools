@@ -1,3 +1,7 @@
+# workflowtools 0.0.17
+
+* `archive_extract_once()` now extracts into a staging directory and only moves members into `dir` once the whole set verifies against the archive manifest, so a failure part-way through can no longer leave a truncated file behind. Extracting in place was actively harmful rather than merely untidy: `archive::archive_extract()` opens each member `O_WRONLY|O_TRUNC`, so a complete file was destroyed the instant extraction began, and because a single short member makes the next call re-extract the *whole* archive, one interrupted run became a self-sustaining loop that re-truncated the same file on every retry. LandWeb hit this on a 1.88 GB NBAC shapefile, which was left at 525 MB, then 274 MB, then 103 MB, then 0 across successive runs. Note the staging directory needs room for a second copy of the extracted members while it exists;
+
 # workflowtools 0.0.16
 
 * `get_module_packages()` no longer warns "no non-missing arguments to max; returning -Inf". A package may be declared in `reqdPkgs` with no version constraint at all (`"data.table"` rather than `"data.table (>= 1.14)"`), so every version in that group is `NA`; `max(..., na.rm = TRUE)` then reduced an empty vector and produced a meaningless version. Such groups now yield `NA_character_`;

@@ -10,9 +10,17 @@
 #' Extraction is skipped only when every wanted file is already on disk **at the size
 #' the archive says it should be**. Checking existence alone is not enough: an
 #' interrupted extraction leaves a short file behind, which then looks "already
-#' extracted" forever. After extracting, the result is verified against the archive
-#' manifest and an error is raised if anything is still missing or short, so a partial
-#' extraction fails loudly instead of being silently reused.
+#' extracted" forever.
+#'
+#' Extraction goes into a staging directory (a child of `dir`, removed on exit) and is
+#' verified against the archive manifest there; only then are the members moved into
+#' `dir`. An error is raised if anything is still missing or short, so a partial
+#' extraction fails loudly instead of being silently reused -- and, because nothing is
+#' moved until the whole set verifies, a failure part-way through can no longer leave a
+#' truncated file in `dir`. That matters because a single short member makes the next
+#' call re-extract the *whole* archive, so extracting in place turns one interrupted run
+#' into a permanent loop. Note this needs room for a second copy of the extracted
+#' members while the staging directory exists.
 #'
 #' `libarchive` (via [archive::archive_extract]) can fail on very large `ZIP64`
 #' archives (e.g. with a "Truncated input file" error). When extraction fails and
@@ -58,18 +66,34 @@ archive_extract_once <- function(archive, dir = ".", files = NULL, ..., force = 
   extract <- isTRUE(force) || length(incomplete) > 0L
 
   if (isTRUE(extract)) {
+    fs::dir_create(dir)
+
+    ## Extract into a STAGING directory and only move the result into `dir` once it verifies.
+    ## `archive_extract()` opens each member `O_WRONLY|O_TRUNC`, so extracting straight into
+    ## `dir` destroys the existing copy the instant it starts -- and any failure part-way (an
+    ## error, an interrupt, a killed worker) leaves a truncated file behind. Because ONE short
+    ## member makes `.archive_incomplete()` re-extract the WHOLE archive, that is self-sustaining:
+    ## every later call restarts the extraction and dies at the same point. Staging makes the
+    ## operation all-or-nothing from `dir`'s point of view: a good file is only ever replaced by
+    ## a verified one. The staging dir is a child of `dir` so the moves stay on one filesystem
+    ## (`file.rename()` is then atomic per file), and it is removed on exit either way.
+    staging <- file.path(dir, sprintf(".archive_extract_once-%s", basename(tempfile(""))))
+    fs::dir_create(staging)
+    on.exit(unlink(staging, recursive = TRUE, force = TRUE), add = TRUE)
+
     f <- tryCatch(
-      archive::archive_extract(archive = archive, dir = dir, files = files, ...),
-      error = function(e) .extract_unzip_fallback(archive, dir, files, e)
+      archive::archive_extract(archive = archive, dir = staging, files = files, ...),
+      error = function(e) .extract_unzip_fallback(archive, staging, files, e)
     )
 
-    ## Verify what actually landed. An interrupted extraction leaves a SHORT file behind, and
-    ## because the previous skip-test was `file.exists()` only, every later call saw the stub and
-    ## skipped -- so the truncation became permanent and silent. This bit LandWeb: a 1.88 GB NBAC
-    ## fire-perimeter .shp was left at 567 MB, GDAL logged 74,178 read errors, `sf::st_read()` still
-    ## returned the full feature count (the .shx index was intact) and the pipeline completed with
-    ## historic fire summaries built from ~30% of the record.
-    still <- .archive_incomplete(manifest, dir, wanted)
+    ## Verify what actually landed, IN STAGING, before anything is moved into place. An
+    ## interrupted extraction leaves a SHORT file behind, and because the original skip-test was
+    ## `file.exists()` only, every later call saw the stub and skipped -- so the truncation became
+    ## permanent and silent. This bit LandWeb: a 1.88 GB NBAC fire-perimeter .shp was left at
+    ## 567 MB, GDAL logged 74,178 read errors, `sf::st_read()` still returned the full feature
+    ## count (the .shx index was intact) and the pipeline completed with historic fire summaries
+    ## built from ~30% of the record.
+    still <- .archive_incomplete(manifest, staging, wanted)
     if (length(still) > 0L) {
       stop(
         "archive_extract_once(): extraction incomplete for ",
@@ -81,11 +105,56 @@ archive_extract_once <- function(archive, dir = ".", files = NULL, ..., force = 
         call. = FALSE
       )
     }
+
+    .archive_move_into_place(staging, dir, wanted)
   } else {
     f <- wanted
   }
 
   return(fs::path(dir, f))
+}
+
+## Move verified members from the staging directory into their final home, replacing whatever is
+## there. `file.rename()` is atomic within a filesystem, and staging is a child of `to_dir`, so
+## each destination goes from old-and-good to new-and-good with no truncated window. The whole set
+## is not atomic -- a crash mid-move can leave some members new and some old -- but every
+## individual file is always a COMPLETE file, which is the property that matters here: the failure
+## mode being fixed is a half-written 1.88 GB shapefile, not a mixed-vintage set. `file.rename()`
+## is documented to fail across filesystems, so fall back to copy-then-remove if that ever happens
+## (it should not, given where staging lives).
+.archive_move_into_place <- function(from_dir, to_dir, wanted) {
+  is_dir <- grepl("/$", wanted)
+  dirs <- wanted[is_dir]
+  if (length(dirs)) {
+    fs::dir_create(file.path(to_dir, dirs))
+  }
+
+  rel <- wanted[!is_dir]
+  if (!length(rel)) {
+    return(invisible(character(0)))
+  }
+  src <- file.path(from_dir, rel)
+  dst <- file.path(to_dir, rel)
+  fs::dir_create(unique(dirname(dst))) ## members may sit in subdirectories of the archive
+
+  ok <- suppressWarnings(file.rename(src, dst))
+  if (!all(ok)) {
+    copied <- file.copy(src[!ok], dst[!ok], overwrite = TRUE)
+    if (!all(copied)) {
+      stop(
+        "archive_extract_once(): could not move ",
+        sum(!copied),
+        " extracted file(s) into ",
+        to_dir,
+        ":\n  ",
+        paste(utils::head(rel[!ok][!copied], 5L), collapse = "\n  "),
+        call. = FALSE
+      )
+    }
+    unlink(src[!ok])
+  }
+
+  invisible(dst)
 }
 
 ## Which of `wanted` are missing on disk, or present but not the size the archive says they should
