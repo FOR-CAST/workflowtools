@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">workflowtools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.18</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.19</span>
       </span>
     </div>
 
@@ -70,6 +70,19 @@
 <span><span class="fu">.github_ref</span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span></code></pre></div>
     </div>
 
+    <div id="arguments">
+    <h2>Arguments</h2>
+
+
+<dl><dt id="arg-x">x<a class="anchor" aria-label="anchor" href="#arg-x"></a></dt>
+<dd><p>character. A GitHub repository specification in the form
+<code><a href="https://remotes.r-lib.org/reference/parse-git-repo.html" class="external-link">remotes::parse_github_repo_spec()</a></code> accepts – <code>"user/repo"</code>, optionally with a
+reference (<code>"user/repo@branch"</code>) or a subdirectory. A string containing neither
+<code>/</code> nor <code>@</code> is taken to be a bare package name: <code>.github_repo()</code> returns it
+unchanged, and <code>.github_user()</code> and <code>.github_ref()</code> return <code>NA_character_</code>.
+Only the first element is used.</p></dd>
+
+</dl></div>
     <div id="value">
     <h2>Value</h2>
     <p>character string corresponding to the extracted component.</p>

@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">workflowtools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.18</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.19</span>
       </span>
     </div>
 
@@ -57,6 +57,11 @@
       <small>Source: <a href="https://github.com/FOR-CAST/workflowtools/blob/main/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="page-header" data-toc-text="0.0.19" id="workflowtools-0019">workflowtools 0.0.19<a class="anchor" aria-label="anchor" href="#workflowtools-0019"></a></h2>
+<ul><li>
+<code><a href="../reference/project_path.html">project_path()</a></code> now actually searches upward for the project root. The criterion was <code>is_rstudio_project | is_git_root | from_wd</code>, and <code><a href="https://rprojroot.r-lib.org/reference/criteria.html" class="external-link">rprojroot::from_wd</a></code> matches <strong>every</strong> directory it is given – so the combined criterion was satisfied at the first level tested, the search never walked up, and <code><a href="../reference/project_path.html">project_path()</a></code> returned <code><a href="https://rdrr.io/r/base/getwd.html" class="external-link">getwd()</a></code> verbatim with the RStudio and git criteria as dead code. It happened to be right whenever it was called from the project root, which is where pipelines usually start, so the defect stayed invisible in exactly the situations anyone would have checked it in; called from a <code>tests/testthat</code> directory it returned that directory, and anything composing a path from it wrote somewhere no one would look. The fallback to the working directory is kept, but as a fallback – it now applies only when neither marker is found anywhere above. <code><a href="../reference/project_path.html">project_name()</a></code> and the deprecated <code><a href="../reference/workflowtools-deprecated.html">findProjectPath()</a></code> both go through it and are fixed with it;</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.0.18" id="workflowtools-0018">workflowtools 0.0.18<a class="anchor" aria-label="anchor" href="#workflowtools-0018"></a></h2>
 <ul><li>
