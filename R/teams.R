@@ -81,7 +81,7 @@ with_retry <- function(fn, times = 3L, wait = 3, http11 = TRUE) {
 #' \pkg{AzureAuth}) caches the token under the AzureR cache dir, so after a
 #' successful device-code login subsequent calls reuse the cached token.
 #'
-#' @param team Team name or id (passed to [Microsoft365R::get_team()]).
+#' @param team Team name or id (passed to `Microsoft365R::get_team()`).
 #' @param channel Channel name (e.g. `"General"`).
 #' @param tenant Azure tenant (e.g. an organisation short name).
 #' @param app Azure app (client) id. Defaults to the well-known Azure CLI

@@ -13,7 +13,7 @@ teams_connect(
 )
 }
 \arguments{
-\item{team}{Team name or id (passed to \code{\link[Microsoft365R:get_team]{Microsoft365R::get_team()}}).}
+\item{team}{Team name or id (passed to \code{Microsoft365R::get_team()}).}
 
 \item{channel}{Channel name (e.g. \code{"General"}).}
 

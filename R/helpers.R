@@ -81,7 +81,12 @@ mod_list <- function(..., keep.null = TRUE) {
 
 #' Extract components of a GitHub repository string
 #'
-#' @param x
+#' @param x character. A GitHub repository specification in the form
+#'   [remotes::parse_github_repo_spec()] accepts -- `"user/repo"`, optionally with a
+#'   reference (`"user/repo@branch"`) or a subdirectory. A string containing neither
+#'   `/` nor `@` is taken to be a bare package name: `.github_repo()` returns it
+#'   unchanged, and `.github_user()` and `.github_ref()` return `NA_character_`.
+#'   Only the first element is used.
 #'
 #' @return character string corresponding to the extracted component.
 #'

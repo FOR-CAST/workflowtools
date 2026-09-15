@@ -12,6 +12,14 @@
 
 .github_ref(x)
 }
+\arguments{
+\item{x}{character. A GitHub repository specification in the form
+\code{\link[remotes:parse_github_repo_spec]{remotes::parse_github_repo_spec()}} accepts -- \code{"user/repo"}, optionally with a
+reference (\code{"user/repo@branch"}) or a subdirectory. A string containing neither
+\code{/} nor \code{@} is taken to be a bare package name: \code{.github_repo()} returns it
+unchanged, and \code{.github_user()} and \code{.github_ref()} return \code{NA_character_}.
+Only the first element is used.}
+}
 \value{
 character string corresponding to the extracted component.
 }
