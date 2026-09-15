@@ -14,6 +14,16 @@ project_name()
 \code{project_name()} returns the basename of the path.
 }
 \description{
-Searches from current working directory for an RStudio project file
-or git repository, falling back on using the current working directory.
+Searches upward from the current working directory for an RStudio project file
+or a git repository, falling back on the working directory when neither is found.
+}
+\details{
+The fallback is deliberately \emph{not} part of the \code{rprojroot} criterion.
+\link[rprojroot:from_wd]{rprojroot::from_wd} matches every directory it is given, so combining it with
+\code{|} makes the whole criterion match at the first level tested -- the working
+directory -- and the search never walks up at all. That is what this used to do,
+which meant \code{project_path()} returned \code{getwd()} verbatim and the RStudio and git
+criteria were dead code. Called from anywhere but the root of a project -- a
+\code{tests/testthat} directory, a module subdirectory -- it silently gave the wrong
+answer, and every path composed from it landed in the wrong place.
 }

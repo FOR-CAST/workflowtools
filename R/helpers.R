@@ -1,7 +1,16 @@
 #' Project root directory
 #'
-#' Searches from current working directory for an RStudio project file
-#' or git repository, falling back on using the current working directory.
+#' Searches upward from the current working directory for an RStudio project file
+#' or a git repository, falling back on the working directory when neither is found.
+#'
+#' The fallback is deliberately *not* part of the `rprojroot` criterion.
+#' [rprojroot::from_wd] matches every directory it is given, so combining it with
+#' `|` makes the whole criterion match at the first level tested -- the working
+#' directory -- and the search never walks up at all. That is what this used to do,
+#' which meant `project_path()` returned `getwd()` verbatim and the RStudio and git
+#' criteria were dead code. Called from anywhere but the root of a project -- a
+#' `tests/testthat` directory, a module subdirectory -- it silently gave the wrong
+#' answer, and every path composed from it landed in the wrong place.
 #'
 #' @return `project_path()` returns an absolute path;
 #'         `project_name()` returns the basename of the path.
@@ -9,9 +18,9 @@
 #' @export
 #' @rdname project_path
 project_path <- function() {
-  rprojroot::find_root(
-    rprojroot::is_rstudio_project | rprojroot::is_git_root | rprojroot::from_wd,
-    path = getwd()
+  tryCatch(
+    rprojroot::find_root(rprojroot::is_rstudio_project | rprojroot::is_git_root, path = getwd()),
+    error = function(e) norm_path(getwd())
   )
 }
 
