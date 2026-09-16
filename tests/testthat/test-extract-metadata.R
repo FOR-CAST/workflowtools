@@ -104,6 +104,7 @@ testthat::test_that("extract_metadata.bcdc_record() degrades when publisher/lice
 
 testthat::test_that("metadata_bcdata() caches the extracted record and hits the cache on rerun", {
   testthat::skip_if_not_installed("withr")
+  testthat::skip_if_not_installed("bcdata") ## mocks a binding inside its namespace
   cache_dir <- withr::local_tempdir()
   withr::local_options(workflowtools.metadata_cache.dir = cache_dir)
 
@@ -128,6 +129,7 @@ testthat::test_that("metadata_bcdata() caches the extracted record and hits the 
 
 testthat::test_that("metadata_bcdata(refresh = TRUE) bypasses the cache", {
   testthat::skip_if_not_installed("withr")
+  testthat::skip_if_not_installed("bcdata") ## mocks a binding inside its namespace
   cache_dir <- withr::local_tempdir()
   withr::local_options(workflowtools.metadata_cache.dir = cache_dir)
 
@@ -148,6 +150,7 @@ testthat::test_that("metadata_bcdata(refresh = TRUE) bypasses the cache", {
 
 testthat::test_that("metadata_bcdata(ttl_days = 0) treats every cached entry as stale", {
   testthat::skip_if_not_installed("withr")
+  testthat::skip_if_not_installed("bcdata") ## mocks a binding inside its namespace
   cache_dir <- withr::local_tempdir()
   withr::local_options(workflowtools.metadata_cache.dir = cache_dir)
 
