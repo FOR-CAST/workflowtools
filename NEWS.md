@@ -1,3 +1,7 @@
+# workflowtools 0.0.20
+
+* `info_git()` now records the latest commit in `Head`. It called `system2()` without `stdout = TRUE`, which prints git's output to the console and returns the exit status, so every receipt built by `info_project()` and `reproducibility_receipt()` carried `Head = 0` in place of the commit it was meant to identify. The receipts looked complete, and the one field that ties results to code was the one missing;
+
 # workflowtools 0.0.19
 
 * `project_path()` now actually searches upward for the project root. The criterion was `is_rstudio_project | is_git_root | from_wd`, and `rprojroot::from_wd` matches **every** directory it is given -- so the combined criterion was satisfied at the first level tested, the search never walked up, and `project_path()` returned `getwd()` verbatim with the RStudio and git criteria as dead code. It happened to be right whenever it was called from the project root, which is where pipelines usually start, so the defect stayed invisible in exactly the situations anyone would have checked it in; called from a `tests/testthat` directory it returned that directory, and anything composing a path from it wrote somewhere no one would look. The fallback to the working directory is kept, but as a fallback -- it now applies only when neither marker is found anywhere above. `project_name()` and the deprecated `findProjectPath()` both go through it and are fixed with it;

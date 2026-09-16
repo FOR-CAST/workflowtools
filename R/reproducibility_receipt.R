@@ -128,7 +128,7 @@ info_git <- function(prjDir = NULL) {
   remote <- strsplit(unique(gsub(" (.*)$", "", remote)), "\t")[[1]]
   remote <- paste0(local, " @ ", remote[1], " (", remote[2], ")")
 
-  head <- system2(Sys.which("git"), "log -1 --format=\"[%h] %as: %s\"", wait = TRUE)
+  head <- system2(Sys.which("git"), "log -1 --format=\"[%h] %as: %s\"", stdout = TRUE)
 
   list(Local = local, Remote = remote, Head = head, Submodules = info_submodules(prjDir))
 }
