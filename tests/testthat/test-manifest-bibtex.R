@@ -61,6 +61,26 @@ testthat::test_that("as_bibentry() returns a bibentry with the manifest's fields
   testthat::expect_equal(b$title, "Test Dataset")
 })
 
+testthat::test_that("format_bibtex_entry() never takes the year from the retrieval date", {
+  ## retrieved_at is when we downloaded it, not when it was published
+  rec <- make_record(id = "undated")
+  lines <- format_bibtex_entry(rec)
+  testthat::expect_false(any(grepl("year =", lines, fixed = TRUE)))
+  testthat::expect_true(any(grepl("note = {Retrieved 2026-06-09", lines, fixed = TRUE)))
+})
+
+testthat::test_that("as_bibentry() takes the year from version_or_vintage", {
+  rec <- make_record(version_or_vintage = "2024-12-01")
+  testthat::expect_equal(as_bibentry(rec)$year, "2024")
+})
+
+testthat::test_that("as_bibentry() leaves an unknown year out rather than guessing it", {
+  rec <- make_record(citation = list(bibtex_key = "TestKey"))
+  b <- as_bibentry(rec)
+  testthat::expect_null(b$year)
+  testthat::expect_true(any(grepl("Test Dataset", format(b, style = "text"))))
+})
+
 testthat::test_that("citation_text() returns formatted prose", {
   rec <- make_record(citation = list(bibtex_key = "TestKey"))
   out <- citation_text(rec)

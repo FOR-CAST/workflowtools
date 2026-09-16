@@ -64,16 +64,17 @@ format_bibtex_entry <- function(record) {
 #' @export
 as_bibentry <- function(record) {
   cit <- record$citation %||% list()
-  year <- .bibtex_year(record) %||% format(Sys.Date(), "%Y")
-
-  utils::bibentry(
+  fields <- list(
     bibtype = "Misc",
     key = cit$bibtex_key %||% record$id,
     title = record$name,
-    year = year,
     url = record$source$url %||% "",
     note = sprintf("Retrieved %s", record$retrieved_at %||% "")
   )
+  ## an unknown year is left out, never filled with today's date
+  fields$year <- .bibtex_year(record)
+
+  do.call(utils::bibentry, fields)
 }
 
 #' Format a manifest record's citation as prose
@@ -87,18 +88,16 @@ citation_text <- function(record) {
   format(as_bibentry(record), style = "text")
 }
 
-## Extract a usable 4-digit year from version_or_vintage or retrieved_at.
+## Extract a 4-digit year from version_or_vintage, or NULL.
+## Not from retrieved_at: that is when the data were downloaded, not when they were
+## published, and a citation with a guessed year looks verified when it is not.
 .bibtex_year <- function(record) {
-  for (field in c("version_or_vintage", "retrieved_at")) {
-    val <- record[[field]]
-    if (!is.null(val)) {
-      m <- regmatches(val, regexpr("[0-9]{4}", val))
-      if (length(m)) {
-        return(m[1L])
-      }
-    }
+  val <- record$version_or_vintage
+  if (is.null(val)) {
+    return(NULL)
   }
-  NULL
+  m <- regmatches(val, regexpr("[0-9]{4}", val))
+  if (length(m)) m[1L] else NULL
 }
 
 ## ---- key extraction ---------------------------------------------------------------------------

@@ -1,6 +1,7 @@
 # workflowtools 0.0.20
 
 * `info_git()` now records the latest commit in `Head`. It called `system2()` without `stdout = TRUE`, which prints git's output to the console and returns the exit status, so every receipt built by `info_project()` and `reproducibility_receipt()` carried `Head = 0` in place of the commit it was meant to identify. The receipts looked complete, and the one field that ties results to code was the one missing;
+* `as_bibentry()` and `format_bibtex_entry()` no longer invent a year. When `version_or_vintage` gave no year, `.bibtex_year()` fell back to the year in `retrieved_at` -- the download date, not the publication date -- and `as_bibentry()` then fell back again to the current year. Both produced a citation whose year looked verified and was not. An unknown year is now left out, so the gap is visible in the rendered bibliography instead of hidden behind a plausible number;
 
 # workflowtools 0.0.19
 
