@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">workflowtools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.19</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.20</span>
       </span>
     </div>
 
@@ -57,6 +57,13 @@
       <small>Source: <a href="https://github.com/FOR-CAST/workflowtools/blob/main/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="page-header" data-toc-text="0.0.20" id="workflowtools-0020">workflowtools 0.0.20<a class="anchor" aria-label="anchor" href="#workflowtools-0020"></a></h2>
+<ul><li>
+<code><a href="../reference/info_project.html">info_git()</a></code> now records the latest commit in <code>Head</code>. It called <code><a href="https://rdrr.io/r/base/system2.html" class="external-link">system2()</a></code> without <code>stdout = TRUE</code>, which prints git’s output to the console and returns the exit status, so every receipt built by <code><a href="../reference/info_project.html">info_project()</a></code> and <code><a href="../reference/reproducibility_receipt.html">reproducibility_receipt()</a></code> carried <code>Head = 0</code> in place of the commit it was meant to identify. The receipts looked complete, and the one field that ties results to code was the one missing;</li>
+<li>
+<code><a href="../reference/as_bibentry.html">as_bibentry()</a></code> and <code><a href="../reference/format_bibtex_entry.html">format_bibtex_entry()</a></code> no longer invent a year. When <code>version_or_vintage</code> gave no year, <code>.bibtex_year()</code> fell back to the year in <code>retrieved_at</code> – the download date, not the publication date – and <code><a href="../reference/as_bibentry.html">as_bibentry()</a></code> then fell back again to the current year. Both produced a citation whose year looked verified and was not. An unknown year is now left out, so the gap is visible in the rendered bibliography instead of hidden behind a plausible number;</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.0.19" id="workflowtools-0019">workflowtools 0.0.19<a class="anchor" aria-label="anchor" href="#workflowtools-0019"></a></h2>
 <ul><li>
