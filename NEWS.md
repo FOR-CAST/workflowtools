@@ -1,3 +1,7 @@
+# workflowtools 0.0.21
+
+* New `project_relative_path()`: a saved file's path relative to the project root, mapped back through the project's own symlinks (an `outputs` link to shared storage, say) before falling back on a directory named like the project. It replaces the copy in SpaDES.targets, which matched folder names only and returned a wrong path when a symlink's target did not contain the project's name.
+
 # workflowtools 0.0.20
 
 * `info_git()` now records the latest commit in `Head`. It called `system2()` without `stdout = TRUE`, which prints git's output to the console and returns the exit status, so every receipt built by `info_project()` and `reproducibility_receipt()` carried `Head = 0` in place of the commit it was meant to identify. The receipts looked complete, and the one field that ties results to code was the one missing;

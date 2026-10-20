@@ -30,6 +30,74 @@ project_name <- function() {
   basename(project_path())
 }
 
+#' Path of a file relative to the project root
+#'
+#' Turns file paths back into paths relative to the project root, so they resolve from any checkout of
+#' the project. A file written through a symlink in the project (`outputs` pointing to shared storage,
+#' say) is usually reported by its resolved path, outside the project, where a plain relative path
+#' would have to climb out with `../`.
+#'
+#' Each path is resolved, then mapped back by the first rule that applies:
+#' 1. inside the project root: the path relative to it;
+#' 2. inside the target of one of the project's top-level symlinks: that symlink's name followed by
+#'    the rest of the path (the longest matching target wins);
+#' 3. through a directory named like the project, as when shared storage is named after the project
+#'    (`/mnt/projects/<group>/<project>/outputs/...`): the rest of the path after the deepest such
+#'    directory;
+#' 4. otherwise, the plain relative path from the project root.
+#'
+#' A path that does not exist is normalized but not resolved.
+#'
+#' @param path Character vector of file paths.
+#' @param project Project root directory.
+#'
+#' @return A character vector, one path per element of `path`.
+#'
+#' @export
+project_relative_path <- function(path, project = project_path()) {
+  proj <- fs::path_abs(project)
+  proj_real <- fs::path_real(proj)
+  links <- as.character(fs::dir_ls(proj, type = "symlink", all = TRUE))
+  targets <- vapply(
+    links,
+    function(l) tryCatch(as.character(fs::path_real(l)), error = function(e) NA_character_),
+    character(1),
+    USE.NAMES = FALSE
+  )
+  ## a dangling or looping symlink cannot hold a saved file
+  links <- links[!is.na(targets)]
+  targets <- targets[!is.na(targets)]
+  proj_name <- fs::path_file(proj_real)
+
+  vapply(
+    as.character(path),
+    function(p) {
+      pr <- if (file.exists(p)) fs::path_real(p) else fs::path_norm(fs::path_abs(p))
+      if (fs::path_has_parent(pr, proj_real)) {
+        return(as.character(fs::path_rel(pr, proj_real)))
+      }
+      under <- vapply(
+        targets,
+        function(tg) fs::path_has_parent(pr, tg),
+        logical(1),
+        USE.NAMES = FALSE
+      )
+      if (any(under)) {
+        k <- which(under)[which.max(nchar(targets[under]))]
+        return(as.character(fs::path(fs::path_file(links[k]), fs::path_rel(pr, targets[k]))))
+      }
+      parts <- fs::path_split(pr)[[1L]]
+      named <- which(parts == proj_name)
+      if (length(named) && max(named) < length(parts)) {
+        return(as.character(fs::path_join(parts[(max(named) + 1L):length(parts)])))
+      }
+      as.character(fs::path_rel(pr, proj_real))
+    },
+    character(1),
+    USE.NAMES = FALSE
+  )
+}
+
 norm_path <- function(path) {
   unlist(path) |>
     fs::path_norm() |>
