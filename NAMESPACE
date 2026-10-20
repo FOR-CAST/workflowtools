@@ -59,6 +59,8 @@ export(user)
 export(validate_manifest_record)
 export(with_retry)
 export(write_input_manifest)
-importFrom(data.table,":=")
-importFrom(data.table,.SD)
+importFrom(data.table,
+  ":=",
+  .SD
+)
 importFrom(lifecycle,deprecated)
