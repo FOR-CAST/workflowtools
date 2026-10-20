@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">workflowtools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.20</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.21</span>
       </span>
     </div>
 
@@ -57,6 +57,10 @@
       <small>Source: <a href="https://github.com/FOR-CAST/workflowtools/blob/main/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="page-header" data-toc-text="0.0.21" id="workflowtools-0021">workflowtools 0.0.21<a class="anchor" aria-label="anchor" href="#workflowtools-0021"></a></h2>
+<ul><li>New <code><a href="../reference/project_relative_path.html">project_relative_path()</a></code>: a saved file’s path relative to the project root, mapped back through the project’s own symlinks (an <code>outputs</code> link to shared storage, say) before falling back on a directory named like the project. It replaces the copy in SpaDES.targets, which matched folder names only and returned a wrong path when a symlink’s target did not contain the project’s name.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.0.20" id="workflowtools-0020">workflowtools 0.0.20<a class="anchor" aria-label="anchor" href="#workflowtools-0020"></a></h2>
 <ul><li>
