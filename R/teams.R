@@ -203,10 +203,15 @@ teams_download_folder <- function(
       dir.create(dirname(lp), recursive = TRUE, showWarnings = FALSE)
       if (isTRUE(overwrite) || !file.exists(lp)) {
         cli::cli_inform("Downloading: {.path {rp}}")
+        ## download beside `lp` and rename into place, as download_once() does, so a failed
+        ## download cannot leave a partial file that `overwrite = FALSE` would then keep
+        partial <- .partial_path(lp)
+        on.exit(unlink(partial, force = TRUE), add = TRUE)
         with_retry(
-          function() folder$get_item(rp)$download(dest = lp, overwrite = TRUE),
+          function() folder$get_item(rp)$download(dest = partial, overwrite = TRUE),
           times = retries
         )
+        .move_into_place(partial, lp)
         downloaded <- c(downloaded, lp)
       } else {
         cli::cli_inform("Skipping (exists): {.path {rp}}")

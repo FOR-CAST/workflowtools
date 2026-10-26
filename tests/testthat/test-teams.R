@@ -91,6 +91,35 @@ test_that("teams_download_folder skips existing files when overwrite = FALSE", {
   expect_equal(readLines(file.path(tmp, "f1.txt")), "KEEP")
 })
 
+test_that("teams_download_folder leaves no partial file when a download fails", {
+  ## Downloading straight into the destination left the partial file in place, and a later call
+  ## with overwrite = FALSE then kept it as if it were complete.
+  tmp <- withr::local_tempdir()
+  tree <- list(
+    "<root>" = data.frame(name = "f1.txt", isdir = FALSE, size = 10, stringsAsFactors = FALSE)
+  )
+  folder <- fake_download_folder(tree)
+  folder$get_item <- function(path) {
+    item <- new.env(parent = emptyenv())
+    item$download <- function(dest, overwrite = TRUE) {
+      writeLines("partial", dest)
+      stop("transfer interrupted")
+    }
+    item
+  }
+
+  expect_error(
+    suppressMessages(teams_download_folder(folder, tmp, overwrite = FALSE, retries = 1L)),
+    "transfer interrupted"
+  )
+  expect_length(list.files(tmp, all.files = TRUE, no.. = TRUE), 0L)
+
+  got <- suppressMessages(teams_download_folder(fake_download_folder(tree), tmp, overwrite = FALSE))
+  expect_identical(got, file.path(tmp, "f1.txt"))
+  expect_equal(readLines(file.path(tmp, "f1.txt")), "content of f1.txt")
+  expect_identical(list.files(tmp, all.files = TRUE, no.. = TRUE), "f1.txt")
+})
+
 test_that("teams_upload_files uploads existing files and skips missing", {
   f1 <- withr::local_tempfile(fileext = ".pdf")
   writeLines("a", f1)
