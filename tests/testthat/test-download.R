@@ -124,7 +124,8 @@ test_that("download_once() downloads to a unique temporary file beside the desti
   expect_error(download_once("https://example.org/landbase.zip", dest))
 
   expect_length(used, 2L)
-  expect_identical(dirname(used), rep(d, 2L))
+  ## against dirname(dest), not `d`: on Windows dirname() rewrites the separators
+  expect_identical(dirname(used), rep(dirname(dest), 2L))
   expect_true(all(startsWith(basename(used), ".partial-")))
   expect_true(all(endsWith(basename(used), "-landbase.zip")))
   expect_identical(tools::file_ext(used), rep("zip", 2L))
@@ -214,7 +215,7 @@ test_that("drive_download_once() downloads to a temporary file beside the destin
   )
 
   expect_error(drive_download_once("drive-file-id", dest))
-  expect_identical(dirname(used), d)
+  expect_identical(dirname(used), dirname(dest))
   expect_true(startsWith(basename(used), ".partial-"))
   expect_true(endsWith(basename(used), "-landbase.zip"))
   expect_identical(tools::file_ext(used), "zip")
