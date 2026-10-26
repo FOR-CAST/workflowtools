@@ -6,11 +6,26 @@
 #'
 #' @param ... additional parameters passed to `download.file`
 #'
+#' @details
+#' The file is downloaded to a temporary file beside `destfile` (`.partial-<random>-<name>`),
+#' which is renamed to `destfile` only once the download has finished. Downloading straight into
+#' `destfile` let a concurrent caller find a half-written file, skip its own download and use it,
+#' and a failed download left a partial file that every later call then skipped. Both paths are in
+#' one directory, so the rename is atomic. The temporary file is removed if the download fails; one
+#' left by a killed process is never mistaken for the download, and can be deleted.
+#'
 #' @export
 #' @seealso [drive_download_once()]
 download_once <- function(url, destfile, ...) {
   if (!file.exists(destfile)) {
-    utils::download.file(url = url, destfile = destfile, ...)
+    partial <- .partial_path(destfile)
+    on.exit(unlink(partial, force = TRUE), add = TRUE)
+    status <- utils::download.file(url = url, destfile = partial, ...)
+    ## the "wget" and "curl" methods report a failure as a non-zero status and a warning
+    if (identical(as.integer(status), 0L)) {
+      .move_into_place(partial, destfile)
+    }
+    invisible(status)
   }
 }
 
@@ -20,11 +35,24 @@ download_once <- function(url, destfile, ...) {
 #'
 #' @param ... additional parameters passed to [utils::download.file]
 #'
+#' @details
+#' As in [download_once()], the file is downloaded to a temporary file beside `path`, which is
+#' renamed into place only once the download has finished. The temporary name ends with the name
+#' of `path`, so googledrive still reads the export type from its extension.
+#'
 #' @export
 #' @seealso [download_once()]
 drive_download_once <- function(file, path, ...) {
   if (!file.exists(path)) {
-    googledrive::drive_download(file = file, path = path, ...)
+    partial <- .partial_path(path)
+    on.exit(unlink(partial, force = TRUE), add = TRUE)
+    res <- googledrive::drive_download(file = file, path = partial, ...)
+    ## googledrive appends an extension when it exports a native Google file to a path without one
+    landed <- res[["local_path"]]
+    dest <- paste0(path, substring(landed, nchar(partial) + 1L))
+    .move_into_place(landed, dest)
+    res[["local_path"]] <- dest
+    invisible(res)
   }
 }
 
@@ -92,4 +120,20 @@ drive_download_folder <- function(drive_folder, path, batch_size = 10, overwrite
   } else {
     downloaded_files
   }
+}
+
+## A unique temporary path for a download in progress. It is in the same directory as `path`, so
+## `file.rename()` into place stays on one filesystem and is atomic (NFS included), and it ends with
+## `basename(path)`, keeping the extension that googledrive reads the export type from.
+.partial_path <- function(path) {
+  file.path(dirname(path), paste0(".partial-", basename(tempfile("")), "-", basename(path)))
+}
+
+## Move a finished download into place. `file.rename()` replaces a `to` that appeared meanwhile,
+## which is fine: if another caller finished the same download first, both copies are complete.
+.move_into_place <- function(from, to) {
+  if (!file.rename(from, to)) {
+    stop("could not move the download ", from, " into place at ", to, call. = FALSE)
+  }
+  invisible(to)
 }

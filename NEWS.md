@@ -1,3 +1,9 @@
+# workflowtools (development version)
+
+## Bug fixes
+
+* `download_once()` and `drive_download_once()` now download to a temporary file beside the destination and rename it into place once the download has finished. They used to skip any destination that existed and download straight into it, so a concurrent caller could find a half-written file and use it (two LandWeb workers fetching the same 1.1 GB landbase zip: one extracted the other's partial copy), and a failed download left a partial file that every later call then skipped.
+
 # workflowtools 0.0.21
 
 * New `project_relative_path()`: a saved file's path relative to the project root, mapped back through the project's own symlinks (an `outputs` link to shared storage, say) before falling back on a directory named like the project. It replaces the copy in SpaDES.targets, which matched folder names only and returned a wrong path when a symlink's target did not contain the project's name.

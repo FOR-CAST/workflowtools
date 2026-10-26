@@ -16,6 +16,14 @@ download_once(url, destfile, ...)
 \description{
 Download a file, skipping if file already exists locally
 }
+\details{
+The file is downloaded to a temporary file beside \code{destfile} (\verb{.partial-<random>-<name>}),
+which is renamed to \code{destfile} only once the download has finished. Downloading straight into
+\code{destfile} let a concurrent caller find a half-written file, skip its own download and use it,
+and a failed download left a partial file that every later call then skipped. Both paths are in
+one directory, so the rename is atomic. The temporary file is removed if the download fails; one
+left by a killed process is never mistaken for the download, and can be deleted.
+}
 \seealso{
 \code{\link[=drive_download_once]{drive_download_once()}}
 }

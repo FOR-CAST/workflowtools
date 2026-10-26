@@ -20,6 +20,11 @@ directory, possibly with an added file extension.}
 \description{
 Download a file from Google Drive, skipping if file already exists locally
 }
+\details{
+As in \code{\link[=download_once]{download_once()}}, the file is downloaded to a temporary file beside \code{path}, which is
+renamed into place only once the download has finished. The temporary name ends with the name
+of \code{path}, so googledrive still reads the export type from its extension.
+}
 \seealso{
 \code{\link[=download_once]{download_once()}}
 }
