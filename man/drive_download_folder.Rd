@@ -4,7 +4,13 @@
 \alias{drive_download_folder}
 \title{Download multiple files/folders from Google Drive}
 \usage{
-drive_download_folder(drive_folder, path, batch_size = 10, overwrite = TRUE)
+drive_download_folder(
+  drive_folder,
+  path,
+  batch_size = 10,
+  overwrite = TRUE,
+  skip_unchanged = FALSE
+)
 }
 \arguments{
 \item{drive_folder}{The folder on Google Drive, given as a URL, file id, or dribble.}
@@ -15,9 +21,14 @@ drive_download_folder(drive_folder, path, batch_size = 10, overwrite = TRUE)
 Downloads are done in batches to mitigate curl handle errors.}
 
 \item{overwrite}{logical indicating whether to overwrite local files}
+
+\item{skip_unchanged}{logical. If \code{TRUE}, a file whose local copy in \code{path} has the same MD5
+checksum as the file on Drive is not downloaded again. Google-native files (Docs, Sheets) have
+no checksum on Drive, so they are always downloaded.}
 }
 \value{
-Invisibly, a dribble of the downloaded files (not directories).
+Invisibly, a dribble of the downloaded files (not directories, and not files skipped as
+unchanged).
 }
 \description{
 Based on \url{https://github.com/tidyverse/googledrive/issues/123#issuecomment-563484927}.

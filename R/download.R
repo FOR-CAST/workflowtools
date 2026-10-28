@@ -71,10 +71,21 @@ drive_download_once <- function(file, path, ...) {
 #'
 #' @param overwrite logical indicating whether to overwrite local files
 #'
-#' @return Invisibly, a dribble of the downloaded files (not directories).
+#' @param skip_unchanged logical. If `TRUE`, a file whose local copy in `path` has the same MD5
+#'   checksum as the file on Drive is not downloaded again. Google-native files (Docs, Sheets) have
+#'   no checksum on Drive, so they are always downloaded.
+#'
+#' @return Invisibly, a dribble of the downloaded files (not directories, and not files skipped as
+#'   unchanged).
 #'
 #' @export
-drive_download_folder <- function(drive_folder, path, batch_size = 10, overwrite = TRUE) {
+drive_download_folder <- function(
+  drive_folder,
+  path,
+  batch_size = 10,
+  overwrite = TRUE,
+  skip_unchanged = FALSE
+) {
   if (!dir.exists(path)) {
     dir.create(path, recursive = TRUE)
   }
@@ -86,6 +97,9 @@ drive_download_folder <- function(drive_folder, path, batch_size = 10, overwrite
   drive_dirs <- googledrive::drive_ls(drive_folder, recursive = FALSE, type = "folder")
   drive_files <- googledrive::drive_ls(drive_folder, recursive = FALSE) |>
     dplyr::filter(!id %in% drive_dirs[["id"]])
+  if (isTRUE(skip_unchanged) && nrow(drive_files) > 0) {
+    drive_files <- drive_files[!.drive_unchanged(drive_files, path), , drop = FALSE]
+  }
 
   ## download the files in the current directory
   downloaded_files <- NULL
@@ -112,7 +126,8 @@ drive_download_folder <- function(drive_folder, path, batch_size = 10, overwrite
         .x,
         file.path(path, .y),
         batch_size = batch_size,
-        overwrite = overwrite
+        overwrite = overwrite,
+        skip_unchanged = skip_unchanged
       )
     ) |>
       dplyr::bind_rows(downloaded_files) |>
@@ -120,6 +135,21 @@ drive_download_folder <- function(drive_folder, path, batch_size = 10, overwrite
   } else {
     downloaded_files
   }
+}
+
+## Which of `drive_files` already have an identical copy in `path`: a local file of the same name
+## whose MD5 equals the Drive file's md5Checksum. Drive gives no checksum for Google-native files,
+## so they never count as unchanged.
+.drive_unchanged <- function(drive_files, path) {
+  local <- file.path(path, drive_files$name)
+  remote <- vapply(
+    drive_files$drive_resource,
+    function(r) r$md5Checksum %||% NA_character_,
+    character(1)
+  )
+  same <- file.exists(local) & !is.na(remote)
+  same[same] <- unname(tools::md5sum(local[same])) == remote[same]
+  same
 }
 
 ## A unique temporary path for a download in progress. It is in the same directory as `path`, so

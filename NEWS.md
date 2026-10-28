@@ -1,3 +1,9 @@
+# workflowtools (development version)
+
+## Enhancements
+
+* `drive_download_folder()` gains `skip_unchanged`. With `TRUE`, a file whose local copy already has the Drive file's MD5 checksum is not downloaded again, so a caller that refreshes a whole folder on every run (for example a `targets` target with `cue = "always"`) no longer re-transfers multi-GB files it already has. Google-native files have no checksum and are always downloaded. The default (`FALSE`) keeps the old behaviour.
+
 # workflowtools 0.0.22
 
 * `download_once()` and `drive_download_once()` now download to a temporary file beside the destination and rename it into place once the download has finished. They used to skip any destination that existed and download straight into it, so a concurrent caller could find a half-written file and use it (two LandWeb workers fetching the same 1.1 GB landbase zip: one extracted the other's partial copy), and a failed download left a partial file that every later call then skipped. `teams_download_folder()` now downloads each file the same way, so a failed download no longer leaves a partial file that a later call with `overwrite = FALSE` keeps.

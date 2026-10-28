@@ -251,3 +251,120 @@ test_that("drive_download_once() skips a destination that already exists", {
   expect_no_error(drive_download_once("drive-file-id", dest))
   expect_identical(readLines(dest), "KEEP")
 })
+
+## A fake Drive for drive_download_folder(): `tree` maps a folder id to its entries, a data frame of
+## id, name, and md5 (NA for a folder or a Google-native file); `folder` marks the subfolders.
+## drive_ls() answers from it and drive_download() writes the file id into the file, recording each
+## id it is asked for in `env$downloaded`.
+local_fake_drive <- function(tree, env, frame = parent.frame()) {
+  env$downloaded <- character()
+  local_mocked_bindings(
+    drive_ls = function(path = NULL, pattern = NULL, recursive = FALSE, ..., type = NULL) {
+      x <- tree[[path]]
+      if (identical(type, "folder")) {
+        x <- x[x$folder, , drop = FALSE]
+      }
+      res <- data.frame(id = x$id, name = x$name)
+      ## Drive gives an md5Checksum for stored files only, not for folders or Google-native files
+      res$drive_resource <- Map(
+        function(m, f) {
+          if (f) {
+            list(mimeType = "application/vnd.google-apps.folder")
+          } else if (is.na(m)) {
+            list(mimeType = "application/vnd.google-apps.document")
+          } else {
+            list(md5Checksum = m)
+          }
+        },
+        x$md5,
+        x$folder
+      )
+      res
+    },
+    drive_download = function(file, path = NULL, ..., overwrite = FALSE) {
+      env$downloaded <- c(env$downloaded, file)
+      writeLines(file, path)
+      invisible(data.frame(id = file, name = basename(path), local_path = path))
+    },
+    .package = "googledrive",
+    .env = frame
+  )
+}
+
+entries <- function(id, name, md5 = NA_character_, folder = FALSE) {
+  data.frame(id = id, name = name, md5 = md5, folder = folder)
+}
+
+## The md5 of each string as drive_download() above writes it (one line).
+md5_of <- function(text) {
+  vapply(
+    text,
+    function(x) {
+      f <- withr::local_tempfile()
+      writeLines(x, f)
+      unname(tools::md5sum(f))
+    },
+    character(1),
+    USE.NAMES = FALSE
+  )
+}
+
+test_that("drive_download_folder(skip_unchanged = TRUE) skips a file whose md5 matches", {
+  d <- withr::local_tempdir()
+  writeLines("fa", file.path(d, "a.txt"))
+  env <- new.env()
+  local_fake_drive(list(root = entries("fa", "a.txt", md5_of("fa"))), env)
+
+  drive_download_folder("root", d, skip_unchanged = TRUE)
+  expect_identical(env$downloaded, character())
+  expect_identical(readLines(file.path(d, "a.txt")), "fa")
+})
+
+test_that("drive_download_folder(skip_unchanged = TRUE) downloads a changed file and a missing one", {
+  d <- withr::local_tempdir()
+  writeLines("old", file.path(d, "b.txt"))
+  env <- new.env()
+  local_fake_drive(
+    list(root = entries(c("fb", "fc"), c("b.txt", "c.txt"), md5_of(c("fb", "fc")))),
+    env
+  )
+
+  drive_download_folder("root", d, skip_unchanged = TRUE)
+  expect_identical(env$downloaded, c("fb", "fc"))
+  expect_identical(readLines(file.path(d, "b.txt")), "fb")
+})
+
+test_that("drive_download_folder(skip_unchanged = TRUE) always downloads a file without an md5", {
+  d <- withr::local_tempdir()
+  writeLines("fdoc", file.path(d, "notes"))
+  env <- new.env()
+  local_fake_drive(list(root = entries("fdoc", "notes")), env)
+
+  drive_download_folder("root", d, skip_unchanged = TRUE)
+  expect_identical(env$downloaded, "fdoc")
+})
+
+test_that("drive_download_folder(skip_unchanged = TRUE) skips unchanged files in subfolders too", {
+  d <- withr::local_tempdir()
+  dir.create(file.path(d, "sub"))
+  writeLines("fd", file.path(d, "sub", "d.txt"))
+  env <- new.env()
+  tree <- list(
+    root = entries("dsub", "sub", folder = TRUE),
+    dsub = entries("fd", "d.txt", md5_of("fd"))
+  )
+  local_fake_drive(tree, env)
+
+  drive_download_folder("root", d, skip_unchanged = TRUE)
+  expect_identical(env$downloaded, character())
+})
+
+test_that("drive_download_folder() downloads every file by default", {
+  d <- withr::local_tempdir()
+  writeLines("fa", file.path(d, "a.txt"))
+  env <- new.env()
+  local_fake_drive(list(root = entries("fa", "a.txt", md5_of("fa"))), env)
+
+  drive_download_folder("root", d)
+  expect_identical(env$downloaded, "fa")
+})
