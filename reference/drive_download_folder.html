@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">workflowtools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.22</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.22.9000</span>
       </span>
     </div>
 
@@ -63,7 +63,13 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">drive_download_folder</span><span class="op">(</span><span class="va">drive_folder</span>, <span class="va">path</span>, batch_size <span class="op">=</span> <span class="fl">10</span>, overwrite <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">drive_download_folder</span><span class="op">(</span></span>
+<span>  <span class="va">drive_folder</span>,</span>
+<span>  <span class="va">path</span>,</span>
+<span>  batch_size <span class="op">=</span> <span class="fl">10</span>,</span>
+<span>  overwrite <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  skip_unchanged <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -86,10 +92,17 @@ Downloads are done in batches to mitigate curl handle errors.</p></dd>
 <dt id="arg-overwrite">overwrite<a class="anchor" aria-label="anchor" href="#arg-overwrite"></a></dt>
 <dd><p>logical indicating whether to overwrite local files</p></dd>
 
+
+<dt id="arg-skip-unchanged">skip_unchanged<a class="anchor" aria-label="anchor" href="#arg-skip-unchanged"></a></dt>
+<dd><p>logical. If <code>TRUE</code>, a file whose local copy in <code>path</code> has the same MD5
+checksum as the file on Drive is not downloaded again. Google-native files (Docs, Sheets) have
+no checksum on Drive, so they are always downloaded.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>Invisibly, a dribble of the downloaded files (not directories).</p>
+    <p>Invisibly, a dribble of the downloaded files (not directories, and not files skipped as
+unchanged).</p>
     </div>
     <div id="details">
     <h2>Details</h2>

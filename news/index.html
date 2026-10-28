@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">workflowtools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.22</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.22.9000</span>
       </span>
     </div>
 
@@ -57,6 +57,14 @@
       <small>Source: <a href="https://github.com/FOR-CAST/workflowtools/blob/main/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="page-header" data-toc-text="development version" id="workflowtools-development-version">workflowtools (development version)<a class="anchor" aria-label="anchor" href="#workflowtools-development-version"></a></h2>
+<div class="section level3">
+<h3 id="enhancements-development-version">Enhancements<a class="anchor" aria-label="anchor" href="#enhancements-development-version"></a></h3>
+<ul><li>
+<code><a href="../reference/drive_download_folder.html">drive_download_folder()</a></code> gains <code>skip_unchanged</code>. With <code>TRUE</code>, a file whose local copy already has the Drive file’s MD5 checksum is not downloaded again, so a caller that refreshes a whole folder on every run (for example a <code>targets</code> target with <code>cue = "always"</code>) no longer re-transfers multi-GB files it already has. Google-native files have no checksum and are always downloaded. The default (<code>FALSE</code>) keeps the old behaviour.</li>
+</ul></div>
+</div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.0.22" id="workflowtools-0022">workflowtools 0.0.22<a class="anchor" aria-label="anchor" href="#workflowtools-0022"></a></h2>
 <ul><li>
