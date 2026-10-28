@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">workflowtools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.22.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.22.9001</span>
       </span>
     </div>
 
@@ -68,7 +68,8 @@
 <span>  <span class="va">path</span>,</span>
 <span>  batch_size <span class="op">=</span> <span class="fl">10</span>,</span>
 <span>  overwrite <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  skip_unchanged <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span>  skip_unchanged <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  files <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -97,6 +98,13 @@ Downloads are done in batches to mitigate curl handle errors.</p></dd>
 <dd><p>logical. If <code>TRUE</code>, a file whose local copy in <code>path</code> has the same MD5
 checksum as the file on Drive is not downloaded again. Google-native files (Docs, Sheets) have
 no checksum on Drive, so they are always downloaded.</p></dd>
+
+
+<dt id="arg-files">files<a class="anchor" aria-label="anchor" href="#arg-files"></a></dt>
+<dd><p>character, or <code>NULL</code> (all files). The names of the files in <code>drive_folder</code> to
+download. Subfolders are then not searched, and an error names any file the folder lacks, or
+holds more than once, before anything is downloaded – so a caller never goes on to read an old
+local copy of a file that was removed from Drive.</p></dd>
 
 </dl></div>
     <div id="value">
