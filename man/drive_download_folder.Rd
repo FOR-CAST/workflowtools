@@ -9,7 +9,8 @@ drive_download_folder(
   path,
   batch_size = 10,
   overwrite = TRUE,
-  skip_unchanged = FALSE
+  skip_unchanged = FALSE,
+  files = NULL
 )
 }
 \arguments{
@@ -25,6 +26,11 @@ Downloads are done in batches to mitigate curl handle errors.}
 \item{skip_unchanged}{logical. If \code{TRUE}, a file whose local copy in \code{path} has the same MD5
 checksum as the file on Drive is not downloaded again. Google-native files (Docs, Sheets) have
 no checksum on Drive, so they are always downloaded.}
+
+\item{files}{character, or \code{NULL} (all files). The names of the files in \code{drive_folder} to
+download. Subfolders are then not searched, and an error names any file the folder lacks, or
+holds more than once, before anything is downloaded -- so a caller never goes on to read an old
+local copy of a file that was removed from Drive.}
 }
 \value{
 Invisibly, a dribble of the downloaded files (not directories, and not files skipped as

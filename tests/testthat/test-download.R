@@ -368,3 +368,74 @@ test_that("drive_download_folder() downloads every file by default", {
   drive_download_folder("root", d)
   expect_identical(env$downloaded, "fa")
 })
+
+test_that("drive_download_folder(files =) downloads only the named files", {
+  d <- withr::local_tempdir()
+  env <- new.env()
+  local_fake_drive(
+    list(
+      root = entries(
+        c("fa", "fb", "fz"),
+        c("a.txt", "b.txt", "big.zip"),
+        md5_of(c("fa", "fb", "fz"))
+      )
+    ),
+    env
+  )
+
+  drive_download_folder("root", d, files = c("a.txt", "b.txt"))
+  expect_identical(env$downloaded, c("fa", "fb"))
+  expect_false(file.exists(file.path(d, "big.zip")))
+})
+
+test_that("drive_download_folder(files =) names the files the folder lacks, and downloads nothing", {
+  ## a caller must not go on to read an old local copy of a file removed from Drive
+  d <- withr::local_tempdir()
+  writeLines("old", file.path(d, "gone.rds"))
+  env <- new.env()
+  local_fake_drive(list(root = entries("fa", "a.txt", md5_of("fa"))), env)
+
+  err <- expect_error(drive_download_folder("root", d, files = c("a.txt", "gone.rds")))
+  expect_match(conditionMessage(err), "gone.rds", fixed = TRUE)
+  expect_match(conditionMessage(err), "root", fixed = TRUE)
+  expect_identical(env$downloaded, character())
+})
+
+test_that("drive_download_folder(files =) does not search subfolders", {
+  d <- withr::local_tempdir()
+  env <- new.env()
+  tree <- list(
+    root = rbind(entries("fa", "a.txt", md5_of("fa")), entries("dsub", "sub", folder = TRUE)),
+    dsub = entries("fd", "d.txt", md5_of("fd"))
+  )
+  local_fake_drive(tree, env)
+
+  drive_download_folder("root", d, files = "a.txt")
+  expect_identical(env$downloaded, "fa")
+  expect_false(dir.exists(file.path(d, "sub")))
+})
+
+test_that("drive_download_folder(files =) refuses a name the folder holds twice", {
+  d <- withr::local_tempdir()
+  env <- new.env()
+  local_fake_drive(
+    list(root = entries(c("f1", "f2"), c("a.txt", "a.txt"), md5_of(c("f1", "f2")))),
+    env
+  )
+
+  expect_error(drive_download_folder("root", d, files = "a.txt"), "more than one", fixed = TRUE)
+  expect_identical(env$downloaded, character())
+})
+
+test_that("drive_download_folder(files =, skip_unchanged = TRUE) skips a named file that has not changed", {
+  d <- withr::local_tempdir()
+  writeLines("fa", file.path(d, "a.txt"))
+  env <- new.env()
+  local_fake_drive(
+    list(root = entries(c("fa", "fb"), c("a.txt", "b.txt"), md5_of(c("fa", "fb")))),
+    env
+  )
+
+  drive_download_folder("root", d, files = c("a.txt", "b.txt"), skip_unchanged = TRUE)
+  expect_identical(env$downloaded, "fb")
+})

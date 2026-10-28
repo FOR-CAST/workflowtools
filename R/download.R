@@ -75,6 +75,11 @@ drive_download_once <- function(file, path, ...) {
 #'   checksum as the file on Drive is not downloaded again. Google-native files (Docs, Sheets) have
 #'   no checksum on Drive, so they are always downloaded.
 #'
+#' @param files character, or `NULL` (all files). The names of the files in `drive_folder` to
+#'   download. Subfolders are then not searched, and an error names any file the folder lacks, or
+#'   holds more than once, before anything is downloaded -- so a caller never goes on to read an old
+#'   local copy of a file that was removed from Drive.
+#'
 #' @return Invisibly, a dribble of the downloaded files (not directories, and not files skipped as
 #'   unchanged).
 #'
@@ -84,7 +89,8 @@ drive_download_folder <- function(
   path,
   batch_size = 10,
   overwrite = TRUE,
-  skip_unchanged = FALSE
+  skip_unchanged = FALSE,
+  files = NULL
 ) {
   if (!dir.exists(path)) {
     dir.create(path, recursive = TRUE)
@@ -97,6 +103,10 @@ drive_download_folder <- function(
   drive_dirs <- googledrive::drive_ls(drive_folder, recursive = FALSE, type = "folder")
   drive_files <- googledrive::drive_ls(drive_folder, recursive = FALSE) |>
     dplyr::filter(!id %in% drive_dirs[["id"]])
+  if (!is.null(files)) {
+    drive_files <- .drive_select_files(drive_files, files, drive_folder)
+    drive_dirs <- drive_dirs[0, , drop = FALSE]
+  }
   if (isTRUE(skip_unchanged) && nrow(drive_files) > 0) {
     drive_files <- drive_files[!.drive_unchanged(drive_files, path), , drop = FALSE]
   }
@@ -135,6 +145,28 @@ drive_download_folder <- function(
   } else {
     downloaded_files
   }
+}
+
+## The rows of `drive_files` named in `files`, or an error naming every file the folder lacks or
+## holds more than once.
+.drive_select_files <- function(drive_files, files, drive_folder) {
+  folder <- as.character(googledrive::as_id(drive_folder))
+  missing <- setdiff(files, drive_files$name)
+  if (length(missing)) {
+    stop("Not in Drive folder ", folder, ": ", paste(missing, collapse = ", "), call. = FALSE)
+  }
+  twice <- unique(drive_files$name[duplicated(drive_files$name)])
+  twice <- intersect(files, twice)
+  if (length(twice)) {
+    stop(
+      "Drive folder ",
+      folder,
+      " holds more than one file named ",
+      paste(twice, collapse = ", "),
+      call. = FALSE
+    )
+  }
+  drive_files[drive_files$name %in% files, , drop = FALSE]
 }
 
 ## Which of `drive_files` already have an identical copy in `path`: a local file of the same name
