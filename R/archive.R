@@ -178,6 +178,14 @@ archive_extract_once <- function(archive, dir = ".", files = NULL, ..., force = 
   expected <- unname(size[wanted])
   actual <- file.size(on_disk)
 
+  ## archive 1.1.14 lists sizes as 32-bit integers (r-lib/archive#122): a member of 2 GiB or more
+  ## comes out negative, or at its size modulo 2^32, so every extraction of it failed this check.
+  ## The listed size is then only known modulo 2^32; compare at that precision.
+  if (is.integer(expected)) {
+    expected <- as.double(expected) %% 2^32
+    actual <- actual %% 2^32
+  }
+
   is_dir <- grepl("/$", wanted)
   bad <- ifelse(
     is_dir,

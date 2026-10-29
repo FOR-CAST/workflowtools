@@ -5,6 +5,10 @@
 * `drive_download_folder()` gains `skip_unchanged`. With `TRUE`, a file whose local copy already has the Drive file's MD5 checksum is not downloaded again, so a caller that refreshes a whole folder on every run (for example a `targets` target with `cue = "always"`) no longer re-transfers multi-GB files it already has. Google-native files have no checksum and are always downloaded. The default (`FALSE`) keeps the old behaviour.
 * `drive_download_folder()` gains `files`: only the named files of the folder are downloaded (its subfolders are then not searched), and it stops, naming them, if the folder lacks any or holds one twice, before downloading anything. A caller then never goes on to read an old local copy of a file that was removed from Drive.
 
+## Bug fixes
+
+* `archive_extract_once()` no longer refuses an archive holding a member of 2 GiB or more. archive 1.1.14 lists member sizes as 32-bit integers (r-lib/archive#122), so such a member was listed with a negative size, the check after extraction always failed, and the call stopped with "extraction incomplete". Sizes listed as integers are now compared modulo 2^32.
+
 # workflowtools 0.0.22
 
 * `download_once()` and `drive_download_once()` now download to a temporary file beside the destination and rename it into place once the download has finished. They used to skip any destination that existed and download straight into it, so a concurrent caller could find a half-written file and use it (two LandWeb workers fetching the same 1.1 GB landbase zip: one extracted the other's partial copy), and a failed download left a partial file that every later call then skipped. `teams_download_folder()` now downloads each file the same way, so a failed download no longer leaves a partial file that a later call with `overwrite = FALSE` keeps.

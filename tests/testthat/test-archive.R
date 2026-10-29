@@ -116,6 +116,37 @@ test_that("staging directory is not left behind", {
   expect_length(list.files(d, pattern = "^[.]archive_extract_once-", all.files = TRUE), 0L)
 })
 
+test_that("a member of 2 GiB or more is not taken for a short file", {
+  ## archive 1.1.14 lists sizes as 32-bit integers (r-lib/archive#122), so LandWeb's landbase zips
+  ## (a 2.0 GiB .dbf, a 2.9 GiB .gdbtable) failed verification on every extraction. Sparse files
+  ## stand in for the extracted members: they take no disk space.
+  skip_on_os("windows") ## seek() past the end there writes the zeros out
+  d <- withr::local_tempdir()
+  sparse_file <- function(name, bytes) {
+    con <- file(file.path(d, name), "wb")
+    seek(con, bytes - 1, rw = "write")
+    writeBin(as.raw(0), con)
+    close(con)
+  }
+  sparse_file("a.dbf", 2^31 + 970) ## listed as negative
+  sparse_file("b.gdbtable", 4.5 * 2^30) ## listed at its size modulo 2^32
+  listed <- function(bytes) as.integer(bytes - 2^32 * round(bytes / 2^32))
+  manifest <- data.frame(path = c("a.dbf", "b.gdbtable"), size = listed(c(2^31 + 970, 4.5 * 2^30)))
+  expect_true(all(manifest$size == c(-2147482678L, 536870912L)))
+
+  expect_identical(.archive_incomplete(manifest, d, manifest$path), character(0))
+
+  ## a short file is still caught
+  manifest$size[1] <- manifest$size[1] + 1L
+  expect_identical(.archive_incomplete(manifest, d, manifest$path), "a.dbf")
+
+  ## sizes listed as doubles (archive's fix) are compared exactly
+  manifest$size <- c(2^31 + 970, 4.5 * 2^30)
+  expect_identical(.archive_incomplete(manifest, d, manifest$path), character(0))
+  manifest$size[2] <- manifest$size[2] + 2^32
+  expect_identical(.archive_incomplete(manifest, d, manifest$path), "b.gdbtable")
+})
+
 test_that("archive_extract_once reads the archive under a binary-safe encoding", {
   ## archive::archive() opens the archive with file(path, "rb"), which takes its encoding from
   ## getOption("encoding"). Under UTF-8 a re-encoding layer is applied to a BINARY stream and
