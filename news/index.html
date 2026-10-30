@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">workflowtools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.22.9001</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.22.9002</span>
       </span>
     </div>
 
@@ -65,6 +65,11 @@
 <code><a href="../reference/drive_download_folder.html">drive_download_folder()</a></code> gains <code>skip_unchanged</code>. With <code>TRUE</code>, a file whose local copy already has the Drive file’s MD5 checksum is not downloaded again, so a caller that refreshes a whole folder on every run (for example a <code>targets</code> target with <code>cue = "always"</code>) no longer re-transfers multi-GB files it already has. Google-native files have no checksum and are always downloaded. The default (<code>FALSE</code>) keeps the old behaviour.</li>
 <li>
 <code><a href="../reference/drive_download_folder.html">drive_download_folder()</a></code> gains <code>files</code>: only the named files of the folder are downloaded (its subfolders are then not searched), and it stops, naming them, if the folder lacks any or holds one twice, before downloading anything. A caller then never goes on to read an old local copy of a file that was removed from Drive.</li>
+</ul></div>
+<div class="section level3">
+<h3 id="bug-fixes-development-version">Bug fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-development-version"></a></h3>
+<ul><li>
+<code><a href="../reference/archive_extract_once.html">archive_extract_once()</a></code> no longer refuses an archive holding a member of 2 GiB or more. archive 1.1.14 lists member sizes as 32-bit integers (r-lib/archive#122), so such a member was listed with a negative size, the check after extraction always failed, and the call stopped with “extraction incomplete”. Sizes listed as integers are now compared modulo 2^32.</li>
 </ul></div>
 </div>
     <div class="section level2">
