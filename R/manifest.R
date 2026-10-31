@@ -227,10 +227,19 @@ read_input_manifest <- function(path = "data/input_manifest.json") {
 #'
 #' @param records A list of records.
 #' @param path Path to the manifest JSON file.
+#' @param keep_retrieved_at logical. If `TRUE`, a record whose fields other than
+#'   `retrieved_at` match the record of the same `id` already in `path` keeps
+#'   that record's `retrieved_at`, so a manifest rebuilt from a registry dates
+#'   only the records that changed. The default (`FALSE`) writes every record as
+#'   given.
 #'
 #' @returns `path`, invisibly.
 #' @export
-write_input_manifest <- function(records, path = "data/input_manifest.json") {
+write_input_manifest <- function(
+  records,
+  path = "data/input_manifest.json",
+  keep_retrieved_at = FALSE
+) {
   if (!requireNamespace("jsonlite", quietly = TRUE)) {
     stop("Package `jsonlite` is required to write manifest files.", call. = FALSE)
   }
@@ -247,6 +256,18 @@ write_input_manifest <- function(records, path = "data/input_manifest.json") {
   ids <- vapply(records, `[[`, character(1L), "id")
   records <- records[order(ids)]
 
+  if (isTRUE(keep_retrieved_at)) {
+    old <- read_input_manifest(path)
+    names(old) <- vapply(old, `[[`, character(1L), "id")
+    records <- lapply(records, function(rec) {
+      prev <- old[[rec$id]]
+      if (!is.null(prev) && identical(manifest_record_key(prev), manifest_record_key(rec))) {
+        rec$retrieved_at <- prev$retrieved_at
+      }
+      rec
+    })
+  }
+
   doc <- list(
     `@context` = "https://schema.org",
     `@type` = "DataCatalog",
@@ -261,6 +282,23 @@ write_input_manifest <- function(records, path = "data/input_manifest.json") {
 
   jsonlite::write_json(doc, path, pretty = TRUE, auto_unbox = TRUE, null = "null", na = "null")
   invisible(path)
+}
+
+## A record without its retrieved_at, as the JSON write_input_manifest() would write for it, with
+## the names of every list sorted: a record read back from the manifest (lists, JSON field order)
+## and the same record built in R (vectors, constructor order) give the same string.
+manifest_record_key <- function(record) {
+  record$retrieved_at <- NULL
+  sort_names <- function(x) {
+    if (!is.list(x)) {
+      return(x)
+    }
+    if (!is.null(names(x))) {
+      x <- x[order(names(x))]
+    }
+    lapply(x, sort_names)
+  }
+  as.character(jsonlite::toJSON(sort_names(record), auto_unbox = TRUE, null = "null", na = "null"))
 }
 
 ## ---- register / upsert --------------------------------------------------------------------------

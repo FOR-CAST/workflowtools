@@ -2,6 +2,7 @@
 
 ## Enhancements
 
+* `write_input_manifest()` gains `keep_retrieved_at`. With `TRUE`, a record whose fields other than `retrieved_at` match the record of the same `id` already in the manifest keeps that record's `retrieved_at`, so a manifest rebuilt from a registry on every change no longer re-dates every record. The default (`FALSE`) writes every record as given.
 * `drive_download_folder()` gains `skip_unchanged`. With `TRUE`, a file whose local copy already has the Drive file's MD5 checksum is not downloaded again, so a caller that refreshes a whole folder on every run (for example a `targets` target with `cue = "always"`) no longer re-transfers multi-GB files it already has. Google-native files have no checksum and are always downloaded. The default (`FALSE`) keeps the old behaviour.
 * `drive_download_folder()` gains `files`: only the named files of the folder are downloaded (its subfolders are then not searched), and it stops, naming them, if the folder lacks any or holds one twice, before downloading anything. A caller then never goes on to read an old local copy of a file that was removed from Drive.
 

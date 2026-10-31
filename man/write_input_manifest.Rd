@@ -4,12 +4,22 @@
 \alias{write_input_manifest}
 \title{Write an input-data manifest to JSON}
 \usage{
-write_input_manifest(records, path = "data/input_manifest.json")
+write_input_manifest(
+  records,
+  path = "data/input_manifest.json",
+  keep_retrieved_at = FALSE
+)
 }
 \arguments{
 \item{records}{A list of records.}
 
 \item{path}{Path to the manifest JSON file.}
+
+\item{keep_retrieved_at}{logical. If \code{TRUE}, a record whose fields other than
+\code{retrieved_at} match the record of the same \code{id} already in \code{path} keeps
+that record's \code{retrieved_at}, so a manifest rebuilt from a registry dates
+only the records that changed. The default (\code{FALSE}) writes every record as
+given.}
 }
 \value{
 \code{path}, invisibly.

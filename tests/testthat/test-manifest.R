@@ -93,6 +93,63 @@ testthat::test_that("write_input_manifest() sorts records by id for stable diffs
   testthat::expect_equal(vapply(out, `[[`, character(1L), "id"), c("alpha", "beta", "gamma"))
 })
 
+testthat::test_that("write_input_manifest(keep_retrieved_at = TRUE) keeps an unchanged record's date", {
+  testthat::skip_if_not_installed("jsonlite")
+  testthat::skip_if_not_installed("withr")
+
+  path <- withr::local_tempfile(fileext = ".json")
+  ## optional fields of several types, so the comparison must survive the JSON round trip
+  rec <- function(retrieved_at, url = "https://example.com/data.csv") {
+    make_record(
+      id = "alpha",
+      source = list(type = "http_download", url = url, shared_by = c("A", "B")),
+      retrieved_at = retrieved_at,
+      description = "a dataset",
+      citation = list(bibtex_key = "Example:2026", external = FALSE),
+      extra = list(licence = "UNSTATED", n = 3L, share = 0.123456)
+    )
+  }
+  write_input_manifest(list(rec("2026-06-09T20:00:00Z")), path)
+  write_input_manifest(
+    list(
+      rec("2026-10-30T00:00:00Z"),
+      make_record(id = "beta", retrieved_at = "2026-10-30T00:00:00Z")
+    ),
+    path,
+    keep_retrieved_at = TRUE
+  )
+  out <- read_input_manifest(path)
+  testthat::expect_identical(
+    vapply(out, `[[`, character(1L), "retrieved_at"),
+    c("2026-06-09T20:00:00Z", "2026-10-30T00:00:00Z")
+  )
+})
+
+testthat::test_that("write_input_manifest(keep_retrieved_at = TRUE) dates a changed record anew", {
+  testthat::skip_if_not_installed("jsonlite")
+  testthat::skip_if_not_installed("withr")
+
+  path <- withr::local_tempfile(fileext = ".json")
+  write_input_manifest(list(make_record(id = "alpha")), path)
+  changed <- make_record(
+    id = "alpha",
+    source = list(type = "http_download", url = "https://example.com/v2.csv"),
+    retrieved_at = "2026-10-30T00:00:00Z"
+  )
+  write_input_manifest(list(changed), path, keep_retrieved_at = TRUE)
+  testthat::expect_identical(read_input_manifest(path)[[1L]]$retrieved_at, "2026-10-30T00:00:00Z")
+})
+
+testthat::test_that("write_input_manifest() writes every record's date as given by default", {
+  testthat::skip_if_not_installed("jsonlite")
+  testthat::skip_if_not_installed("withr")
+
+  path <- withr::local_tempfile(fileext = ".json")
+  write_input_manifest(list(make_record(id = "alpha")), path)
+  write_input_manifest(list(make_record(id = "alpha", retrieved_at = "2026-10-30T00:00:00Z")), path)
+  testthat::expect_identical(read_input_manifest(path)[[1L]]$retrieved_at, "2026-10-30T00:00:00Z")
+})
+
 testthat::test_that("read_input_manifest() returns empty list when file is absent", {
   out <- read_input_manifest(tempfile(fileext = ".json"))
   testthat::expect_equal(out, list())
