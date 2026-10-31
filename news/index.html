@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">workflowtools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.22.9002</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.22.9003</span>
       </span>
     </div>
 
@@ -62,6 +62,8 @@
 <div class="section level3">
 <h3 id="enhancements-development-version">Enhancements<a class="anchor" aria-label="anchor" href="#enhancements-development-version"></a></h3>
 <ul><li>
+<code><a href="../reference/write_input_manifest.html">write_input_manifest()</a></code> gains <code>keep_retrieved_at</code>. With <code>TRUE</code>, a record whose fields other than <code>retrieved_at</code> match the record of the same <code>id</code> already in the manifest keeps that record’s <code>retrieved_at</code>, so a manifest rebuilt from a registry on every change no longer re-dates every record. The default (<code>FALSE</code>) writes every record as given.</li>
+<li>
 <code><a href="../reference/drive_download_folder.html">drive_download_folder()</a></code> gains <code>skip_unchanged</code>. With <code>TRUE</code>, a file whose local copy already has the Drive file’s MD5 checksum is not downloaded again, so a caller that refreshes a whole folder on every run (for example a <code>targets</code> target with <code>cue = "always"</code>) no longer re-transfers multi-GB files it already has. Google-native files have no checksum and are always downloaded. The default (<code>FALSE</code>) keeps the old behaviour.</li>
 <li>
 <code><a href="../reference/drive_download_folder.html">drive_download_folder()</a></code> gains <code>files</code>: only the named files of the folder are downloaded (its subfolders are then not searched), and it stops, naming them, if the folder lacks any or holds one twice, before downloading anything. A caller then never goes on to read an old local copy of a file that was removed from Drive.</li>
