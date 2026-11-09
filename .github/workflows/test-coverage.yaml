@@ -16,6 +16,11 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 60
     env:
+      ## at most 2 cores for the tests, as CRAN asks (tests/testthat/setup-cores.R)
+      OMP_THREAD_LIMIT: 2
+      OMP_NUM_THREADS: 2
+      OPENBLAS_NUM_THREADS: 2
+      MKL_NUM_THREADS: 2
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
 
     steps:

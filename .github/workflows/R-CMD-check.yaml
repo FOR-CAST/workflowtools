@@ -37,6 +37,11 @@ jobs:
           - {os: ubuntu-latest,   r: 'oldrel-2'}
 
     env:
+      ## at most 2 cores for the tests, as CRAN asks (tests/testthat/setup-cores.R)
+      OMP_THREAD_LIMIT: 2
+      OMP_NUM_THREADS: 2
+      OPENBLAS_NUM_THREADS: 2
+      MKL_NUM_THREADS: 2
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
       R_KEEP_PKG_SOURCE: yes
       R_REMOTES_NO_ERRORS_FROM_WARNINGS: true
