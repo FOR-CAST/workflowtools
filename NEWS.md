@@ -6,6 +6,7 @@
 
 ## Enhancements
 
+* An input-manifest record's `source` can be `access = "restricted"`, for data shared only with named people, and then needs no `url`: recording the link would publish it. Its BibTeX entry has no `url` either.
 * `description()` gains `take_snapshot`. With `FALSE`, `snapshot` must name an existing renv lockfile or Require snapshot, which is read as it is, so a project can rebuild its `DESCRIPTION` from its own `renv.lock`. With the default (`TRUE`), `description()` first writes a snapshot of the installed packages to `snapshot`, which with `snapshot = "renv.lock"` overwrites the project's lockfile.
 * `write_input_manifest()` gains `keep_retrieved_at`. With `TRUE`, a record whose fields other than `retrieved_at` match the record of the same `id` already in the manifest keeps that record's `retrieved_at`, so a manifest rebuilt from a registry on every change no longer re-dates every record. The default (`FALSE`) writes every record as given.
 * `drive_download_folder()` gains `skip_unchanged`. With `TRUE`, a file whose local copy already has the Drive file's MD5 checksum is not downloaded again, so a caller that refreshes a whole folder on every run (for example a `targets` target with `cue = "always"`) no longer re-transfers multi-GB files it already has. Google-native files have no checksum and are always downloaded. The default (`FALSE`) keeps the old behaviour.

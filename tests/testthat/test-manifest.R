@@ -57,6 +57,25 @@ testthat::test_that("input_manifest_record() rejects source without type or url"
   )
 })
 
+## a record with exactly this `source` (make_record() would merge in its default url)
+record_with_source <- function(source) {
+  input_manifest_record(id = "x", name = "X", source = source, local_path = "p")
+}
+
+testthat::test_that("a restricted source needs no url, and its BibTeX entry has none", {
+  ## data shared only with named people: recorded without a link, which would publish it
+  rec <- record_with_source(list(type = "file", access = "restricted", file = "captures.xlsx"))
+  testthat::expect_identical(validate_manifest_record(rec), character())
+  testthat::expect_false(any(grepl("url =", format_bibtex_entry(rec), fixed = TRUE)))
+})
+
+testthat::test_that("a source that is not restricted still needs a url", {
+  testthat::expect_error(
+    record_with_source(list(type = "file", access = "open", file = "a.csv")),
+    "url"
+  )
+})
+
 testthat::test_that("input_manifest_schema() returns the documented field set", {
   schema <- input_manifest_schema()
   required <- vapply(schema, function(s) identical(s$level, "required"), logical(1L))

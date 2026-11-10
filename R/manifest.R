@@ -38,7 +38,10 @@ input_manifest_schema <- function() {
     source = list(
       level = "required",
       class = "list",
-      desc = "Object: type (e.g. 'bcdata', 'http_download'), url, optional query_args."
+      desc = paste(
+        "Object: type (e.g. 'bcdata', 'http_download'), url, optional query_args;",
+        "access = 'restricted' and no url for data shared only with named people."
+      )
     ),
     retrieved_at = list(
       level = "required",
@@ -84,7 +87,8 @@ input_manifest_schema <- function() {
 #'
 #' @param id Stable slug; the join key. Once published, do not rename.
 #' @param name Human-readable dataset title.
-#' @param source A list with at minimum `type` and `url`.
+#' @param source A list with at minimum `type` and `url`. A source shared only with named people
+#'   is given `access = "restricted"` instead of a `url`, so the manifest does not publish its link.
 #' @param local_path Path to the local copy, relative to the project root.
 #' @param retrieved_at ISO-8601 UTC timestamp. Defaults to `Sys.time()`.
 #' @param description,version_or_vintage,sha256,license Optional metadata.
@@ -184,9 +188,11 @@ validate_manifest_record <- function(record) {
     }
   }
 
-  ## source must have type + url
+  ## source must have type + url; a restricted source (shared only with named people) has no url,
+  ## since recording its link would publish it
   if ("source" %in% names(record) && is.list(record$source)) {
-    for (subfield in c("type", "url")) {
+    restricted <- identical(record$source$access, "restricted")
+    for (subfield in c("type", if (!restricted) "url")) {
       if (!subfield %in% names(record$source) || is.null(record$source[[subfield]])) {
         errs <- c(errs, sprintf("field `source` is missing required subfield `%s`", subfield))
       }

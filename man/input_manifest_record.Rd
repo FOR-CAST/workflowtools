@@ -23,7 +23,8 @@ input_manifest_record(
 
 \item{name}{Human-readable dataset title.}
 
-\item{source}{A list with at minimum \code{type} and \code{url}.}
+\item{source}{A list with at minimum \code{type} and \code{url}. A source shared only with named people
+is given \code{access = "restricted"} instead of a \code{url}, so the manifest does not publish its link.}
 
 \item{local_path}{Path to the local copy, relative to the project root.}
 
