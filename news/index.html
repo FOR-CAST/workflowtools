@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">workflowtools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.22.9005</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.22.9006</span>
       </span>
     </div>
 
@@ -60,6 +60,10 @@
     <div class="section level2">
 <h2 class="page-header" data-toc-text="development version" id="workflowtools-development-version">workflowtools (development version)<a class="anchor" aria-label="anchor" href="#workflowtools-development-version"></a></h2>
 <div class="section level3">
+<h3 id="new-features-development-version">New features<a class="anchor" aria-label="anchor" href="#new-features-development-version"></a></h3>
+<ul><li>New <code><a href="../reference/drive_ls_folder.html">drive_ls_folder()</a></code>: the contents of a Drive folder, for any account that can see the folder, including one given access to a folder of a shared drive without being a member of the drive (a project service account, say). <code><a href="https://googledrive.tidyverse.org/reference/drive_ls.html" class="external-link">googledrive::drive_ls()</a></code> searches within the shared drive, which Drive answers only for its members.</li>
+</ul></div>
+<div class="section level3">
 <h3 id="enhancements-development-version">Enhancements<a class="anchor" aria-label="anchor" href="#enhancements-development-version"></a></h3>
 <ul><li>
 <code><a href="../reference/description.html">description()</a></code> gains <code>take_snapshot</code>. With <code>FALSE</code>, <code>snapshot</code> must name an existing renv lockfile or Require snapshot, which is read as it is, so a project can rebuild its <code>DESCRIPTION</code> from its own <code>renv.lock</code>. With the default (<code>TRUE</code>), <code><a href="../reference/description.html">description()</a></code> first writes a snapshot of the installed packages to <code>snapshot</code>, which with <code>snapshot = "renv.lock"</code> overwrites the project’s lockfile.</li>
@@ -73,6 +77,8 @@
 <div class="section level3">
 <h3 id="bug-fixes-development-version">Bug fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-development-version"></a></h3>
 <ul><li>
+<code><a href="../reference/drive_download_folder.html">drive_download_folder()</a></code> and <code><a href="../reference/drive_upload_folder.html">drive_upload_folder()</a></code> now work for an account given access to a folder of a shared drive without being a member of the drive. They listed the folder with <code><a href="https://googledrive.tidyverse.org/reference/drive_ls.html" class="external-link">googledrive::drive_ls()</a></code>, which Drive refuses for a non-member (“Shared drive not found”); they now list it with <code><a href="../reference/drive_ls_folder.html">drive_ls_folder()</a></code>.</li>
+<li>
 <code><a href="../reference/archive_extract_once.html">archive_extract_once()</a></code> no longer refuses an archive holding a member of 2 GiB or more. archive 1.1.14 lists member sizes as 32-bit integers (r-lib/archive#122), so such a member was listed with a negative size, the check after extraction always failed, and the call stopped with “extraction incomplete”. Sizes listed as integers are now compared modulo 2^32.</li>
 </ul></div>
 </div>
