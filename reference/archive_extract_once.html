@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">workflowtools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.22.9006</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.22.9007</span>
       </span>
     </div>
 
@@ -125,41 +125,41 @@ the archive is a <code>.zip</code>, <code>archive_extract_once()</code> falls ba
 <span class="r-in"><span><span class="va">i</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1L</span>, <span class="fl">3L</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu">archive_extract_once</span><span class="op">(</span><span class="va">a</span>, <span class="va">d</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> /tmp/RtmpGbM1Ar/file1e881e24567/iris.csv</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> /tmp/RtmpGbM1Ar/file1e881e24567/mtcars.csv</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> /tmp/RtmpGbM1Ar/file1e881e24567/airquality.csv</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> /tmp/RtmplVqOBR/file1d616b6e6c17/iris.csv</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> /tmp/RtmplVqOBR/file1d616b6e6c17/mtcars.csv</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> /tmp/RtmplVqOBR/file1d616b6e6c17/airquality.csv</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/list.files.html" class="external-link">list.files</a></span><span class="op">(</span><span class="va">d</span>, full.names <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "/tmp/RtmpGbM1Ar/file1e881e24567/airquality.csv"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [2] "/tmp/RtmpGbM1Ar/file1e881e24567/iris.csv"      </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [3] "/tmp/RtmpGbM1Ar/file1e881e24567/mtcars.csv"    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "/tmp/RtmplVqOBR/file1d616b6e6c17/airquality.csv"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [2] "/tmp/RtmplVqOBR/file1d616b6e6c17/iris.csv"      </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [3] "/tmp/RtmplVqOBR/file1d616b6e6c17/mtcars.csv"    </span>
 <span class="r-in"><span><span class="fu">archive_extract_once</span><span class="op">(</span><span class="va">a</span>, <span class="va">d</span><span class="op">)</span> <span class="co">## does not re-extract files</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> /tmp/RtmpGbM1Ar/file1e881e24567/iris.csv</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> /tmp/RtmpGbM1Ar/file1e881e24567/mtcars.csv</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> /tmp/RtmpGbM1Ar/file1e881e24567/airquality.csv</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> /tmp/RtmplVqOBR/file1d616b6e6c17/iris.csv</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> /tmp/RtmplVqOBR/file1d616b6e6c17/mtcars.csv</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> /tmp/RtmplVqOBR/file1d616b6e6c17/airquality.csv</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/unlink.html" class="external-link">unlink</a></span><span class="op">(</span><span class="va">d</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">d</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">archive_extract_once</span><span class="op">(</span><span class="va">a</span>, <span class="va">d</span>, <span class="va">f</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> /tmp/RtmpGbM1Ar/file1e886ebd19f/iris.csv</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> /tmp/RtmpGbM1Ar/file1e886ebd19f/airquality.csv</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> /tmp/RtmplVqOBR/file1d6157605ad4/iris.csv</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> /tmp/RtmplVqOBR/file1d6157605ad4/airquality.csv</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/list.files.html" class="external-link">list.files</a></span><span class="op">(</span><span class="va">d</span>, full.names <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "/tmp/RtmpGbM1Ar/file1e886ebd19f/airquality.csv"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [2] "/tmp/RtmpGbM1Ar/file1e886ebd19f/iris.csv"      </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "/tmp/RtmplVqOBR/file1d6157605ad4/airquality.csv"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [2] "/tmp/RtmplVqOBR/file1d6157605ad4/iris.csv"      </span>
 <span class="r-in"><span><span class="fu">archive_extract_once</span><span class="op">(</span><span class="va">a</span>, <span class="va">d</span>, <span class="va">f</span><span class="op">)</span> <span class="co">## does not re-extract files</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> /tmp/RtmpGbM1Ar/file1e886ebd19f/iris.csv</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> /tmp/RtmpGbM1Ar/file1e886ebd19f/airquality.csv</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> /tmp/RtmplVqOBR/file1d6157605ad4/iris.csv</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> /tmp/RtmplVqOBR/file1d6157605ad4/airquality.csv</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/unlink.html" class="external-link">unlink</a></span><span class="op">(</span><span class="va">d</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">d</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">archive_extract_once</span><span class="op">(</span><span class="va">a</span>, <span class="va">d</span>, <span class="va">i</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> /tmp/RtmpGbM1Ar/file1e88415081e2/iris.csv</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> /tmp/RtmpGbM1Ar/file1e88415081e2/airquality.csv</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> /tmp/RtmplVqOBR/file1d6112c99d83/iris.csv</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> /tmp/RtmplVqOBR/file1d6112c99d83/airquality.csv</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/list.files.html" class="external-link">list.files</a></span><span class="op">(</span><span class="va">d</span>, full.names <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "/tmp/RtmpGbM1Ar/file1e88415081e2/airquality.csv"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [2] "/tmp/RtmpGbM1Ar/file1e88415081e2/iris.csv"      </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "/tmp/RtmplVqOBR/file1d6112c99d83/airquality.csv"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [2] "/tmp/RtmplVqOBR/file1d6112c99d83/iris.csv"      </span>
 <span class="r-in"><span><span class="fu">archive_extract_once</span><span class="op">(</span><span class="va">a</span>, <span class="va">d</span>, <span class="va">i</span><span class="op">)</span> <span class="co">## does not re-extract files</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> /tmp/RtmpGbM1Ar/file1e88415081e2/iris.csv</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> /tmp/RtmpGbM1Ar/file1e88415081e2/airquality.csv</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> /tmp/RtmplVqOBR/file1d6112c99d83/iris.csv</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> /tmp/RtmplVqOBR/file1d6112c99d83/airquality.csv</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/unlink.html" class="external-link">unlink</a></span><span class="op">(</span><span class="va">d</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 </code></pre></div>

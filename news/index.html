@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">workflowtools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.22.9006</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.22.9007</span>
       </span>
     </div>
 
@@ -65,7 +65,8 @@
 </ul></div>
 <div class="section level3">
 <h3 id="enhancements-development-version">Enhancements<a class="anchor" aria-label="anchor" href="#enhancements-development-version"></a></h3>
-<ul><li>
+<ul><li>An input-manifest record’s <code>source</code> can be <code>access = "restricted"</code>, for data shared only with named people, and then needs no <code>url</code>: recording the link would publish it. Its BibTeX entry has no <code>url</code> either.</li>
+<li>
 <code><a href="../reference/description.html">description()</a></code> gains <code>take_snapshot</code>. With <code>FALSE</code>, <code>snapshot</code> must name an existing renv lockfile or Require snapshot, which is read as it is, so a project can rebuild its <code>DESCRIPTION</code> from its own <code>renv.lock</code>. With the default (<code>TRUE</code>), <code><a href="../reference/description.html">description()</a></code> first writes a snapshot of the installed packages to <code>snapshot</code>, which with <code>snapshot = "renv.lock"</code> overwrites the project’s lockfile.</li>
 <li>
 <code><a href="../reference/write_input_manifest.html">write_input_manifest()</a></code> gains <code>keep_retrieved_at</code>. With <code>TRUE</code>, a record whose fields other than <code>retrieved_at</code> match the record of the same <code>id</code> already in the manifest keeps that record’s <code>retrieved_at</code>, so a manifest rebuilt from a registry on every change no longer re-dates every record. The default (<code>FALSE</code>) writes every record as given.</li>
