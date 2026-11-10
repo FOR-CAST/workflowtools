@@ -4,14 +4,27 @@
 \alias{description}
 \title{Create or modify a project's \file{DESCRIPTION} file}
 \usage{
-description(fields = list(), library = NULL, snapshot = NULL)
+description(
+  fields = list(),
+  library = NULL,
+  snapshot = NULL,
+  take_snapshot = TRUE
+)
 }
 \arguments{
 \item{fields}{named list of \file{DESCRIPTION} fields and their values.}
 
 \item{library}{paths to package libraries. if \code{NULL}, \code{.libPaths()} will be used.}
 
-\item{snapshot}{character. path to a \pkg{renv} or \pkg{Require} snapshot file.}
+\item{snapshot}{character. path to a \pkg{renv} lockfile (\code{.lock}) or \pkg{Require} snapshot
+(\code{.csv}). If \code{NULL}, a temporary file is used; only allowed with \code{take_snapshot = TRUE}.}
+
+\item{take_snapshot}{logical. If \code{TRUE} (the default), first snapshot the packages installed in
+\code{library} with \pkg{renv} (or with \pkg{Require} when \code{options(workflowtools.useRequire = TRUE)})
+and write it to \code{snapshot}, replacing that file: with \code{snapshot = "renv.lock"}, the project's
+lockfile is overwritten with the installed packages.
+If \code{FALSE}, \code{snapshot} must name an existing renv lockfile or Require snapshot, which is read
+as it is and not written to; \code{library} is then not used.}
 }
 \value{
 \code{NULL} invisibly.

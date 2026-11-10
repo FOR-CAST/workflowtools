@@ -16,7 +16,15 @@ utils::globalVariables(c(
 #'
 #' @param library paths to package libraries. if `NULL`, `.libPaths()` will be used.
 #'
-#' @param snapshot character. path to a \pkg{renv} or \pkg{Require} snapshot file.
+#' @param snapshot character. path to a \pkg{renv} lockfile (`.lock`) or \pkg{Require} snapshot
+#'   (`.csv`). If `NULL`, a temporary file is used; only allowed with `take_snapshot = TRUE`.
+#'
+#' @param take_snapshot logical. If `TRUE` (the default), first snapshot the packages installed in
+#'   `library` with \pkg{renv} (or with \pkg{Require} when `options(workflowtools.useRequire = TRUE)`)
+#'   and write it to `snapshot`, replacing that file: with `snapshot = "renv.lock"`, the project's
+#'   lockfile is overwritten with the installed packages.
+#'   If `FALSE`, `snapshot` must name an existing renv lockfile or Require snapshot, which is read
+#'   as it is and not written to; `library` is then not used.
 #'
 #' @return `NULL` invisibly.
 #' Invoked for side effect of writing a \file{DESCRIPTION} file to the project directory,
@@ -48,14 +56,18 @@ utils::globalVariables(c(
 #' setwd(cwd)
 #' unlink(tmpdir, recursive = TRUE)
 #' options(opts)
-description <- function(fields = list(), library = NULL, snapshot = NULL) {
+description <- function(fields = list(), library = NULL, snapshot = NULL, take_snapshot = TRUE) {
+  if (!isTRUE(take_snapshot) && !isFALSE(take_snapshot)) {
+    stop("`take_snapshot` must be TRUE or FALSE.")
+  }
+
   if (is.null(library)) {
     library <- .libPaths()
   }
 
   useRequire <- isTRUE(getOption("workflowtools.useRequire"))
 
-  if (is.null(snapshot)) {
+  if (is.null(snapshot) && take_snapshot) {
     if (useRequire) {
       snapshot <- tempfile("pkgsnapshot_Require_", fileext = ".csv")
     } else {
@@ -65,7 +77,16 @@ description <- function(fields = list(), library = NULL, snapshot = NULL) {
     on.exit(unlink(snapshot), add = TRUE)
   }
 
-  if (useRequire) {
+  if (!take_snapshot) {
+    ## read `snapshot` as it is; nothing below writes to it
+    if (is.null(snapshot) || !file.exists(snapshot)) {
+      stop(
+        "With `take_snapshot = FALSE`, `snapshot` must name an existing renv lockfile or ",
+        "Require snapshot",
+        if (is.null(snapshot)) ", not NULL." else paste0("; '", snapshot, "' does not exist.")
+      )
+    }
+  } else if (useRequire) {
     if (requireNamespace("Require", quietly = TRUE)) {
       Require::pkgSnapshot(packageVersionFile = snapshot, libPaths = library)
     } else {
