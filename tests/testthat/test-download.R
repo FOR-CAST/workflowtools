@@ -254,13 +254,20 @@ test_that("drive_download_once() skips a destination that already exists", {
 
 ## A fake Drive for drive_download_folder(): `tree` maps a folder id to its entries, a data frame of
 ## id, name, and md5 (NA for a folder or a Google-native file); `folder` marks the subfolders.
-## drive_ls() answers from it and drive_download() writes the file id into the file, recording each
-## id it is asked for in `env$downloaded`.
+## drive_find() answers a search for a folder's children from it, and drive_download() writes the
+## file id into the file, recording each id it is asked for in `env$downloaded`.
+## The caller is shared folders of a shared drive without being a member of the drive, as a project
+## service account is. Drive then refuses a search scoped to the shared drive, which is what
+## drive_ls() runs there ("Shared drive not found"), and answers one over all drives.
 local_fake_drive <- function(tree, env, frame = parent.frame()) {
   env$downloaded <- character()
   local_mocked_bindings(
-    drive_ls = function(path = NULL, pattern = NULL, recursive = FALSE, ..., type = NULL) {
-      x <- tree[[path]]
+    drive_ls = function(...) stop("Client error: (404) Not Found. Shared drive not found"),
+    drive_find = function(..., type = NULL, shared_drive = NULL, corpus = NULL, q = NULL) {
+      if (!is.null(shared_drive) || !identical(corpus, "allDrives")) {
+        stop("Client error: (404) Not Found. Shared drive not found")
+      }
+      x <- tree[[sub("^'(.+)' in parents$", "\\1", q)]]
       if (identical(type, "folder")) {
         x <- x[x$folder, , drop = FALSE]
       }
@@ -308,6 +315,17 @@ md5_of <- function(text) {
     USE.NAMES = FALSE
   )
 }
+
+test_that("drive_ls_folder() lists a folder of a shared drive the caller is not a member of", {
+  env <- new.env()
+  local_fake_drive(
+    list(root = rbind(entries("fa", "a.txt", md5_of("fa")), entries("dsub", "sub", folder = TRUE))),
+    env
+  )
+
+  expect_identical(drive_ls_folder("root")$name, c("a.txt", "sub"))
+  expect_identical(drive_ls_folder("root", type = "folder")$name, "sub")
+})
 
 test_that("drive_download_folder(skip_unchanged = TRUE) skips a file whose md5 matches", {
   d <- withr::local_tempdir()

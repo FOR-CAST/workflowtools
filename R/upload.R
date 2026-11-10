@@ -31,7 +31,7 @@ drive_upload_folder <- function(folder, drive_path, batch_size = 10) {
   contents <- fs::dir_info(folder, type = c("file", "dir"))
   dirs_to_upload <- contents |> dplyr::filter(type == "directory") |> dplyr::pull(path)
 
-  folderIDs <- googledrive::drive_ls(drive_path)
+  folderIDs <- drive_ls_folder(drive_path)
   fid <- folderIDs[folderIDs[["name"]] == basename(folder), "id"][[1]]
   if (length(fid) == 0) {
     fid <- googledrive::drive_mkdir(basename(folder), drive_path)[["id"]]

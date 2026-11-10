@@ -1,5 +1,9 @@
 # workflowtools (development version)
 
+## New features
+
+* New `drive_ls_folder()`: the contents of a Drive folder, for any account that can see the folder, including one given access to a folder of a shared drive without being a member of the drive (a project service account, say). `googledrive::drive_ls()` searches within the shared drive, which Drive answers only for its members.
+
 ## Enhancements
 
 * `description()` gains `take_snapshot`. With `FALSE`, `snapshot` must name an existing renv lockfile or Require snapshot, which is read as it is, so a project can rebuild its `DESCRIPTION` from its own `renv.lock`. With the default (`TRUE`), `description()` first writes a snapshot of the installed packages to `snapshot`, which with `snapshot = "renv.lock"` overwrites the project's lockfile.
@@ -9,6 +13,7 @@
 
 ## Bug fixes
 
+* `drive_download_folder()` and `drive_upload_folder()` now work for an account given access to a folder of a shared drive without being a member of the drive. They listed the folder with `googledrive::drive_ls()`, which Drive refuses for a non-member ("Shared drive not found"); they now list it with `drive_ls_folder()`.
 * `archive_extract_once()` no longer refuses an archive holding a member of 2 GiB or more. archive 1.1.14 lists member sizes as 32-bit integers (r-lib/archive#122), so such a member was listed with a negative size, the check after extraction always failed, and the call stopped with "extraction incomplete". Sizes listed as integers are now compared modulo 2^32.
 
 # workflowtools 0.0.22

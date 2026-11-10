@@ -56,6 +56,27 @@ drive_download_once <- function(file, path, ...) {
   }
 }
 
+#' List the contents of a Google Drive folder
+#'
+#' Lists the files and folders directly in a Drive folder, for any account that can see the folder.
+#' Unlike `googledrive::drive_ls()`, it also works for an account that was given access to a folder
+#' of a shared drive without being a member of the drive (a project service account, say):
+#' `drive_ls()` searches within the shared drive, which Drive answers only for the drive's members,
+#' with "Shared drive not found" for anyone else. This searches all drives the caller can see.
+#'
+#' @param drive_folder The folder on Google Drive, given as a URL, file id, or dribble.
+#'
+#' @param type Passed to `googledrive::drive_find()`, e.g. `"folder"` for the subfolders only;
+#'   `NULL` (the default) lists everything.
+#'
+#' @return A dribble of the folder's contents, not including trashed files.
+#'
+#' @export
+drive_ls_folder <- function(drive_folder, type = NULL) {
+  id <- as.character(googledrive::as_id(drive_folder))
+  googledrive::drive_find(type = type, q = sprintf("'%s' in parents", id), corpus = "allDrives")
+}
+
 #' Download multiple files/folders from Google Drive
 #'
 #' Based on <https://github.com/tidyverse/googledrive/issues/123#issuecomment-563484927>.
@@ -100,9 +121,8 @@ drive_download_folder <- function(
   ## per https://github.com/tidyverse/googlesheets4/issues/233#issuecomment-889376499
   .use_http11()
 
-  drive_dirs <- googledrive::drive_ls(drive_folder, recursive = FALSE, type = "folder")
-  drive_files <- googledrive::drive_ls(drive_folder, recursive = FALSE) |>
-    dplyr::filter(!id %in% drive_dirs[["id"]])
+  drive_dirs <- drive_ls_folder(drive_folder, type = "folder")
+  drive_files <- drive_ls_folder(drive_folder) |> dplyr::filter(!id %in% drive_dirs[["id"]])
   if (!is.null(files)) {
     drive_files <- .drive_select_files(drive_files, files, drive_folder)
     drive_dirs <- drive_dirs[0, , drop = FALSE]
