@@ -22,6 +22,8 @@ jobs:
       OPENBLAS_NUM_THREADS: 2
       MKL_NUM_THREADS: 2
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+      ## Codecov refuses tokenless uploads to a protected branch; it is empty in Dependabot's runs
+      CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
     steps:
       - uses: actions/checkout@v6
@@ -46,5 +48,8 @@ jobs:
             any::covr
 
       - name: Test coverage
-        run: covr::codecov()
+        run: |
+          ## Dependabot's runs get no Actions secrets: test under covr, upload only with a token
+          cov <- covr::package_coverage()
+          if (nzchar(Sys.getenv("CODECOV_TOKEN"))) covr::codecov(coverage = cov) else print(cov)
         shell: Rscript {0}
