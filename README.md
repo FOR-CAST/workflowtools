@@ -3,7 +3,7 @@
 <!-- badges: start -->
 [![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
 [![R-CMD-check](https://github.com/FOR-CAST/workflowtools/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/FOR-CAST/workflowtools/actions/workflows/R-CMD-check.yaml)
-[![test-coverage](https://github.com/FOR-CAST/workflowtools/actions/workflows/test-coverage.yaml/badge.svg)](https://github.com/FOR-CAST/workflowtools/actions/workflows/test-coverage.yaml)
+[![Codecov test coverage](https://codecov.io/gh/FOR-CAST/workflowtools/graph/badge.svg)](https://app.codecov.io/gh/FOR-CAST/workflowtools)
 [![pkgdown](https://github.com/FOR-CAST/workflowtools/actions/workflows/pkgdown.yaml/badge.svg)](https://for-cast.github.io/workflowtools/)
 <!-- badges: end -->
 
