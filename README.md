@@ -18,6 +18,9 @@ each function is small, single-purpose, and composable with `{targets}`,
 
 ```r
 # install.packages("pak")
+# Install the release version from GitHub:
+pak::pak("FOR-CAST/workflowtools")
+
 # Install the development version from GitHub:
 pak::pak("FOR-CAST/workflowtools@development")
 ```
