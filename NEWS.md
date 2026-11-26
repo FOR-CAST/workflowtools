@@ -1,4 +1,4 @@
-# workflowtools (development version)
+# workflowtools 0.0.23
 
 ## New features
 
