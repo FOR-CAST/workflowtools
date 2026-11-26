@@ -17,8 +17,9 @@ each function is small, single-purpose, and composable with `{targets}`,
 ## Installation
 
 ```r
+# install.packages("pak")
 # Install the development version from GitHub:
-remotes::install_github("FOR-CAST/workflowtools@development")
+pak::pak("FOR-CAST/workflowtools@development")
 ```
 
 ## Getting started
