@@ -51,5 +51,10 @@ jobs:
         run: |
           ## Dependabot's runs get no Actions secrets: test under covr, upload only with a token
           cov <- covr::package_coverage()
-          if (nzchar(Sys.getenv("CODECOV_TOKEN"))) covr::codecov(coverage = cov) else print(cov)
+          if (nzchar(Sys.getenv("CODECOV_TOKEN"))) {
+            ## print Codecov's reply, which the log otherwise omits, so a rejected upload shows why
+            print(covr::codecov(coverage = cov))
+          } else {
+            print(cov)
+          }
         shell: Rscript {0}
